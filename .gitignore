@@ -1,0 +1,11 @@
+/build/
+/out/
+/.vs/
+*.user
+*.suo
+*.VC.db
+*.VC.VC.opendb
+
+# Local third-party binary payload; keep metadata/README tracked.
+third_party/MagicTrackpad2ForWindows-v2.0/
+!third_party/README.md
