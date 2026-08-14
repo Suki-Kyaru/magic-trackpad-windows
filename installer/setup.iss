@@ -1,9 +1,6 @@
-; Magic Trackpad for Windows - v0.1.0-dev.5.1
-; UAC launch + Chinese wizard hotfix.
-;
+; Magic Trackpad for Windows - v0.1.0-dev.5.3
+; Persistent install logging + installed diagnostics tools.
 ; x64 Windows 11 only.
-; Driver write operations are delegated to the already-tested safe PowerShell gate.
-; The upstream signed driver payload is never modified.
 
 #ifndef RepoRoot
   #define RepoRoot ".."
@@ -18,7 +15,7 @@
 #endif
 
 #define MyAppName "Magic Trackpad for Windows"
-#define MyAppVersion "0.1.0-dev.5.1"
+#define MyAppVersion "0.1.0-dev.5.3"
 #define MyAppExeName "AmtPtpControlPanel.exe"
 
 [Setup]
@@ -44,6 +41,7 @@ InfoBeforeFile={#RepoRoot}\installer\INFO_BEFORE.txt
 CloseApplications=yes
 RestartIfNeededByRun=no
 ShowLanguageDialog=no
+SetupLogging=yes
 
 [Languages]
 #ifdef ChineseMessagesFile
@@ -52,8 +50,6 @@ Name: "chinesesimp"; MessagesFile: "{#ChineseMessagesFile}"
 Name: "english"; MessagesFile: "compiler:Default.isl"
 #endif
 
-; These overrides keep the main flow Chinese even when the local Inno Setup
-; installation does not ship a Simplified Chinese .isl file.
 [Messages]
 SetupAppTitle=安装
 SetupWindowTitle=安装 - %1
@@ -98,25 +94,30 @@ StatusRunProgram=正在完成安装...
 SetupAborted=安装尚未完成。%n%n请解决问题后重新运行安装程序。
 ErrorExecutingProgram=无法执行文件：%n%1
 
+[Dirs]
+Name: "{commonappdata}\Magic Trackpad for Windows\Logs"
+
 [Files]
-; Keep these first: PrepareToInstall extracts them before normal file copying.
 Source: "{#RuntimeZip}"; DestName: "MagicTrackpadSetupPayload.zip"; Flags: dontcopy noencryption
 Source: "{#RepoRoot}\installer\Run-SafeInstall.ps1"; DestName: "Run-SafeInstall.ps1"; Flags: dontcopy noencryption
 
-; User-facing installed files.
 Source: "{#RepoRoot}\third_party\MagicTrackpad2ForWindows-v2.0\AmtPtpControlPanel.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#RepoRoot}\THIRD_PARTY_NOTICES.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#RepoRoot}\installer\INFO_BEFORE.txt"; DestDir: "{app}"; DestName: "README_FIRST.txt"; Flags: ignoreversion
 
+Source: "{#RepoRoot}\build\Release\MagicTrackpadHelper.exe"; DestDir: "{app}\Tools"; Flags: ignoreversion
+Source: "{#RepoRoot}\scripts\Collect-Diagnostics.ps1"; DestDir: "{app}\Tools"; Flags: ignoreversion
+Source: "{#RepoRoot}\scripts\Get-UninstallPlan.ps1"; DestDir: "{app}\Tools"; Flags: ignoreversion
+Source: "{#RepoRoot}\scripts\Invoke-SafeDriverUninstall.ps1"; DestDir: "{app}\Tools"; Flags: ignoreversion
+
 [Icons]
 Name: "{group}\Magic Trackpad 控制面板"; Filename: "{app}\{#MyAppExeName}"
 Name: "{group}\Windows 触摸板设置"; Filename: "{sys}\cmd.exe"; Parameters: "/c start """" ms-settings:devices-touchpad"; WorkingDir: "{app}"; IconFilename: "{app}\{#MyAppExeName}"
+Name: "{group}\生成诊断报告"; Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoLogo -NoProfile -ExecutionPolicy Bypass -File ""{app}\Tools\Collect-Diagnostics.ps1"" -HelperPath ""{app}\Tools\MagicTrackpadHelper.exe"" -OpenFolder"; WorkingDir: "{app}\Tools"
+Name: "{group}\打开诊断日志文件夹"; Filename: "{sys}\explorer.exe"; Parameters: """{commonappdata}\Magic Trackpad for Windows\Logs"""
 Name: "{group}\卸载 Magic Trackpad for Windows"; Filename: "{uninstallexe}"
 
 [Run]
-; The upstream control panel has a requireAdministrator manifest.
-; postinstall normally uses the original non-elevated user token in Inno Setup.
-; runascurrentuser makes it inherit Setup's already-elevated credentials.
 Filename: "{app}\{#MyAppExeName}"; Description: "打开 Magic Trackpad 控制面板"; Flags: postinstall nowait skipifsilent runascurrentuser
 
 [Code]
@@ -169,6 +170,7 @@ begin
       Result :=
         '驱动安装检查未通过，安装程序已停止。' + #13#10 +
         '退出代码：' + IntToStr(ResultCode) + #13#10 +
+        '诊断日志目录：' + ExpandConstant('{commonappdata}\Magic Trackpad for Windows\Logs') + #13#10 +
         '当前版本不会自动清理旧驱动、降级新驱动或处理多个残留驱动包。';
       exit;
     end;
@@ -182,7 +184,7 @@ begin
   if CurUninstallStep = usUninstall then
   begin
     MsgBox(
-      '当前开发版卸载程序只移除控制面板、文档和快捷方式。' + #13#10 +
+      '当前开发版卸载程序只移除控制面板、工具、文档和快捷方式。' + #13#10 +
       'Magic Trackpad 驱动会保留，不会删除其他 Apple/iPhone 驱动。',
       mbInformation,
       MB_OK

@@ -53,6 +53,41 @@ if (-not (Test-Path $Helper -PathType Leaf)) {
 
 & $VerifyPayload
 
+foreach ($requiredTool in @(
+    (Join-Path $PSScriptRoot "Collect-Diagnostics.ps1"),
+    (Join-Path $PSScriptRoot "Get-UninstallPlan.ps1"),
+    (Join-Path $PSScriptRoot "Invoke-SafeDriverUninstall.ps1")
+)) {
+    if (-not (Test-Path $requiredTool -PathType Leaf)) {
+        throw "Installer diagnostic tool is missing: $requiredTool"
+    }
+}
+
+function Assert-AsciiRuntimeScript {
+    param([string]$Path)
+
+    $bytes = [System.IO.File]::ReadAllBytes($Path)
+
+    foreach ($byte in $bytes) {
+        if ($byte -gt 0x7F) {
+            throw "Runtime script contains non-ASCII source bytes and is unsafe for Windows PowerShell 5.1 without a BOM: $Path"
+        }
+    }
+
+    Write-Host "[PASS] ASCII runtime source: $Path"
+}
+
+foreach ($runtimeScript in @(
+    (Join-Path $RepoRoot "installer\Run-SafeInstall.ps1"),
+    (Join-Path $PSScriptRoot "Install-Driver.ps1"),
+    (Join-Path $PSScriptRoot "Verify-DriverPayload.ps1"),
+    (Join-Path $PSScriptRoot "Collect-Diagnostics.ps1"),
+    (Join-Path $PSScriptRoot "Get-UninstallPlan.ps1"),
+    (Join-Path $PSScriptRoot "Invoke-SafeDriverUninstall.ps1")
+)) {
+    Assert-AsciiRuntimeScript -Path $runtimeScript
+}
+
 if (Test-Path $RuntimeRoot) {
     Remove-Item $RuntimeRoot -Recurse -Force
 }
@@ -114,7 +149,7 @@ if ($LASTEXITCODE -ne 0) {
     throw "Inno Setup compilation failed."
 }
 
-$SetupExe = Join-Path $InstallerOutput "MagicTrackpad-for-Windows-Setup-0.1.0-dev.5.1-x64.exe"
+$SetupExe = Join-Path $InstallerOutput "MagicTrackpad-for-Windows-Setup-0.1.0-dev.5.3-x64.exe"
 
 if (-not (Test-Path $SetupExe -PathType Leaf)) {
     throw "Setup.exe was not produced at the expected path: $SetupExe"
@@ -124,7 +159,7 @@ $setupHash = (Get-FileHash -Algorithm SHA256 -Path $SetupExe).Hash.ToLowerInvari
 $setupSignature = Get-AuthenticodeSignature -FilePath $SetupExe
 
 Write-Host ""
-Write-Host "[PASS] dev.5.1 installer built."
+Write-Host "[PASS] dev.5.3 installer built."
 Write-Host "[PASS] Setup: $SetupExe"
 Write-Host "[INFO] Setup SHA256: $setupHash"
 Write-Host "[INFO] Setup Authenticode: $($setupSignature.Status)"

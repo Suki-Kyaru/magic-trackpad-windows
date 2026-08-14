@@ -17,7 +17,22 @@ $windowsPowerShell = Join-Path `
     $env:SystemRoot `
     "System32\WindowsPowerShell\v1.0\powershell.exe"
 
+$transcriptStarted = $false
+$logPath = ""
+
 try {
+    try {
+        $logRoot = Join-Path $env:ProgramData "Magic Trackpad for Windows\Logs"
+        New-Item -ItemType Directory -Path $logRoot -Force -ErrorAction Stop | Out-Null
+        $logPath = Join-Path $logRoot ("Install-" + (Get-Date -Format "yyyyMMdd-HHmmss") + "-$PID.log")
+        Start-Transcript -Path $logPath -Force -ErrorAction Stop | Out-Null
+        $transcriptStarted = $true
+        Write-Host "[INFO] Persistent install log: $logPath"
+    }
+    catch {
+        Write-Host "[WARN] Persistent install logging could not be started: $($_.Exception.Message)"
+    }
+
     New-Item -ItemType Directory -Path $runtimeRoot -Force | Out-Null
 
     Write-Host "[INFO] Expanding validated installer runtime..."
@@ -56,5 +71,13 @@ finally {
             -Recurse `
             -Force `
             -ErrorAction SilentlyContinue
+    }
+
+    if ($transcriptStarted) {
+        try {
+            Stop-Transcript | Out-Null
+        }
+        catch {
+        }
     }
 }
