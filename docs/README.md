@@ -74,3 +74,10 @@ installer layout:
 
 Raw history is useful evidence, but it should not be treated as the current
 product contract when a newer maintained document exists.
+
+## Public repository entry points
+
+- [`../README.md`](../README.md)
+  - public English project overview
+- [`../README.zh-CN.md`](../README.zh-CN.md)
+  - Simplified Chinese project overview
