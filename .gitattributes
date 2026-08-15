@@ -1,6 +1,7 @@
 # Repository text normalization
 * text=auto
 
+.gitattributes text eol=lf
 *.cpp text eol=lf
 *.h text eol=lf
 *.hpp text eol=lf

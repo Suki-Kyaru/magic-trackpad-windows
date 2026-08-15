@@ -1,0 +1,16 @@
+Windows 11 x64 is currently supported.
+
+This installation includes:
+- The validated Microsoft-signed MagicTrackpad2ForWindows v2.0 driver.
+- The Magic Trackpad control panel.
+- Diagnostic and troubleshooting tools.
+
+Safety boundaries:
+- Other Apple, iPhone, or Apple Mobile Device drivers are not modified.
+- A newer driver will not be silently downgraded.
+- Setup stops for manual review if multiple matching driver packages are detected.
+
+Uninstall preview:
+dev.5.4.1 lets you keep the driver or preview removing it with the application.
+This preview build never deletes the driver; the validated safe-removal path will
+be connected to the user-facing uninstaller in a later stage.

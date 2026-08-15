@@ -53,6 +53,14 @@ if (-not (Test-Path $Helper -PathType Leaf)) {
 
 & $VerifyPayload
 
+$VerifyLocalization = Join-Path $PSScriptRoot "Verify-InstallerLocalizationPreview.ps1"
+
+if (-not (Test-Path $VerifyLocalization -PathType Leaf)) {
+    throw "Installer localization verifier is missing: $VerifyLocalization"
+}
+
+& $VerifyLocalization -RepoRoot $RepoRoot
+
 foreach ($requiredTool in @(
     (Join-Path $PSScriptRoot "Collect-Diagnostics.ps1"),
     (Join-Path $PSScriptRoot "Get-UninstallPlan.ps1"),
@@ -132,14 +140,14 @@ $definitions = @(
     "/DOutputDir=$InstallerOutput"
 )
 
-if ($ChineseMessagesFile) {
-    $definitions += "/DChineseMessagesFile=$ChineseMessagesFile"
-    Write-Host "[INFO] Simplified Chinese messages: $ChineseMessagesFile"
+if (-not $ChineseMessagesFile) {
+    throw "Simplified Chinese Inno Setup language file (ChineseSimplified.isl) was not found."
 }
-else {
-    Write-Host "[WARN] Simplified Chinese .isl was not found."
-    Write-Host "[INFO] Built-in message overrides will still keep the main wizard flow in Chinese."
-}
+
+$definitions += "/DChineseMessagesFile=$ChineseMessagesFile"
+Write-Host "[PASS] Simplified Chinese messages: $ChineseMessagesFile"
+Write-Host "[PASS] Installer languages: English + Simplified Chinese"
+Write-Host "[INFO] Unsupported Windows UI languages fall back to English."
 
 Write-Host "[INFO] Inno Setup compiler: $Iscc"
 
@@ -149,7 +157,7 @@ if ($LASTEXITCODE -ne 0) {
     throw "Inno Setup compilation failed."
 }
 
-$SetupExe = Join-Path $InstallerOutput "MagicTrackpad-for-Windows-Setup-0.1.0-dev.5.3-x64.exe"
+$SetupExe = Join-Path $InstallerOutput "MagicTrackpad-for-Windows-Setup-0.1.0-dev.5.4.1-x64.exe"
 
 if (-not (Test-Path $SetupExe -PathType Leaf)) {
     throw "Setup.exe was not produced at the expected path: $SetupExe"
@@ -159,7 +167,7 @@ $setupHash = (Get-FileHash -Algorithm SHA256 -Path $SetupExe).Hash.ToLowerInvari
 $setupSignature = Get-AuthenticodeSignature -FilePath $SetupExe
 
 Write-Host ""
-Write-Host "[PASS] dev.5.3 installer built."
+Write-Host "[PASS] dev.5.4.1 installer built."
 Write-Host "[PASS] Setup: $SetupExe"
 Write-Host "[INFO] Setup SHA256: $setupHash"
 Write-Host "[INFO] Setup Authenticode: $($setupSignature.Status)"
