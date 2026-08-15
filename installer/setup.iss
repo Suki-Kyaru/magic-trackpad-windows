@@ -1,6 +1,6 @@
-; Magic Trackpad for Windows - v0.1.0-dev.5.4.1
-; UI-language auto detection + bilingual uninstall decision preview.
-; Driver lifecycle core remains frozen at dev.5.3.
+; Magic Trackpad for Windows - v0.1.0-dev.5.4.2
+; UI-language auto detection + bilingual user-safe driver removal.
+; dev.5.3 destructive lifecycle remains the validated safety reference.
 ; x64 Windows 11 only.
 
 #ifndef RepoRoot
@@ -16,7 +16,7 @@
 #endif
 
 #define MyAppName "Magic Trackpad for Windows"
-#define MyAppVersion "0.1.0-dev.5.4.1"
+#define MyAppVersion "0.1.0-dev.5.4.2"
 #define MyAppExeName "AmtPtpControlPanel.exe"
 
 [Setup]
@@ -106,17 +106,20 @@ chinesesimp.DriverGateSafety=当前版本不会自动清理旧驱动、降级新
 english.DriverPrepareException=An error occurred while preparing the driver installation: %1
 chinesesimp.DriverPrepareException=准备驱动安装时发生错误：%1
 
-english.UninstallChoice=Would you also like to remove the Magic Trackpad driver?%n%nYes: preview removing the driver.%nNo: remove the application only and keep the driver (recommended).%nCancel: exit Uninstall.%n%ndev.5.4.1 is a preview build. The driver will NOT actually be deleted.
-chinesesimp.UninstallChoice=是否同时移除 Magic Trackpad 驱动？%n%n是：预览“同时移除驱动”。%n否：仅卸载程序并保留驱动（推荐）。%n取消：退出卸载。%n%ndev.5.4.1 为预览版本，不会真正删除驱动。
+english.UninstallChoice=Would you also like to remove the Magic Trackpad driver?%n%nYes: remove the application and the Magic Trackpad driver.%nNo: remove the application only and keep the driver (recommended).%nCancel: exit Uninstall.%n%nDriver removal backs up the exact matching package first and does not remove other Apple, iPhone, or Apple Mobile Device drivers.
+chinesesimp.UninstallChoice=是否同时移除 Magic Trackpad 驱动？%n%n是：卸载程序并同时移除 Magic Trackpad 驱动。%n否：仅卸载程序并保留驱动（推荐）。%n取消：退出卸载。%n%n移除驱动前会先备份精确匹配的驱动包，不会删除其他 Apple、iPhone 或 Apple Mobile Device 驱动。
 
-english.UninstallPreviewReady=The driver-removal safety preview succeeded.%n%nThis preview build will still keep the driver. No driver package will be deleted.
-chinesesimp.UninstallPreviewReady=驱动移除安全预览已通过。%n%n本预览版本仍会保留驱动，不会删除任何驱动包。
+english.UninstallRemovalSuccess=The Magic Trackpad driver is no longer installed.%n%nA backup was kept under:%n%1%n%nThe application will now be uninstalled.
+chinesesimp.UninstallRemovalSuccess=Magic Trackpad 驱动已不再安装。%n%n驱动备份保存在：%n%1%n%n现在将继续卸载程序。
 
-english.UninstallPreviewReview=The driver-removal preview requires review (exit code %1).%n%nThe application may still be uninstalled, but the driver will be kept.
-chinesesimp.UninstallPreviewReview=驱动移除预览需要检查（退出代码 %1）。%n%n程序仍可卸载，但驱动会保留。
+english.UninstallRemovalConnected=A Magic Trackpad is currently connected.%n%nTurn it off or disconnect USB, then run Uninstall again if you want to remove the driver.%n%nThe driver has been kept.%n%nContinue uninstalling the application while keeping the driver?
+chinesesimp.UninstallRemovalConnected=当前检测到 Magic Trackpad 正在连接使用。%n%n如需移除驱动，请先关闭妙控板或断开 USB，然后重新运行卸载程序。%n%n驱动已保留。%n%n是否继续卸载程序并保留驱动？
 
-english.UninstallPreviewLaunchFailed=The driver-removal preview could not be started.%n%nThe application may still be uninstalled, but the driver will be kept.
-chinesesimp.UninstallPreviewLaunchFailed=无法启动驱动移除预览。%n%n程序仍可卸载，但驱动会保留。
+english.UninstallRemovalFailed=The Magic Trackpad driver could not be safely removed (exit code %1).%n%nThe driver has been kept. Review the technical log before trying again.%n%nContinue uninstalling the application while keeping the driver?
+chinesesimp.UninstallRemovalFailed=无法安全移除 Magic Trackpad 驱动（退出代码 %1）。%n%n驱动已保留。再次尝试前请先检查技术日志。%n%n是否继续卸载程序并保留驱动？
+
+english.UninstallRemovalLaunchFailed=The safe driver-removal tool could not be started.%n%nThe driver has been kept.%n%nContinue uninstalling the application while keeping the driver?
+chinesesimp.UninstallRemovalLaunchFailed=无法启动安全驱动移除工具。%n%n驱动已保留。%n%n是否继续卸载程序并保留驱动？
 
 [Dirs]
 Name: "{commonappdata}\Magic Trackpad for Windows\Logs"
@@ -134,7 +137,7 @@ Source: "{#RepoRoot}\installer\INFO_BEFORE.zh-CN.txt"; DestDir: "{app}"; DestNam
 Source: "{#RepoRoot}\build\Release\MagicTrackpadHelper.exe"; DestDir: "{app}\Tools"; Flags: ignoreversion
 Source: "{#RepoRoot}\scripts\Collect-Diagnostics.ps1"; DestDir: "{app}\Tools"; Flags: ignoreversion
 Source: "{#RepoRoot}\scripts\Get-UninstallPlan.ps1"; DestDir: "{app}\Tools"; Flags: ignoreversion
-Source: "{#RepoRoot}\scripts\Invoke-SafeDriverUninstall.ps1"; DestDir: "{app}\Tools"; Flags: ignoreversion
+Source: "{#RepoRoot}\scripts\Invoke-UserSafeDriverUninstall.ps1"; DestDir: "{app}\Tools"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{cm:ShortcutControlPanel}"; Filename: "{app}\{#MyAppExeName}"
@@ -149,8 +152,9 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:RunControlPanel}"; Flags: p
 [Code]
 var
   UninstallRemoveDriverRequested: Boolean;
-  UninstallPreviewRan: Boolean;
-  UninstallPreviewExitCode: Integer;
+  UninstallDriverRemovalRan: Boolean;
+  UninstallDriverRemovalExitCode: Integer;
+  UninstallDriverRemovalCompleted: Boolean;
 
 procedure InitializeWizard;
 begin
@@ -319,10 +323,10 @@ begin
   end;
 end;
 
-function RunDriverRemovalPreview(var ExitCode: Integer): Boolean;
+function RunUserDriverRemoval(var ExitCode: Integer): Boolean;
 var
   PowerShellPath: String;
-  PlanScript: String;
+  RemovalScript: String;
   HelperPath: String;
   Params: String;
 begin
@@ -330,18 +334,18 @@ begin
   ExitCode := -1;
 
   PowerShellPath := ExpandConstant('{sys}\WindowsPowerShell\v1.0\powershell.exe');
-  PlanScript := ExpandConstant('{app}\Tools\Get-UninstallPlan.ps1');
+  RemovalScript := ExpandConstant('{app}\Tools\Invoke-UserSafeDriverUninstall.ps1');
   HelperPath := ExpandConstant('{app}\Tools\MagicTrackpadHelper.exe');
 
-  if (not FileExists(PlanScript)) or (not FileExists(HelperPath)) then
+  if (not FileExists(RemovalScript)) or (not FileExists(HelperPath)) then
     exit;
 
   Params :=
     '-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "' +
-    PlanScript +
+    RemovalScript +
     '" -HelperPath "' +
     HelperPath +
-    '" -WriteLog';
+    '"';
 
   Result := Exec(
     PowerShellPath,
@@ -353,31 +357,27 @@ begin
   );
 end;
 
-procedure WriteUninstallDecisionPreviewLog;
+procedure WriteUninstallDecisionLog;
 var
   LogDir: String;
   LogPath: String;
   Lines: TArrayOfString;
 begin
   LogDir := ExpandConstant('{commonappdata}\Magic Trackpad for Windows\Logs');
+  if not ForceDirectories(LogDir) then exit;
 
-  if not ForceDirectories(LogDir) then
-    exit;
+  LogPath := AddBackslash(LogDir) + 'UninstallDecision-' +
+    GetDateTimeString('yyyymmdd-hhnnss', '-', ':') + '.log';
 
-  LogPath :=
-    AddBackslash(LogDir) +
-    'UninstallDecisionPreview-' +
-    GetDateTimeString('yyyymmdd-hhnnss', '-', ':') +
-    '.log';
-
-  SetArrayLength(Lines, 7);
-  Lines[0] := 'mode=preview-only';
+  SetArrayLength(Lines, 8);
+  Lines[0] := 'mode=user-uninstall';
   Lines[1] := 'active_language=' + ActiveLanguage;
   Lines[2] := 'remove_driver_requested=' + BoolToLowerString(UninstallRemoveDriverRequested);
-  Lines[3] := 'preview_ran=' + BoolToLowerString(UninstallPreviewRan);
-  Lines[4] := 'preview_exit_code=' + IntToStr(UninstallPreviewExitCode);
-  Lines[5] := 'driver_delete_executed=false';
+  Lines[3] := 'driver_removal_ran=' + BoolToLowerString(UninstallDriverRemovalRan);
+  Lines[4] := 'driver_removal_exit_code=' + IntToStr(UninstallDriverRemovalExitCode);
+  Lines[5] := 'driver_removal_completed=' + BoolToLowerString(UninstallDriverRemovalCompleted);
   Lines[6] := 'app_uninstall_started=true';
+  Lines[7] := 'silent_uninstall=' + BoolToLowerString(UninstallSilent);
 
   SaveStringsToUTF8FileWithoutBOM(LogPath, Lines, False);
 end;
@@ -385,59 +385,56 @@ end;
 function InitializeUninstall: Boolean;
 var
   Choice: Integer;
+  ContinueChoice: Integer;
   Started: Boolean;
-  ReviewMessage: String;
+  FailureMessage: String;
+  SuccessMessage: String;
+  BackupRoot: String;
 begin
   Result := False;
   UninstallRemoveDriverRequested := False;
-  UninstallPreviewRan := False;
-  UninstallPreviewExitCode := -1;
+  UninstallDriverRemovalRan := False;
+  UninstallDriverRemovalExitCode := -1;
+  UninstallDriverRemovalCompleted := False;
 
+  { Silent uninstall is intentionally non-destructive: keep the driver. }
   if UninstallSilent then
   begin
     Result := True;
     exit;
   end;
 
-  Choice := MsgBox(
-    CustomMessage('UninstallChoice'),
-    mbConfirmation,
-    MB_YESNOCANCEL
-  );
-
-  if Choice = IDCANCEL then
-    exit;
+  Choice := MsgBox(CustomMessage('UninstallChoice'), mbConfirmation, MB_YESNOCANCEL);
+  if Choice = IDCANCEL then exit;
 
   if Choice = IDYES then
   begin
     UninstallRemoveDriverRequested := True;
-    Started := RunDriverRemovalPreview(UninstallPreviewExitCode);
-    UninstallPreviewRan := Started;
+    Started := RunUserDriverRemoval(UninstallDriverRemovalExitCode);
+    UninstallDriverRemovalRan := Started;
 
     if not Started then
     begin
-      MsgBox(
-        CustomMessage('UninstallPreviewLaunchFailed'),
-        mbInformation,
-        MB_OK
-      );
+      ContinueChoice := MsgBox(CustomMessage('UninstallRemovalLaunchFailed'), mbError, MB_YESNO);
+      if ContinueChoice <> IDYES then exit;
     end
-    else if UninstallPreviewExitCode = 0 then
+    else if UninstallDriverRemovalExitCode = 0 then
     begin
-      MsgBox(
-        CustomMessage('UninstallPreviewReady'),
-        mbInformation,
-        MB_OK
-      );
+      UninstallDriverRemovalCompleted := True;
+      BackupRoot := ExpandConstant('{commonappdata}\Magic Trackpad for Windows\DriverBackup');
+      SuccessMessage := FmtMessage(CustomMessage('UninstallRemovalSuccess'), [BackupRoot]);
+      MsgBox(SuccessMessage, mbInformation, MB_OK);
+    end
+    else if UninstallDriverRemovalExitCode = 61 then
+    begin
+      ContinueChoice := MsgBox(CustomMessage('UninstallRemovalConnected'), mbError, MB_YESNO);
+      if ContinueChoice <> IDYES then exit;
     end
     else
     begin
-      ReviewMessage := FmtMessage(CustomMessage('UninstallPreviewReview'), [IntToStr(UninstallPreviewExitCode)]);
-      MsgBox(
-        ReviewMessage,
-        mbInformation,
-        MB_OK
-      );
+      FailureMessage := FmtMessage(CustomMessage('UninstallRemovalFailed'), [IntToStr(UninstallDriverRemovalExitCode)]);
+      ContinueChoice := MsgBox(FailureMessage, mbError, MB_YESNO);
+      if ContinueChoice <> IDYES then exit;
     end;
   end;
 
@@ -447,5 +444,5 @@ end;
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
   if CurUninstallStep = usUninstall then
-    WriteUninstallDecisionPreviewLog;
+    WriteUninstallDecisionLog;
 end;

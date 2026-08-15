@@ -10,7 +10,13 @@ Safety boundaries:
 - A newer driver will not be silently downgraded.
 - Setup stops for manual review if multiple matching driver packages are detected.
 
-Uninstall preview:
-dev.5.4.1 lets you keep the driver or preview removing it with the application.
-This preview build never deletes the driver; the validated safe-removal path will
-be connected to the user-facing uninstaller in a later stage.
+Uninstall options:
+You may remove only the application and keep the driver (recommended), or remove
+the Magic Trackpad driver as well.
+
+Driver removal is fail-closed:
+- a connected Magic Trackpad blocks driver removal;
+- a paired but disconnected device may be removed safely;
+- the exact matching package is exported to a backup before deletion;
+- /force is never used;
+- post-removal verification must report not-installed.

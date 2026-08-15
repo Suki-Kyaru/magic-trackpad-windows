@@ -61,10 +61,18 @@ if (-not (Test-Path $VerifyLocalization -PathType Leaf)) {
 
 & $VerifyLocalization -RepoRoot $RepoRoot
 
+$VerifyUserUninstall = Join-Path $PSScriptRoot "Verify-UserSafeUninstall.ps1"
+
+if (-not (Test-Path $VerifyUserUninstall -PathType Leaf)) {
+    throw "User-safe uninstall verifier is missing: $VerifyUserUninstall"
+}
+
+& $VerifyUserUninstall -RepoRoot $RepoRoot
+
 foreach ($requiredTool in @(
     (Join-Path $PSScriptRoot "Collect-Diagnostics.ps1"),
     (Join-Path $PSScriptRoot "Get-UninstallPlan.ps1"),
-    (Join-Path $PSScriptRoot "Invoke-SafeDriverUninstall.ps1")
+    (Join-Path $PSScriptRoot "Invoke-UserSafeDriverUninstall.ps1")
 )) {
     if (-not (Test-Path $requiredTool -PathType Leaf)) {
         throw "Installer diagnostic tool is missing: $requiredTool"
@@ -91,7 +99,7 @@ foreach ($runtimeScript in @(
     (Join-Path $PSScriptRoot "Verify-DriverPayload.ps1"),
     (Join-Path $PSScriptRoot "Collect-Diagnostics.ps1"),
     (Join-Path $PSScriptRoot "Get-UninstallPlan.ps1"),
-    (Join-Path $PSScriptRoot "Invoke-SafeDriverUninstall.ps1")
+    (Join-Path $PSScriptRoot "Invoke-UserSafeDriverUninstall.ps1")
 )) {
     Assert-AsciiRuntimeScript -Path $runtimeScript
 }
@@ -157,7 +165,7 @@ if ($LASTEXITCODE -ne 0) {
     throw "Inno Setup compilation failed."
 }
 
-$SetupExe = Join-Path $InstallerOutput "MagicTrackpad-for-Windows-Setup-0.1.0-dev.5.4.1-x64.exe"
+$SetupExe = Join-Path $InstallerOutput "MagicTrackpad-for-Windows-Setup-0.1.0-dev.5.4.2-x64.exe"
 
 if (-not (Test-Path $SetupExe -PathType Leaf)) {
     throw "Setup.exe was not produced at the expected path: $SetupExe"
@@ -167,7 +175,7 @@ $setupHash = (Get-FileHash -Algorithm SHA256 -Path $SetupExe).Hash.ToLowerInvari
 $setupSignature = Get-AuthenticodeSignature -FilePath $SetupExe
 
 Write-Host ""
-Write-Host "[PASS] dev.5.4.1 installer built."
+Write-Host "[PASS] dev.5.4.2 installer built."
 Write-Host "[PASS] Setup: $SetupExe"
 Write-Host "[INFO] Setup SHA256: $setupHash"
 Write-Host "[INFO] Setup Authenticode: $($setupSignature.Status)"
