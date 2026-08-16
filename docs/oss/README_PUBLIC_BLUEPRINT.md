@@ -37,7 +37,7 @@ Update the README when:
 
 - a new wrapper version is actually validated;
 - CI badges become meaningful;
-- CONTRIBUTING / SECURITY / GitHub templates are added;
+- contributor/security workflow or public support links change;
 - wrapper code signing is introduced;
 - additional hardware/architectures are genuinely validated;
 - a public binary release is published.

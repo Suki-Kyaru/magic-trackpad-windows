@@ -294,21 +294,19 @@ archive and build-workflow snapshot are published alongside that binary bundle.
 
 No public binary release has been published yet.
 
-## Contributing and security
+## Contributing, support, and security
 
-The public contribution/security workflow is being prepared in the OSS
-productization branch.
+Contributor/reporting workflows are now documented:
 
-For now, contributors and coding agents should read:
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [SUPPORT.md](SUPPORT.md)
+- [SECURITY.md](SECURITY.md)
+- [AGENTS.md](AGENTS.md)
+- [Contributor Workflow and Validation Matrix](docs/oss/CONTRIBUTOR_WORKFLOW.md)
 
-- [Documentation Index](docs/README.md)
-- [OSS Installer UX Baseline](docs/OSS_INSTALLER_UX_BASELINE.md)
-- [User-Safe Uninstall Contract](docs/DEV5_4_2_USER_SAFE_UNINSTALL_CONTRACT.md)
-- [User-Safe Uninstall Validation](docs/DEV5_4_2_USER_SAFE_UNINSTALL_VALIDATION.md)
-- [Repository Structure](docs/oss/REPOSITORY_STRUCTURE.md)
+GitHub Issue forms and a pull-request template are included under `.github/`.
 
-`CONTRIBUTING.md`, `SECURITY.md`, issue templates, PR templates, and CI are
-planned in the next OSS phases.
+CI is the next OSS productization phase.
 
 ## Independence
 

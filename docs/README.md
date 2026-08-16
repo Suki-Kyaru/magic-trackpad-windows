@@ -95,3 +95,16 @@ product contract when a newer maintained document exists.
   - controlled binary/source bundle process and frozen dev.5.4.2 build guard
 - `../licenses/README.md`
   - repository MIT versus third-party GPL license-file map
+
+## Contributing / support / security
+
+- [`../CONTRIBUTING.md`](../CONTRIBUTING.md)
+  - contribution rules and development expectations
+- [`../SUPPORT.md`](../SUPPORT.md)
+  - support scope and diagnostic-report guidance
+- [`../SECURITY.md`](../SECURITY.md)
+  - private vulnerability-reporting guidance
+- [`../AGENTS.md`](../AGENTS.md)
+  - concise repository map and safety rules for coding agents
+- `oss/CONTRIBUTOR_WORKFLOW.md`
+  - risk-based validation matrix for changes

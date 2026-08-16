@@ -277,19 +277,19 @@ Release 位置提供精确上游对应源码包和构建 workflow 快照。
 
 当前尚未发布公开二进制 Release。
 
-## 贡献与安全
+## 贡献、支持与安全
 
-公开贡献/安全流程正在 OSS 产品化分支中建设。
+贡献/反馈/安全报告流程现已建立：
 
-目前贡献者和 coding agents 应优先阅读：
+- [贡献指南](CONTRIBUTING.md)
+- [支持与问题反馈](SUPPORT.md)
+- [安全策略](SECURITY.md)
+- [Coding Agent 仓库导航](AGENTS.md)
+- [贡献者工作流与验证矩阵](docs/oss/CONTRIBUTOR_WORKFLOW.md)
 
-- [文档索引](docs/README.md)
-- [OSS 安装器 UX 基线](docs/OSS_INSTALLER_UX_BASELINE.md)
-- [用户安全卸载契约](docs/DEV5_4_2_USER_SAFE_UNINSTALL_CONTRACT.md)
-- [用户安全卸载验证](docs/DEV5_4_2_USER_SAFE_UNINSTALL_VALIDATION.md)
-- [仓库结构规则](docs/oss/REPOSITORY_STRUCTURE.md)
+GitHub Issue 表单和 Pull Request 模板位于 `.github/`。
 
-`CONTRIBUTING.md`、`SECURITY.md`、Issue/PR 模板和 CI 会在后续 OSS 阶段加入。
+CI 是下一阶段 OSS 产品化主线。
 
 ## 独立项目说明
 

@@ -37,20 +37,23 @@ Completed in OSS-1.3A/B/C:
 
 A public binary release has **not** been published yet.
 
-## Next: contributor workflow
+## Contributor workflow
 
-Add:
+Completed in OSS-1.4:
 
 - `CONTRIBUTING.md`;
+- `SUPPORT.md`;
 - `SECURITY.md`;
-- issue templates;
+- concise root `AGENTS.md`;
+- GitHub bug/feature issue forms;
 - pull request template;
-- development environment instructions;
-- validation matrix;
-- coding/PowerShell/Inno conventions;
-- explicit "do not weaken" safety contracts for contributors and coding agents.
+- development environment guidance;
+- risk-based validation matrix;
+- coding/PowerShell/Inno safety conventions;
+- explicit "do not weaken" contracts for contributors/coding agents;
+- static contributor-workflow verifier.
 
-## Then: CI / reproducibility
+## Next: CI / reproducibility
 
 Automate on Windows:
 

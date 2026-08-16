@@ -1,0 +1,96 @@
+name: Bug report
+description: Report a reproducible problem in the wrapper, installer, diagnostics, or lifecycle tooling.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a problem. Please do not paste unredacted raw logs or sensitive security details here.
+
+  - type: input
+    id: version
+    attributes:
+      label: Project version / commit
+      description: For example v0.1.0-dev.5.4.2 or a commit SHA.
+    validations:
+      required: true
+
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version/build
+      placeholder: Windows 11 25H2, build ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: arch
+    attributes:
+      label: Architecture
+      options:
+        - x64
+        - ARM64
+        - Other / unknown
+    validations:
+      required: true
+
+  - type: input
+    id: hardware
+    attributes:
+      label: Magic Trackpad model
+      description: Include A-number/PID if known.
+      placeholder: A3120
+    validations:
+      required: true
+
+  - type: dropdown
+    id: connection
+    attributes:
+      label: Connection mode
+      options:
+        - Bluetooth
+        - USB
+        - Both / switches between them
+        - Not connected
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Give the smallest reliable reproduction sequence.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Sanitized diagnostics
+      description: Prefer Diagnostics-*.txt. Review/redact raw technical logs before posting.
+      render: text
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Confirmation
+      options:
+        - label: I checked that this is not a private security vulnerability requiring confidential reporting.
+          required: true
+        - label: I reviewed diagnostic/log content for personal or machine-specific information before posting.
+          required: true

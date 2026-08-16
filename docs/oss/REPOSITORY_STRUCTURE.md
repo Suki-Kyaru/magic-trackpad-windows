@@ -31,7 +31,7 @@ scripts/
 third_party/
 licenses/
 docs/
-.github/                  (later OSS phase)
+.github/
 ```
 
 ## Build artifacts
