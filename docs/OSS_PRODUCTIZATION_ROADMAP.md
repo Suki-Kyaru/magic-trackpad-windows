@@ -85,12 +85,26 @@ Current release line:
 - dev.6.0 Candidate 1 has been built and used to refresh the English/Simplified
   Chinese installation and connected-device fail-closed screenshot set.
 
+Candidate 1 behavioral validation is now closed:
+
+- clean-VM install: `not-installed` -> one exact current Driver Store package;
+- application-only uninstall: application removed while the driver remained;
+- reinstall with the exact current driver: NO-OP Driver Store path, count remained one;
+- VM safe driver removal: export -> four-file backup verification -> delete without
+  `/force` -> post-check `not-installed`;
+- reinstall after safe removal: returned to one exact current package while the
+  driver backup remained preserved;
+- physical-host A3120 connected-device guard: destructive removal failed closed,
+  `remove.executed=false`, `other_apple_drivers_touched=false`, `result=connected`;
+- English and Simplified Chinese candidate screenshots were captured.
+
 Before the first public binary release:
 
-- build the new dev.6.0 installer without reusing `v0.1.0-dev.5.4.2`;
-- run the complete regression matrix;
-- re-capture screenshots only if a later candidate changes user-visible UI;
+- commit the Candidate 1 validation evidence;
+- rebuild the final dev.6.0 candidate from the final clean committed HEAD;
+- re-run focused identity/signature/smoke checks against that exact final binary;
 - generate and verify the controlled release directory;
+- re-capture screenshots only if the final candidate changes user-visible UI;
 - publish as a prerelease only after asset/source/SHA verification;
 - document beta support/reporting expectations.
 
