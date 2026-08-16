@@ -306,7 +306,11 @@ Contributor/reporting workflows are now documented:
 
 GitHub Issue forms and a pull-request template are included under `.github/`.
 
-CI is the next OSS productization phase.
+A non-destructive GitHub Actions CI workflow is now defined under
+`.github/workflows/ci.yml`. It runs repository/license/contributor contracts,
+Windows PowerShell 5.1 compatibility checks, static installer safety checks, and
+a C++ helper build. The first real GitHub-hosted run is tracked separately from
+the local workflow-definition baseline.
 
 ## Independence
 

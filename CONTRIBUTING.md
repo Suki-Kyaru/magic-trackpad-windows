@@ -126,9 +126,22 @@ Every PR should run:
 ```powershell
 git diff --check
 .\scripts\Verify-ContributorWorkflow.ps1
+.\scripts\Verify-CIWorkflow.ps1
 ```
 
+For a local reproduction of the hosted helper-build job, run:
+
+```powershell
+.\scripts\Build-CIHelper.ps1
+```
+
+The script resolves CMake from PATH or Visual Studio via `vswhere.exe`.
+
 and all additional checks relevant to the files/behavior changed.
+
+The repository also contains a GitHub Actions workflow that mirrors the
+non-destructive OSS/static checks and compiles the C++ helper on a hosted Windows
+runner. Hosted CI must not rebuild the frozen dev.5.4.2 installer.
 
 Do not claim a check passed if it was not run.
 

@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - feature/oss-productization
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contracts:
+    name: OSS and safety contracts
+    runs-on: windows-2025-vs2026
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Show environment
+        shell: pwsh
+        run: |
+          $PSVersionTable
+          cmake --version
+          git --version
+
+      - name: Check committed whitespace
+        shell: pwsh
+        run: |
+          git show --check --oneline --no-renames HEAD
+          if ($LASTEXITCODE -ne 0) {
+            throw "Committed whitespace check failed."
+          }
+
+      - name: Run non-destructive CI checks
+        shell: pwsh
+        run: |
+          ./scripts/Invoke-CIStaticChecks.ps1
+
+  helper-build:
+    name: C++ helper build
+    runs-on: windows-2025-vs2026
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Build helper and run Windows PowerShell 5.1 compatibility
+        shell: pwsh
+        run: |
+          ./scripts/Build-CIHelper.ps1
+
+      - name: Confirm frozen installer is not produced
+        shell: pwsh
+        run: |
+          $frozen = Join-Path $PWD "out\installer\MagicTrackpad-for-Windows-Setup-0.1.0-dev.5.4.2-x64.exe"
+          if (Test-Path $frozen -PathType Leaf) {
+            throw "CI must not rebuild the frozen dev.5.4.2 installer."
+          }
+          Write-Host "[PASS] CI did not produce a frozen dev.5.4.2 Setup."

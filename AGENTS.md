@@ -80,6 +80,8 @@ Run checks appropriate to the change. For repository/meta changes, at minimum:
 .\scripts\Verify-LicensePolicyDecision.ps1
 .\scripts\Verify-LicenseDistribution.ps1
 .\scripts\Verify-ContributorWorkflow.ps1
+.\scripts\Verify-CIWorkflow.ps1
+.\scripts\Build-CIHelper.ps1
 git diff --check
 ```
 
@@ -89,6 +91,10 @@ listed in `docs/oss/CONTRIBUTOR_WORKFLOW.md`.
 
 Do not run `Build-Installer.ps1` or `Build-ReleaseBundle.ps1` while `VERSION`
 remains `0.1.0-dev.5.4.2`; the refusal is intentional.
+
+The GitHub Actions CI workflow must also preserve this rule: CI may build the
+C++ helper and run static/runtime compatibility checks, but must not produce a
+new dev.5.4.2 installer.
 
 ## Change discipline
 

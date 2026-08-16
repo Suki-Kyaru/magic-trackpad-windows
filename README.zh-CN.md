@@ -289,7 +289,10 @@ Release 位置提供精确上游对应源码包和构建 workflow 快照。
 
 GitHub Issue 表单和 Pull Request 模板位于 `.github/`。
 
-CI 是下一阶段 OSS 产品化主线。
+`.github/workflows/ci.yml` 现已定义非破坏性的 GitHub Actions CI：自动运行仓库/
+许可证/贡献者契约、Windows PowerShell 5.1 兼容性、安装器静态安全检查，并编译
+C++ helper。首次真实 GitHub hosted-run 仍作为独立验收项，不会因为“有了 YAML”
+就提前宣称 CI 已经完整上线。
 
 ## 独立项目说明
 

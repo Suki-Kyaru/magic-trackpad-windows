@@ -108,3 +108,8 @@ product contract when a newer maintained document exists.
   - concise repository map and safety rules for coding agents
 - `oss/CONTRIBUTOR_WORKFLOW.md`
   - risk-based validation matrix for changes
+
+## Continuous integration
+
+- `oss/CI_WORKFLOW.md`
+  - hosted CI scope, safety boundaries, and first-run acceptance plan
