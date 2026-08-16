@@ -81,3 +81,10 @@ product contract when a newer maintained document exists.
   - public English project overview
 - [`../README.zh-CN.md`](../README.zh-CN.md)
   - Simplified Chinese project overview
+
+## OSS licensing / redistribution
+
+- `oss/UPSTREAM_SOURCE_PROVENANCE.md`
+  - exact upstream signed-build/source provenance evidence
+- `oss/LICENSE_REVIEW_CHECKLIST.md`
+  - OSS-1.3 review gates and remaining policy decisions

@@ -1,69 +1,96 @@
 # License / Redistribution Review Checklist
 
-Status: NOT YET FINALIZED
+Status: OSS-1.3A EVIDENCE COLLECTED; POLICY NOT YET FINALIZED
 
-This document is an engineering/legal-review checklist, not a final license
-decision.
+This document is an engineering/legal-review checklist, not legal advice.
 
-## Verified upstream facts as of 2026-08-16
+## Evidence now frozen
 
-The upstream repository:
+### Pinned signed payload
 
 ```text
-vitoplantamura/MagicTrackpad2ForWindows
+Project: vitoplantamura/MagicTrackpad2ForWindows
+Release: v2.0
+Asset: MT2FW11-20260223-MSSigned.zip
+SHA256: 2870c0c7982ce6aafc3ff763fec2999423dc4bdbd1a2c0e31ca216f26a75714f
 ```
 
-is publicly identified by GitHub as GPL-2.0 and contains a GNU GPL version 2
-license file.
+### Upstream release/tag
 
-The currently pinned upstream release in this project is v2.0.
+`refs/tags/v2.0` resolves to:
 
-These facts do not, by themselves, settle every license-expression question for
-this wrapper repository.
+```text
+6a308eccf6ae4fbc3cdcf267c3a525b4818824e3
+```
 
-## Before creating the root LICENSE file
+The tag includes the GNU General Public License version 2 text.
 
-Review all of the following:
+### Signed-build provenance
 
-1. Upstream source-file license notices.
-   - Determine whether relevant files specify GPL version 2 only, or version 2
-     "or any later version".
-   - Do not infer `GPL-2.0-only` versus `GPL-2.0-or-later` from GitHub's short
-     repository label alone.
+The v2.0 Release points to GitHub Actions run:
 
-2. Upstream lineage.
-   - Review inherited notices from the imbushuo project where applicable.
-   - Preserve author/copyright/license notices.
+```text
+22308909844
+```
 
-3. Binary redistribution model.
-   - This installer redistributes the upstream Microsoft-signed binaries.
-   - Confirm the exact source-availability mechanism supplied to recipients.
-   - Preserve the upstream signed payload byte-for-byte.
+That workflow revision is:
 
-4. Wrapper/helper licensing.
-   - Decide the license expression for the code authored in this repository
-     only after compatibility/aggregation/derivative-work questions have been
-     reviewed.
-   - Do not imply that choosing a wrapper license can reduce obligations that
-     apply to redistributed GPL-covered components.
+```text
+3611b8c6f4fa06a6912d16bb4b51a47bb8c70afa
+```
 
-5. Installer distribution contents.
-   Before public release, verify the distributed package/source materials
-   include or clearly provide:
-   - applicable GPL v2 license text;
-   - upstream attribution;
-   - upstream source / corresponding-source access as required;
-   - third-party notices;
-   - clear separation between upstream driver authorship and wrapper authorship.
+The workflow explicitly checks out `ref: ossign`, creates a source tarball from
+the checkout, and uploads it before building.
 
-6. Release reproducibility.
-   - Record exact upstream release/tag/asset.
-   - Record SHA256.
-   - Record corresponding source revision/tag.
+Archived run metadata identifies that source artifact as:
 
-## Current rule
+```text
+source-code-8874eaa3994f0e7e40fa40312250bbc5f13cc928
+```
 
-Do not add a root `LICENSE` file merely to make the repository look complete.
+Treat this source SHA as the strongest currently available public evidence of the
+source checkout used by the signed build.
 
-OSS-1.3 will perform the license/source-distribution review and then make the
-explicit repository license decision.
+See `UPSTREAM_SOURCE_PROVENANCE.md`.
+
+## OSS-1.3B policy questions still open
+
+1. Final license expression for code authored in this wrapper repository.
+2. Whether to align wrapper code to GPLv2 for simplicity, or license independent
+   wrapper components separately while honoring GPL obligations for the driver.
+3. Exact SPDX wording (`GPL-2.0-only` vs `GPL-2.0-or-later`) must not be guessed
+   from shorthand "GPLv2".
+4. Final form of `THIRD_PARTY_NOTICES.md`.
+5. Copyright/attribution notice for wrapper-authored code.
+6. Public release source bundle layout.
+
+## OSS-1.3C implementation gates
+
+Before public binary distribution:
+
+- add the final root LICENSE chosen in OSS-1.3B;
+- preserve applicable upstream GPLv2 text;
+- ship/furnish exact corresponding upstream source;
+- preserve build/provenance information;
+- keep signed upstream binaries byte-for-byte unchanged;
+- update README licensing language from "review in progress";
+- update THIRD_PARTY_NOTICES;
+- add a release verifier that fails when source/license assets are missing;
+- document wrapper `Setup.exe` signature status separately from driver signature.
+
+## Conservative source-availability plan
+
+For each binary release containing the pinned upstream driver, publish at the
+same release/download location:
+
+```text
+MagicTrackpad-for-Windows-Setup-<version>-x64.exe
+SHA256SUMS.txt
+MagicTrackpad-for-Windows-source-<version>.zip
+MagicTrackpad2ForWindows-corresponding-source-8874eaa3994f.zip
+UPSTREAM_PROVENANCE.txt
+GPL-2.0.txt
+```
+
+The exact final filenames may change in OSS-1.3C, but the evidence/source
+coverage must not be weakened.
