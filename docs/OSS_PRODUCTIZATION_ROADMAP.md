@@ -1,6 +1,6 @@
 # OSS Productization Roadmap After dev.5.4.2
 
-Status after OSS-1.5B hosted CI and first PR/main integration validation.
+Status after OSS-1.6 public repository launch, main ruleset activation, and public-readiness closure.
 
 The validated driver lifecycle remains frozen. OSS productization is improving
 the repository, licensing, contributor workflow, CI, and release engineering
@@ -77,14 +77,21 @@ driver payload.
 
 ## First public release preparation
 
+Current release line:
+
+- selected source/prerelease version: `v0.1.0-dev.6.0`;
+- last fully validated binary baseline: `v0.1.0-dev.5.4.2`;
+- wrapper Setup remains unsigned for the initial prerelease candidate;
+- English/Simplified Chinese screenshot refresh is deferred until the dev.6.0
+  candidate installer exists, so screenshots match the actual release candidate.
+
 Before the first public binary release:
 
-- choose and validate the next wrapper version;
-- build a new installer without reusing `v0.1.0-dev.5.4.2`;
+- build the new dev.6.0 installer without reusing `v0.1.0-dev.5.4.2`;
 - run the complete regression matrix;
+- refresh both English and Simplified Chinese screenshots from the candidate;
 - generate and verify the controlled release directory;
-- decide wrapper code-signing strategy;
-- publish only verified release assets;
+- publish as a prerelease only after asset/source/SHA verification;
 - document beta support/reporting expectations.
 
 ## Deferred

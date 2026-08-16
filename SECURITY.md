@@ -48,16 +48,21 @@ unredacted personal data.
 
 There is not yet a public binary release from this repository.
 
-The currently frozen validated development artifact is:
+The active source version preparing the first public prerelease is:
+
+```text
+v0.1.0-dev.6.0
+```
+
+The last fully validated binary baseline remains:
 
 ```text
 v0.1.0-dev.5.4.2
 ```
 
-It must not be silently rebuilt/reissued under the same version.
-
-Security fixes are developed on the active repository branch and will use a new
-version before any new public binary is built.
+The frozen baseline must not be silently rebuilt/reissued under the same version.
+Security fixes are developed on the active repository branch and use a new
+version before a new public binary is built.
 
 ## Disclosure process
 

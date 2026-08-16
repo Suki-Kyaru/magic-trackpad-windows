@@ -6,30 +6,44 @@ $ErrorActionPreference = "Stop"
 
 $Readme = Join-Path $RepoRoot "README.md"
 $ReadmeZh = Join-Path $RepoRoot "README.zh-CN.md"
+$VersionPath = Join-Path $RepoRoot "VERSION"
 
-foreach ($path in @($Readme, $ReadmeZh)) {
+foreach ($path in @($Readme, $ReadmeZh, $VersionPath)) {
     if (-not (Test-Path $path -PathType Leaf)) {
-        throw "Public README file missing: $path"
+        throw "Public README/version file missing: $path"
     }
 }
 
 $en = Get-Content $Readme -Raw
 $zh = Get-Content $ReadmeZh -Raw
+$Version = (Get-Content $VersionPath -Raw).Trim()
+
+if ([string]::IsNullOrWhiteSpace($Version)) {
+    throw "VERSION is empty."
+}
+
+$currentEn = 'Current source version: `v' + $Version + '`.'
+$currentZh = '当前源码版本：`v' + $Version + '`。'
 
 foreach ($stale in @(
     'v0.1.0-dev.5.1',
     '尚未完成的关键验收',
     '当前卸载程序只移除',
     'are still being prepared.',
-    'CI、贡献流程和首个公开 Release 仍在继续准备'
+    'CI、贡献流程和首个公开 Release 仍在继续准备',
+    'Current validated baseline: `v0.1.0-dev.5.4.2`.',
+    '当前已验证基线：`v0.1.0-dev.5.4.2`。'
 )) {
     if ($en.Contains($stale) -or $zh.Contains($stale)) {
-        throw "Stale pre-OSS README statement remains: $stale"
+        throw "Stale pre-current README statement remains: $stale"
     }
 }
 
 foreach ($required in @(
-    'v0.1.0-dev.5.4.2',
+    $currentEn,
+    'Last fully validated binary baseline: `v0.1.0-dev.5.4.2`.',
+    'first public-binary prerelease candidate',
+    'not considered validated until its release regression closes',
     'Windows 11 x64',
     'Apple USB-C Magic Trackpad A3120',
     'ARM64 wrapper/install lifecycle | **Not yet validated**',
@@ -43,7 +57,6 @@ foreach ($required in @(
     'GPLv2',
     'Release compliance process',
     'non-destructive GitHub Actions CI',
-    'hosted-validated',
     'afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04',
     'docs/assets/screenshots/installer-information-zh-cn.png',
     'docs/assets/screenshots/installer-destination-zh-cn.png',
@@ -55,7 +68,10 @@ foreach ($required in @(
 }
 
 foreach ($required in @(
-    'v0.1.0-dev.5.4.2',
+    $currentZh,
+    '最近一个完整验收的二进制基线：`v0.1.0-dev.5.4.2`。',
+    '公开二进制预发布的候选版本线',
+    '完整发布回归收口前不视为“已验证二进制版本”',
     'Windows 11 x64',
     'Apple USB-C Magic Trackpad A3120',
     'ARM64 包装/安装生命周期',
@@ -69,7 +85,6 @@ foreach ($required in @(
     '不会**被本项目重新许可为 MIT',
     'Release 合规流程',
     '非破坏性 GitHub Actions CI',
-    'GitHub hosted 环境完成验证',
     'afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04'
 )) {
     if (-not $zh.Contains($required)) {
@@ -83,28 +98,25 @@ foreach ($image in @(
     "docs\assets\screenshots\uninstall-connected-guard-zh-cn.png"
 )) {
     $path = Join-Path $RepoRoot $image
-
     if (-not (Test-Path $path -PathType Leaf)) {
         throw "README screenshot missing: $image"
     }
-
     if ((Get-Item $path).Length -le 0) {
         throw "README screenshot is empty: $image"
     }
 }
 
 $rootPatchNotes = @(Get-ChildItem -Path $RepoRoot -File -Filter "PATCH_NOTES*.md")
-
 if ($rootPatchNotes.Count -ne 0) {
     throw "OSS-1.1B root cleanup regressed."
 }
 
-Write-Host "[PASS] Public English README targets dev.5.4.2 and contains no dev.5.1 stale status."
+Write-Host "[PASS] Public README reports current source version v$Version and frozen dev.5.4.2 binary baseline."
 Write-Host "[PASS] Simplified Chinese companion README is present."
 Write-Host "[PASS] Validated support is separated from unvalidated ARM64/Windows 10 claims."
 Write-Host "[PASS] Install, safe uninstall, diagnostics/privacy, and safety model are documented."
 Write-Host "[PASS] Pinned upstream v2.0 asset and SHA256 are documented."
-Write-Host "[PASS] Three accepted Windows 11 screenshots are present."
+Write-Host "[PASS] Current accepted Windows 11 screenshot set is present; bilingual refresh remains a release-candidate task."
 Write-Host "[PASS] README records implemented MIT/GPL separation, release compliance, and frozen dev.5.4.2 artifact identity."
-Write-Host "[PASS] Public status copy reflects completed contributor workflow and hosted non-destructive CI validation."
+Write-Host "[PASS] Public status copy distinguishes source-version transition from binary validation."
 Write-Host "[PASS] OSS-1.1B root-history cleanup remains intact."
