@@ -75,38 +75,28 @@ gates only after the release version and packaging policy are reviewed.
 CI must not invent, silently replace, or modify the pinned upstream signed
 driver payload.
 
-## First public release preparation
+## First public prerelease: completed
 
-Current release line:
+The first public binary prerelease has been published and closed:
 
-- selected source/prerelease version: `v0.1.0-dev.6.0`;
-- last fully validated binary baseline: `v0.1.0-dev.5.4.2`;
-- wrapper Setup remains unsigned for the initial prerelease candidate;
-- dev.6.0 Candidate 1 has been built and used to refresh the English/Simplified
-  Chinese installation and connected-device fail-closed screenshot set.
+- public prerelease: `v0.1.0-dev.6.0`;
+- final source/tag target: `4ea2db6dc7ba1f7998f735d56ce1158c9b2be420`;
+- final Setup SHA256: `f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791`;
+- the outer Setup remains unsigned; the embedded upstream driver remains Microsoft-signed;
+- validated project scope remains Windows 11 x64 + Apple USB-C Magic Trackpad A3120;
+- current post-release source line: `v0.1.0-dev.6.1`.
 
-Candidate 1 behavioral validation is now closed:
+Release closure included:
 
-- clean-VM install: `not-installed` -> one exact current Driver Store package;
-- application-only uninstall: application removed while the driver remained;
-- reinstall with the exact current driver: NO-OP Driver Store path, count remained one;
-- VM safe driver removal: export -> four-file backup verification -> delete without
-  `/force` -> post-check `not-installed`;
-- reinstall after safe removal: returned to one exact current package while the
-  driver backup remained preserved;
-- physical-host A3120 connected-device guard: destructive removal failed closed,
-  `remove.executed=false`, `other_apple_drivers_touched=false`, `result=connected`;
-- English and Simplified Chinese candidate screenshots were captured.
+- Candidate 1 lifecycle validation covering install, uninstall, NO-OP, safe real driver removal/reinstall, backup verification, and connected-device fail-closed behavior;
+- one final controlled release-bundle build from the final clean source state;
+- focused clean-VM install and current-driver NO-OP validation against the exact final Setup;
+- exact wrapper source, upstream corresponding source, workflow snapshot, provenance, and SHA256 closure;
+- GitHub Draft/prerelease remote asset review before publication;
+- publication as the repository's first public binary prerelease.
 
-Before the first public binary release:
-
-- commit the Candidate 1 validation evidence;
-- rebuild the final dev.6.0 candidate from the final clean committed HEAD;
-- re-run focused identity/signature/smoke checks against that exact final binary;
-- generate and verify the controlled release directory;
-- re-capture screenshots only if the final candidate changes user-visible UI;
-- publish as a prerelease only after asset/source/SHA verification;
-- document beta support/reporting expectations.
+`v0.1.0-dev.6.0` is now frozen and must never be rebuilt or reissued under the same version.
+Future binary publication must use a new version and repeat the controlled release process.
 
 ## Deferred
 

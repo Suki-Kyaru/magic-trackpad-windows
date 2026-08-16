@@ -1,31 +1,44 @@
 # Release Compliance
 
-Status: IMPLEMENTED IN OSS-1.3C; NO PUBLIC BINARY RELEASE YET
+Status: IMPLEMENTED; FIRST PUBLIC PRERELEASE PUBLISHED (`v0.1.0-dev.6.0`)
 
 This document defines the controlled release/source-distribution process for
 Magic Trackpad for Windows.
 
 It is an engineering/open-source compliance process, not legal advice.
 
-## Frozen dev.5.4.2 boundary
+## Frozen release identities
 
-`v0.1.0-dev.5.4.2` is already a validated artifact.
+`v0.1.0-dev.5.4.2` is a validated frozen artifact.
 
-Frozen Setup SHA256:
+Frozen dev.5.4.2 Setup SHA256:
 
 ```text
 afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04
 ```
 
-OSS productization changes occur **after** that tag. Rebuilding the post-tag
-source under the same version would create a different binary with the same
-identity, so the current build scripts deliberately reject
-`VERSION=0.1.0-dev.5.4.2`.
+`v0.1.0-dev.6.0` is the first public binary prerelease.
 
-OSS-1.3C does not modify `installer/setup.iss`.
+Frozen dev.6.0 final Setup SHA256:
 
-The next actual installer build must first use a new version, with root `VERSION`
-and Inno `#define MyAppVersion` updated together.
+```text
+f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791
+```
+
+Its final source/tag target is:
+
+```text
+4ea2db6dc7ba1f7998f735d56ce1158c9b2be420
+```
+
+Both binary identities are immutable. Rebuilding later source under either frozen
+version would create a different binary with an existing identity, so the build
+scripts deliberately reject both versions.
+
+Current post-release development uses `0.1.0-dev.6.1`.
+
+Historical note: OSS-1.3C does not modify `installer/setup.iss`; that phase
+established the original dev.5.4.2 freeze before the first public prerelease existed.
 
 ## Publishable binary unit
 
@@ -50,13 +63,13 @@ SOURCE_AVAILABILITY.txt
 ```
 
 This keeps license/notice/provenance material with the distributed binary while
-leaving the already-frozen dev.5.4.2 Setup untouched.
+leaving the published/frozen Setup identities untouched.
 
 Do not upload the raw `out/installer/*.exe` as a standalone public release asset.
 
 ## Public release directory
 
-After a future version bump and clean committed source state,
+For an intentional future release from a new version and clean committed source state,
 `Build-ReleaseBundle.ps1` creates:
 
 ```text
@@ -83,13 +96,15 @@ Upload the verified files from that release directory together.
 
 ### 2. Use a new wrapper version
 
-Before any post-dev.5.4.2 installer build:
+Before any new installer/release build:
 
+- do not reuse `0.1.0-dev.5.4.2` or `0.1.0-dev.6.0`;
 - update root `VERSION`;
 - update `#define MyAppVersion` in `installer/setup.iss` to exactly the same
   version;
 - commit the intended source state;
-- keep the working tree clean.
+- keep the working tree clean;
+- build only as an intentional release action, never as a side effect of normal CI.
 
 ### 3. Build the controlled release assets
 
@@ -177,8 +192,11 @@ Among other checks, the verifier ensures:
 
 ## Current expected behavior
 
-Immediately after OSS-1.3C, running `Build-Installer.ps1` or
-`Build-ReleaseBundle.ps1` while `VERSION` is still `0.1.0-dev.5.4.2` should
-**fail deliberately before rebuilding**.
+Running `Build-Installer.ps1` or `Build-ReleaseBundle.ps1` with either frozen
+`VERSION=0.1.0-dev.5.4.2` or `VERSION=0.1.0-dev.6.0` must **fail deliberately
+before rebuilding**.
 
-That failure is a safety gate, not a regression.
+Current development `0.1.0-dev.6.1` is not a frozen identity, but installer/release
+building remains an explicit maintainer action rather than a normal CI side effect.
+
+A frozen-version refusal is a safety gate, not a regression.

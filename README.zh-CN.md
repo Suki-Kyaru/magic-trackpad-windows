@@ -14,12 +14,16 @@
 >
 > 当前源码版本：`v0.1.0-dev.6.1`。
 >
-> 最近一个完整验收的二进制基线：`v0.1.0-dev.5.4.2`。
+> 当前公开预发行版：[`v0.1.0-dev.6.0`](https://github.com/Suki-Kyaru/magic-trackpad-windows/releases/tag/v0.1.0-dev.6.0)。
 >
-> 本仓库暂未发布公开二进制 Release。外层 `Setup.exe` 当前尚未代码签名；安装器
-> 内嵌的上游驱动仍保持原始 Microsoft 签名。许可证与对应源码分发工具链、贡献流程、
-> 非破坏性 GitHub Actions CI 以及公开仓库安全门禁均已就绪，并已完成 GitHub hosted 验证。`dev.6.0` 是首个面向
-> 公开二进制预发布的候选版本线，在完整发布回归收口前不视为“已验证二进制版本”。
+> 已发布二进制 ZIP 内 Final Setup SHA256：
+> `f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791`。
+>
+> 上一个冻结并完成验收的二进制基线：`v0.1.0-dev.5.4.2`。
+>
+> `v0.1.0-dev.6.0` 已完成受控发布回归并正式冻结。外层 `Setup.exe` 当前仍未
+> 代码签名，内嵌上游驱动继续保持原始 Microsoft 签名。当前 `dev.6.1` 源码属于
+> 发布后的继续开发状态，本身并不是已经公开发布的二进制版本。
 
 ## 界面截图
 
@@ -75,12 +79,13 @@
 
 ## 安装
 
-当前尚未发布公开二进制 Release。
+当前公开二进制预发行版为 `v0.1.0-dev.6.0`。应从 GitHub Release 使用受控二进制
+ZIP，不应把裸 `Setup.exe` 作为独立公开发布单元。
 
-`v0.1.0-dev.5.4.2` 继续作为已经冻结并完整验收的二进制基线，绝不能从 tag 之后的
-源码重新构建或重新发布。当前源码已经升级到 `v0.1.0-dev.6.0`，用于首个公开二进制
-预发布候选。版本号升级本身不代表验收完成；候选版本仍必须完成完整发布回归和受控
-Release 包验证。
+`v0.1.0-dev.6.0` 已成为冻结的公开发布身份，绝不能从 tag 之后的源码重新构建或
+重新发布同版本二进制。`v0.1.0-dev.5.4.2` 继续作为上一个冻结并完成验收的二进制
+基线。当前 `v0.1.0-dev.6.1` 属于发布后的继续开发源码，未来公开二进制必须使用
+属于其自身的新发布身份。
 
 普通用户流程：
 
@@ -279,10 +284,11 @@ docs/         契约、验证证据、OSS 规划和开发历史
 - [上游源码与构建溯源](docs/oss/UPSTREAM_SOURCE_PROVENANCE.md)
 - [Release 合规流程](docs/oss/RELEASE_COMPLIANCE.md)
 
-未来公开二进制会以包含 MIT/GPL/第三方说明/溯源材料的二进制包发布，并在同一
+公开二进制采用包含 MIT/GPL/第三方说明/溯源材料的受控二进制包，并在同一
 Release 位置提供精确上游对应源码包和构建 workflow 快照。
 
-当前尚未发布公开二进制 Release。
+`v0.1.0-dev.6.0` 已按这套流程成为本仓库首个公开二进制预发行版；最终 Release
+目录、对应源码、workflow 快照、溯源和 SHA256 材料均在公开前一起完成核验。
 
 ## 贡献、支持与安全
 
@@ -296,10 +302,10 @@ Release 位置提供精确上游对应源码包和构建 workflow 快照。
 
 GitHub Issue 表单和 Pull Request 模板位于 `.github/`。
 
-`.github/workflows/ci.yml` 现已定义非破坏性的 GitHub Actions CI：自动运行仓库/
+`.github/workflows/ci.yml` 已定义非破坏性的 GitHub Actions CI：自动运行仓库/
 许可证/贡献者契约、Windows PowerShell 5.1 兼容性、安装器静态安全检查，并编译
-C++ helper。首次真实 GitHub hosted-run 仍作为独立验收项，不会因为“有了 YAML”
-就提前宣称 CI 已经完整上线。
+C++ helper。该工作流已经在 GitHub-hosted Windows runner 上实际成功运行；本地
+复现仍继续作为维护者验证的一部分。
 
 ## 独立项目说明
 

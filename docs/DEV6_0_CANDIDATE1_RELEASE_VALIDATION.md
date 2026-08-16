@@ -4,7 +4,12 @@
 
 Candidate 1 behavioral validation: **PASS**
 
-Final publishable dev.6.0 prerelease: **PENDING**
+Final publishable dev.6.0 prerelease at the time of this Candidate 1 record: **PENDING**
+
+> Post-release note (2026-08-16): the final `v0.1.0-dev.6.0` prerelease was later
+> built from the final clean source state, received focused final-binary validation,
+> and was published successfully. This file remains the historical Candidate 1
+> behavioral record; see `DEV6_0_FINAL_RELEASE_VALIDATION.md` for the final artifact.
 
 This document records the first release-candidate validation pass for
 `v0.1.0-dev.6.0`. It does not promote Candidate 1 to the final downloadable

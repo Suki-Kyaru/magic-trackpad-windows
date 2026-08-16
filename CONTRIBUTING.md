@@ -63,18 +63,23 @@ third_party/MagicTrackpad2ForWindows-v2.0/
 
 and is intentionally excluded from Git.
 
-## Frozen dev.5.4.2 rule
+## Frozen release rules
 
-`v0.1.0-dev.5.4.2` is a validated frozen artifact.
+`v0.1.0-dev.5.4.2` is the previous validated frozen artifact.
 
-Do not rebuild or publish a different Setup binary using that same version.
+`v0.1.0-dev.6.0` is the first public binary prerelease and is also frozen.
 
-Future installer work must first move to a new version with matching:
+Do not rebuild or publish a different Setup binary using either frozen version.
+
+Any intentional future installer/release build must use a new release identity
+with matching:
 
 ```text
 VERSION
 installer/setup.iss -> MyAppVersion
 ```
+
+Current development source is `0.1.0-dev.6.1`.
 
 See `docs/oss/RELEASE_COMPLIANCE.md`.
 
@@ -145,7 +150,7 @@ and all additional checks relevant to the files/behavior changed.
 
 The repository also contains a GitHub Actions workflow that mirrors the
 non-destructive OSS/static checks and compiles the C++ helper on a hosted Windows
-runner. Hosted CI must not rebuild the frozen dev.5.4.2 installer.
+runner. Hosted CI must not rebuild either frozen dev.5.4.2 or dev.6.0 installer.
 
 Do not claim a check passed if it was not run.
 
