@@ -23,6 +23,8 @@
 
 ## 界面截图
 
+以下截图已使用 dev.6.0 预发布候选界面重新采集。
+
 | 安装说明 | 安装位置 |
 | --- | --- |
 | ![简体中文安装说明页](docs/assets/screenshots/installer-information-zh-cn.png) | ![简体中文安装位置页](docs/assets/screenshots/installer-destination-zh-cn.png) |

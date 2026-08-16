@@ -26,13 +26,15 @@ and predictable uninstall/reinstall behavior for ordinary Windows users.
 
 ## Screenshots
 
+The screenshots below were refreshed from the dev.6.0 prerelease candidate UI.
+
 | Installation information | Destination folder |
 | --- | --- |
-| ![Simplified Chinese installation information page](docs/assets/screenshots/installer-information-zh-cn.png) | ![Simplified Chinese destination folder page](docs/assets/screenshots/installer-destination-zh-cn.png) |
+| ![English installation information page](docs/assets/screenshots/installer-information-en.png) | ![English destination folder page](docs/assets/screenshots/installer-destination-en.png) |
 
 Connected-device fail-closed guard:
 
-![Connected Magic Trackpad driver-removal guard](docs/assets/screenshots/uninstall-connected-guard-zh-cn.png)
+![English connected Magic Trackpad driver-removal guard](docs/assets/screenshots/uninstall-connected-guard-en.png)
 
 The installer automatically uses Simplified Chinese on a Simplified Chinese
 Windows UI. Unsupported Windows UI languages fall back to English.

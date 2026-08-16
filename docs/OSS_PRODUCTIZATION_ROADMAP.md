@@ -82,14 +82,14 @@ Current release line:
 - selected source/prerelease version: `v0.1.0-dev.6.0`;
 - last fully validated binary baseline: `v0.1.0-dev.5.4.2`;
 - wrapper Setup remains unsigned for the initial prerelease candidate;
-- English/Simplified Chinese screenshot refresh is deferred until the dev.6.0
-  candidate installer exists, so screenshots match the actual release candidate.
+- dev.6.0 Candidate 1 has been built and used to refresh the English/Simplified
+  Chinese installation and connected-device fail-closed screenshot set.
 
 Before the first public binary release:
 
 - build the new dev.6.0 installer without reusing `v0.1.0-dev.5.4.2`;
 - run the complete regression matrix;
-- refresh both English and Simplified Chinese screenshots from the candidate;
+- re-capture screenshots only if a later candidate changes user-visible UI;
 - generate and verify the controlled release directory;
 - publish as a prerelease only after asset/source/SHA verification;
 - document beta support/reporting expectations.

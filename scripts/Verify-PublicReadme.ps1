@@ -39,11 +39,24 @@ foreach ($stale in @(
     }
 }
 
+$englishScreenshots = @(
+    'docs/assets/screenshots/installer-information-en.png',
+    'docs/assets/screenshots/installer-destination-en.png',
+    'docs/assets/screenshots/uninstall-connected-guard-en.png'
+)
+
+$chineseScreenshots = @(
+    'docs/assets/screenshots/installer-information-zh-cn.png',
+    'docs/assets/screenshots/installer-destination-zh-cn.png',
+    'docs/assets/screenshots/uninstall-connected-guard-zh-cn.png'
+)
+
 foreach ($required in @(
     $currentEn,
     'Last fully validated binary baseline: `v0.1.0-dev.5.4.2`.',
     'first public-binary prerelease candidate',
     'not considered validated until its release regression closes',
+    'The screenshots below were refreshed from the dev.6.0 prerelease candidate UI.',
     'Windows 11 x64',
     'Apple USB-C Magic Trackpad A3120',
     'ARM64 wrapper/install lifecycle | **Not yet validated**',
@@ -57,13 +70,16 @@ foreach ($required in @(
     'GPLv2',
     'Release compliance process',
     'non-destructive GitHub Actions CI',
-    'afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04',
-    'docs/assets/screenshots/installer-information-zh-cn.png',
-    'docs/assets/screenshots/installer-destination-zh-cn.png',
-    'docs/assets/screenshots/uninstall-connected-guard-zh-cn.png'
-)) {
+    'afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04'
+) + $englishScreenshots) {
     if (-not $en.Contains($required)) {
         throw "English public README contract missing: $required"
+    }
+}
+
+foreach ($forbidden in $chineseScreenshots) {
+    if ($en.Contains($forbidden)) {
+        throw "English README must not reference Simplified Chinese screenshot: $forbidden"
     }
 }
 
@@ -72,6 +88,7 @@ foreach ($required in @(
     '最近一个完整验收的二进制基线：`v0.1.0-dev.5.4.2`。',
     '公开二进制预发布的候选版本线',
     '完整发布回归收口前不视为“已验证二进制版本”',
+    '以下截图已使用 dev.6.0 预发布候选界面重新采集。',
     'Windows 11 x64',
     'Apple USB-C Magic Trackpad A3120',
     'ARM64 包装/安装生命周期',
@@ -86,21 +103,26 @@ foreach ($required in @(
     'Release 合规流程',
     '非破坏性 GitHub Actions CI',
     'afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04'
-)) {
+) + $chineseScreenshots) {
     if (-not $zh.Contains($required)) {
         throw "Chinese public README contract missing: $required"
     }
 }
 
-foreach ($image in @(
-    "docs\assets\screenshots\installer-information-zh-cn.png",
-    "docs\assets\screenshots\installer-destination-zh-cn.png",
-    "docs\assets\screenshots\uninstall-connected-guard-zh-cn.png"
-)) {
-    $path = Join-Path $RepoRoot $image
+foreach ($forbidden in $englishScreenshots) {
+    if ($zh.Contains($forbidden)) {
+        throw "Chinese README must not reference English screenshot: $forbidden"
+    }
+}
+
+foreach ($image in @($englishScreenshots + $chineseScreenshots)) {
+    $relative = $image.Replace('/', '\')
+    $path = Join-Path $RepoRoot $relative
+
     if (-not (Test-Path $path -PathType Leaf)) {
         throw "README screenshot missing: $image"
     }
+
     if ((Get-Item $path).Length -le 0) {
         throw "README screenshot is empty: $image"
     }
@@ -112,11 +134,11 @@ if ($rootPatchNotes.Count -ne 0) {
 }
 
 Write-Host "[PASS] Public README reports current source version v$Version and frozen dev.5.4.2 binary baseline."
-Write-Host "[PASS] Simplified Chinese companion README is present."
+Write-Host "[PASS] English and Simplified Chinese READMEs use language-matched screenshot sets."
+Write-Host "[PASS] All six dev.6.0 bilingual screenshot assets exist and are non-empty."
 Write-Host "[PASS] Validated support is separated from unvalidated ARM64/Windows 10 claims."
 Write-Host "[PASS] Install, safe uninstall, diagnostics/privacy, and safety model are documented."
 Write-Host "[PASS] Pinned upstream v2.0 asset and SHA256 are documented."
-Write-Host "[PASS] Current accepted Windows 11 screenshot set is present; bilingual refresh remains a release-candidate task."
 Write-Host "[PASS] README records implemented MIT/GPL separation, release compliance, and frozen dev.5.4.2 artifact identity."
 Write-Host "[PASS] Public status copy distinguishes source-version transition from binary validation."
 Write-Host "[PASS] OSS-1.1B root-history cleanup remains intact."
