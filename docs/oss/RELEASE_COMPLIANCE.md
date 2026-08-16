@@ -148,7 +148,7 @@ A known upstream checkout can instead be supplied:
 
 ```powershell
 .\scripts\Build-ReleaseBundle.ps1 `
-    -UpstreamRepoPath "D:\Dev\MagicTrackpad2ForWindows-upstream"
+    -UpstreamRepoPath "<path-to-MagicTrackpad2ForWindows-checkout>"
 ```
 
 The repository origin and required immutable commits are verified.

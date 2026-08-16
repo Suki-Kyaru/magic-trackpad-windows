@@ -1,5 +1,5 @@
 param(
-    [string]$RepoRoot = "D:\Dev\magic-trackpad-windows",
+    [string]$RepoRoot = (Split-Path -Parent $PSScriptRoot),
     [string]$UpstreamRepoPath = ""
 )
 
