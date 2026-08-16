@@ -32,7 +32,19 @@ foreach ($stale in @(
     'are still being prepared.',
     'CI、贡献流程和首个公开 Release 仍在继续准备',
     'Current validated baseline: `v0.1.0-dev.5.4.2`.',
-    '当前已验证基线：`v0.1.0-dev.5.4.2`。'
+    '当前已验证基线：`v0.1.0-dev.5.4.2`。',
+    'Last fully validated binary baseline: `v0.1.0-dev.5.4.2`.',
+    '最近一个完整验收的二进制基线：`v0.1.0-dev.5.4.2`。',
+    'No public binary release',
+    'A public binary release is not published yet',
+    'first public-binary prerelease candidate',
+    'not considered validated until its release regression closes',
+    '本仓库暂未发布公开二进制 Release',
+    '当前尚未发布公开二进制 Release',
+    '公开二进制预发布的候选版本线',
+    '完整发布回归收口前不视为“已验证二进制版本”',
+    'first real GitHub-hosted run is tracked separately',
+    '首次真实 GitHub hosted-run 仍作为独立验收项'
 )) {
     if ($en.Contains($stale) -or $zh.Contains($stale)) {
         throw "Stale pre-current README statement remains: $stale"
@@ -53,9 +65,13 @@ $chineseScreenshots = @(
 
 foreach ($required in @(
     $currentEn,
-    'Last fully validated binary baseline: `v0.1.0-dev.5.4.2`.',
-    'first public-binary prerelease candidate',
-    'not considered validated until its release regression closes',
+    'Current public prerelease: [`v0.1.0-dev.6.0`](https://github.com/Suki-Kyaru/magic-trackpad-windows/releases/tag/v0.1.0-dev.6.0).',
+    'Final Setup SHA256 inside the published binary ZIP:',
+    'f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791',
+    'Previous frozen validated binary baseline: `v0.1.0-dev.5.4.2`.',
+    '`v0.1.0-dev.6.0` completed the controlled release regression and is now frozen.',
+    'The current public binary prerelease is `v0.1.0-dev.6.0`.',
+    'The workflow has completed successfully on GitHub-hosted',
     'The screenshots below were refreshed from the dev.6.0 prerelease candidate UI.',
     'Windows 11 x64',
     'Apple USB-C Magic Trackpad A3120',
@@ -85,9 +101,13 @@ foreach ($forbidden in $chineseScreenshots) {
 
 foreach ($required in @(
     $currentZh,
-    '最近一个完整验收的二进制基线：`v0.1.0-dev.5.4.2`。',
-    '公开二进制预发布的候选版本线',
-    '完整发布回归收口前不视为“已验证二进制版本”',
+    '当前公开预发行版：[`v0.1.0-dev.6.0`](https://github.com/Suki-Kyaru/magic-trackpad-windows/releases/tag/v0.1.0-dev.6.0)。',
+    '已发布二进制 ZIP 内 Final Setup SHA256：',
+    'f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791',
+    '上一个冻结并完成验收的二进制基线：`v0.1.0-dev.5.4.2`。',
+    '`v0.1.0-dev.6.0` 已完成受控发布回归并正式冻结。',
+    '当前公开二进制预发行版为 `v0.1.0-dev.6.0`。',
+    '该工作流已经在 GitHub-hosted Windows runner 上实际成功运行',
     '以下截图已使用 dev.6.0 预发布候选界面重新采集。',
     'Windows 11 x64',
     'Apple USB-C Magic Trackpad A3120',
@@ -101,7 +121,7 @@ foreach ($required in @(
     'SPDX: MIT',
     '不会**被本项目重新许可为 MIT',
     'Release 合规流程',
-    '非破坏性 GitHub Actions CI',
+    '非破坏性的 GitHub Actions CI',
     'afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04'
 ) + $chineseScreenshots) {
     if (-not $zh.Contains($required)) {
@@ -133,12 +153,12 @@ if ($rootPatchNotes.Count -ne 0) {
     throw "OSS-1.1B root cleanup regressed."
 }
 
-Write-Host "[PASS] Public README reports current source version v$Version and frozen dev.5.4.2 binary baseline."
+Write-Host "[PASS] Public README reports current source version v$Version and published dev.6.0 prerelease."
 Write-Host "[PASS] English and Simplified Chinese READMEs use language-matched screenshot sets."
 Write-Host "[PASS] All six dev.6.0 bilingual screenshot assets exist and are non-empty."
 Write-Host "[PASS] Validated support is separated from unvalidated ARM64/Windows 10 claims."
 Write-Host "[PASS] Install, safe uninstall, diagnostics/privacy, and safety model are documented."
 Write-Host "[PASS] Pinned upstream v2.0 asset and SHA256 are documented."
-Write-Host "[PASS] README records implemented MIT/GPL separation, release compliance, and frozen dev.5.4.2 artifact identity."
-Write-Host "[PASS] Public status copy distinguishes source-version transition from binary validation."
+Write-Host "[PASS] README records MIT/GPL separation, release compliance, and frozen dev.5.4.2/dev.6.0 identities."
+Write-Host "[PASS] Public status distinguishes published dev.6.0 from post-release dev.6.1 source."
 Write-Host "[PASS] OSS-1.1B root-history cleanup remains intact."

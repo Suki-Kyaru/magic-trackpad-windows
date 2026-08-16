@@ -11,8 +11,10 @@ $BuildInstaller = Join-Path $RepoRoot "scripts\Build-Installer.ps1"
 $VerifyLicenseDistribution = Join-Path $RepoRoot "scripts\Verify-LicenseDistribution.ps1"
 $VerifyRelease = Join-Path $RepoRoot "scripts\Verify-ReleaseBundle.ps1"
 
-$FrozenReleaseVersion = "0.1.0-dev.5.4.2"
-$FrozenReleaseSetupSha256 = "afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04"
+$FrozenReleaseSetupSha256ByVersion = @{
+    "0.1.0-dev.5.4.2" = "afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04"
+    "0.1.0-dev.6.0" = "f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791"
+}
 
 $UpstreamUrl = "https://github.com/vitoplantamura/MagicTrackpad2ForWindows.git"
 $UpstreamSourceSha = "8874eaa3994f0e7e40fa40312250bbc5f13cc928"
@@ -33,8 +35,9 @@ if ([string]::IsNullOrWhiteSpace($Version)) {
     throw "VERSION is empty."
 }
 
-if ($Version -eq $FrozenReleaseVersion) {
-    throw "v$FrozenReleaseVersion is frozen (Setup SHA256 $FrozenReleaseSetupSha256). Create a new wrapper version before building post-tag release assets."
+if ($FrozenReleaseSetupSha256ByVersion.ContainsKey($Version)) {
+    $frozenSetupSha256 = $FrozenReleaseSetupSha256ByVersion[$Version]
+    throw "v$Version is frozen (Setup SHA256 $frozenSetupSha256). Create a new wrapper version before building post-tag release assets."
 }
 
 if (-not (Test-Path $Iss -PathType Leaf)) {

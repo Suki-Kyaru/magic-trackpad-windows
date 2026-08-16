@@ -12,23 +12,32 @@ Before changing code, read the documents relevant to the task:
 - `docs/README.md` — technical documentation index.
 - `docs/OSS_INSTALLER_UX_BASELINE.md` — frozen installer UX/safety baseline.
 - `docs/DEV5_4_2_USER_SAFE_UNINSTALL_CONTRACT.md` — user-safe removal contract.
-- `docs/DEV5_4_2_USER_SAFE_UNINSTALL_VALIDATION.md` — real validation evidence.
+- `docs/DEV5_4_2_USER_SAFE_UNINSTALL_VALIDATION.md` — historical validated baseline evidence.
+- `docs/DEV6_0_FINAL_RELEASE_VALIDATION.md` — first public prerelease identity and final validation evidence.
 - `docs/oss/RELEASE_COMPLIANCE.md` — release/source-distribution rules.
 - `docs/oss/CONTRIBUTOR_WORKFLOW.md` — change-risk and validation matrix.
 
-## Frozen baseline
+## Frozen release identities
 
-`v0.1.0-dev.5.4.2` is a validated artifact.
+`v0.1.0-dev.5.4.2` is the previous validated frozen artifact.
 
-Do not rebuild or republish a different installer under that version.
-
-The frozen Setup SHA256 is:
+Frozen dev.5.4.2 Setup SHA256:
 
 ```text
 afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04
 ```
 
-A future installer build requires a new version first.
+`v0.1.0-dev.6.0` is the first public binary prerelease and is also frozen.
+
+Frozen dev.6.0 final Setup SHA256:
+
+```text
+f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791
+```
+
+Do not rebuild or republish a different installer under either frozen version.
+
+Current post-release development uses `0.1.0-dev.6.1`.
 
 ## Never weaken these rules
 
@@ -90,12 +99,14 @@ For installer/runtime/driver lifecycle changes, also run the relevant existing
 installer, PowerShell compatibility, payload, status, and uninstall verifiers
 listed in `docs/oss/CONTRIBUTOR_WORKFLOW.md`.
 
-Do not run `Build-Installer.ps1` or `Build-ReleaseBundle.ps1` while `VERSION`
-remains `0.1.0-dev.5.4.2`; the refusal is intentional.
+Do not run `Build-Installer.ps1` or `Build-ReleaseBundle.ps1` with either frozen
+`VERSION=0.1.0-dev.5.4.2` or `VERSION=0.1.0-dev.6.0`; refusal is intentional.
+Current `0.1.0-dev.6.1` source is not frozen, but release building remains an
+explicit maintainer action rather than part of normal CI.
 
-The GitHub Actions CI workflow must also preserve this rule: CI may build the
-C++ helper and run static/runtime compatibility checks, but must not produce a
-new dev.5.4.2 installer.
+The GitHub Actions CI workflow must preserve this rule: CI may build the C++
+helper and run static/runtime compatibility checks, but must not produce a new
+Setup for either frozen version.
 
 ## Change discipline
 

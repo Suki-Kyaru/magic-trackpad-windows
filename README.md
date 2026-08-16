@@ -13,16 +13,19 @@ and predictable uninstall/reinstall behavior for ordinary Windows users.
 
 > **Development status**
 >
-> Current source version: `v0.1.0-dev.6.0`.
+> Current source version: `v0.1.0-dev.6.1`.
 >
-> Last fully validated binary baseline: `v0.1.0-dev.5.4.2`.
+> Current public prerelease: [`v0.1.0-dev.6.0`](https://github.com/Suki-Kyaru/magic-trackpad-windows/releases/tag/v0.1.0-dev.6.0).
 >
-> No public binary release is published from this repository yet. The wrapper
-> `Setup.exe` is currently unsigned; the embedded upstream driver payload remains
-> the original Microsoft-signed payload. License/source-distribution tooling,
-> contributor workflows, hosted non-destructive CI, and public-repository safety
-> controls are in place. `dev.6.0` is the first public-binary prerelease candidate
-> line and is not considered validated until its release regression closes.
+> Final Setup SHA256 inside the published binary ZIP:
+> `f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791`.
+>
+> Previous frozen validated binary baseline: `v0.1.0-dev.5.4.2`.
+>
+> `v0.1.0-dev.6.0` completed the controlled release regression and is now frozen.
+> The outer `Setup.exe` remains unsigned; the embedded upstream driver payload
+> remains the original Microsoft-signed payload. Current `dev.6.1` source is
+> post-release development and is not itself a published binary.
 
 ## Screenshots
 
@@ -83,13 +86,14 @@ until this wrapper has been exercised on the corresponding real hardware/system.
 
 ## Installation
 
-A public binary release is not published yet.
+The current public binary prerelease is `v0.1.0-dev.6.0`. Use the controlled
+binary ZIP from the GitHub Release rather than publishing or redistributing a
+standalone raw Setup executable.
 
-`v0.1.0-dev.5.4.2` remains the frozen validated binary baseline and must never be
-rebuilt or reissued from post-tag source. The active source version has advanced
-to `v0.1.0-dev.6.0` for the first public-binary prerelease candidate. The version
-bump alone is not validation; the candidate must still pass the complete release
-regression and controlled bundle verification.
+`v0.1.0-dev.6.0` is now a frozen published release identity and must never be
+rebuilt or reissued from post-tag source. `v0.1.0-dev.5.4.2` remains the previous
+frozen validated binary baseline. Current source `v0.1.0-dev.6.1` is post-release
+development and requires its own new release identity before binary publication.
 
 The normal user flow is:
 
@@ -296,11 +300,13 @@ Redistribution material is kept separate and explicit:
 - [Upstream source/build provenance](docs/oss/UPSTREAM_SOURCE_PROVENANCE.md)
 - [Release compliance process](docs/oss/RELEASE_COMPLIANCE.md)
 
-Future public binary releases are produced as a binary bundle that contains the
+Public binary releases use a controlled binary bundle containing the
 MIT/GPL/third-party/provenance material. The exact upstream corresponding-source
 archive and build-workflow snapshot are published alongside that binary bundle.
 
-No public binary release has been published yet.
+`v0.1.0-dev.6.0` is the first public binary prerelease produced by this process.
+Its final release directory, corresponding source, workflow snapshot, provenance,
+and SHA256 material were verified together before publication.
 
 ## Contributing, support, and security
 
@@ -314,11 +320,11 @@ Contributor/reporting workflows are now documented:
 
 GitHub Issue forms and a pull-request template are included under `.github/`.
 
-A non-destructive GitHub Actions CI workflow is now defined under
+A non-destructive GitHub Actions CI workflow is defined under
 `.github/workflows/ci.yml`. It runs repository/license/contributor contracts,
 Windows PowerShell 5.1 compatibility checks, static installer safety checks, and
-a C++ helper build. The first real GitHub-hosted run is tracked separately from
-the local workflow-definition baseline.
+a C++ helper build. The workflow has completed successfully on GitHub-hosted
+Windows runners; local reproduction remains part of maintainer validation.
 
 ## Independence
 

@@ -16,6 +16,8 @@ For contributors and coding agents:
   - current user-safe uninstall contract
 - `DEV5_4_2_USER_SAFE_UNINSTALL_VALIDATION.md`
   - frozen dev.5.4.2 real VM + physical-host validation evidence
+- `DEV6_0_FINAL_RELEASE_VALIDATION.md`
+  - final dev.6.0 public prerelease identity, assets, and focused final-binary evidence
 - `DEV6_0_CANDIDATE1_RELEASE_VALIDATION.md`
   - dev.6.0 Candidate 1 VM lifecycle and physical-host fail-closed evidence
 - `OSS_PRODUCTIZATION_ROADMAP.md`
@@ -42,6 +44,7 @@ For contributors and coding agents:
 - `DEV5_3_DRIVER_LIFECYCLE_VALIDATION.md`
 - `DEV5_4_1_INSTALLER_PREVIEW_VALIDATION.md`
 - `DEV5_4_2_USER_SAFE_UNINSTALL_VALIDATION.md`
+- `DEV6_0_FINAL_RELEASE_VALIDATION.md`
 - `DEV6_0_CANDIDATE1_RELEASE_VALIDATION.md`
 
 ## Windows PowerShell / diagnostics

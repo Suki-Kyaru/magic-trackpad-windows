@@ -6,8 +6,10 @@ $ErrorActionPreference = "Stop"
 
 $RepoRoot = Split-Path -Parent $PSScriptRoot
 $VersionPath = Join-Path $RepoRoot "VERSION"
-$FrozenReleaseVersion = "0.1.0-dev.5.4.2"
-$FrozenReleaseSetupSha256 = "afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04"
+$FrozenReleaseSetupSha256ByVersion = @{
+    "0.1.0-dev.5.4.2" = "afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04"
+    "0.1.0-dev.6.0" = "f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791"
+}
 
 if (-not (Test-Path $VersionPath -PathType Leaf)) {
     throw "VERSION file not found: $VersionPath"
@@ -19,8 +21,9 @@ if ([string]::IsNullOrWhiteSpace($Version)) {
     throw "VERSION is empty."
 }
 
-if ($Version -eq $FrozenReleaseVersion) {
-    throw "v$FrozenReleaseVersion is frozen (Setup SHA256 $FrozenReleaseSetupSha256). Bump VERSION and installer/setup.iss MyAppVersion together before rebuilding from post-tag source."
+if ($FrozenReleaseSetupSha256ByVersion.ContainsKey($Version)) {
+    $frozenSetupSha256 = $FrozenReleaseSetupSha256ByVersion[$Version]
+    throw "v$Version is frozen (Setup SHA256 $frozenSetupSha256). Bump VERSION and installer/setup.iss MyAppVersion together before rebuilding from post-tag source."
 }
 $BuildScript = Join-Path $PSScriptRoot "Build.ps1"
 $VerifyPayload = Join-Path $PSScriptRoot "Verify-DriverPayload.ps1"

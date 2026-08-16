@@ -28,8 +28,9 @@ foreach ($required in @(
     "Invoke-CIStaticChecks.ps1",
     "Build-CIHelper.ps1",
     "Build helper and run Windows PowerShell 5.1 compatibility",
-    "Confirm frozen installer is not produced",
-    "0.1.0-dev.5.4.2"
+    "Confirm frozen installers are not produced",
+    "0.1.0-dev.5.4.2",
+    "0.1.0-dev.6.0"
 )) {
     if (-not $workflow.Contains($required)) {
         throw "CI workflow contract missing: $required"
@@ -60,6 +61,7 @@ foreach ($required in @(
     "Verify-UserSafeUninstall.ps1",
     "Windows PowerShell 5.1 runtime compatibility is deferred to the helper-build job",
     "0.1.0-dev.5.4.2",
+    "0.1.0-dev.6.0",
     "installer/release build intentionally skipped"
 )) {
     if (-not $runner.Contains($required)) {
@@ -125,5 +127,5 @@ Write-Host "[PASS] CI runs the OSS/license/contributor and static installer safe
 Write-Host "[PASS] CI runs Windows PowerShell 5.1 compatibility only after a fresh helper build."
 Write-Host "[PASS] WinPS compatibility accepts both current-driver and clean no-driver environments without weakening dry-run safety."
 Write-Host "[PASS] CI and local reproduction share the same CMake/helper-build script."
-Write-Host "[PASS] Frozen dev.5.4.2 installer/release builds are excluded from CI."
+Write-Host "[PASS] Frozen dev.5.4.2 and dev.6.0 installer/release builds are excluded from CI."
 Write-Host "[PASS] CI contains no driver-removal or `/force` execution path."

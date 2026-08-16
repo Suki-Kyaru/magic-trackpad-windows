@@ -13,7 +13,8 @@ $required = @(
     ".github\ISSUE_TEMPLATE\feature_request.yml",
     ".github\ISSUE_TEMPLATE\config.yml",
     ".github\PULL_REQUEST_TEMPLATE.md",
-    "docs\oss\CONTRIBUTOR_WORKFLOW.md"
+    "docs\oss\CONTRIBUTOR_WORKFLOW.md",
+    "docs\DEV6_0_FINAL_RELEASE_VALIDATION.md"
 )
 
 foreach ($relative in $required) {
@@ -36,6 +37,9 @@ foreach ($requiredText in @(
     'Never add `/force`',
     "Windows PowerShell 5.1",
     "0.1.0-dev.5.4.2",
+    "0.1.0-dev.6.0",
+    "0.1.0-dev.6.1",
+    "DEV6_0_FINAL_RELEASE_VALIDATION.md",
     "Verify-ContributorWorkflow.ps1"
 )) {
     if (-not $agents.Contains($requiredText)) {
@@ -45,6 +49,8 @@ foreach ($requiredText in @(
 
 foreach ($requiredText in @(
     "v0.1.0-dev.5.4.2",
+    "v0.1.0-dev.6.0",
+    "0.1.0-dev.6.1",
     "PowerShell's location",
     "MagicTrackpad2ForWindows",
     "third-party GPLv2 software",
@@ -59,7 +65,9 @@ foreach ($requiredText in @(
 foreach ($requiredText in @(
     "do **not** publish exploit details",
     "private security",
-    "v0.1.0-dev.5.4.2"
+    "v0.1.0-dev.5.4.2",
+    "v0.1.0-dev.6.0",
+    "v0.1.0-dev.6.1"
 )) {
     if (-not $security.Contains($requiredText)) {
         throw "SECURITY.md contract missing: $requiredText"
@@ -71,7 +79,9 @@ foreach ($requiredText in @(
     "Class F",
     "git diff --check",
     "Build-Installer.ps1",
-    "runtime logs"
+    "runtime logs",
+    "v0.1.0-dev.6.0",
+    "v0.1.0-dev.6.1"
 )) {
     if (-not $workflow.Contains($requiredText)) {
         throw "Contributor validation matrix missing: $requiredText"
@@ -82,7 +92,8 @@ foreach ($requiredText in @(
     "Safety contract impact",
     "Validated",
     "Not run",
-    "v0.1.0-dev.5.4.2"
+    "v0.1.0-dev.5.4.2",
+    "v0.1.0-dev.6.0"
 )) {
     if (-not $pr.Contains($requiredText)) {
         throw "PR template contract missing: $requiredText"
@@ -113,6 +124,6 @@ Write-Host "[PASS] CONTRIBUTING, SUPPORT, and SECURITY policies are present."
 Write-Host "[PASS] Root AGENTS.md is a concise safety/navigation map for coding agents."
 Write-Host "[PASS] GitHub bug/feature issue forms and PR template are present."
 Write-Host "[PASS] Risk-based contributor validation matrix is documented."
-Write-Host "[PASS] Frozen dev.5.4.2 and driver-removal safety rules are carried into contributor guidance."
+Write-Host "[PASS] Frozen dev.5.4.2/dev.6.0 release identities and driver-removal safety rules are carried into contributor guidance."
 Write-Host "[PASS] LICENSE/YAML files are explicitly normalized to LF."
 Write-Host "[PASS] OSS-1.1B root-history cleanup remains intact."

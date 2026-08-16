@@ -46,23 +46,27 @@ unredacted personal data.
 
 ## Supported baseline
 
-There is not yet a public binary release from this repository.
-
-The active source version preparing the first public prerelease is:
+The current public binary prerelease is:
 
 ```text
 v0.1.0-dev.6.0
 ```
 
-The last fully validated binary baseline remains:
+The current post-release development source is:
+
+```text
+v0.1.0-dev.6.1
+```
+
+The previous frozen validated binary baseline remains:
 
 ```text
 v0.1.0-dev.5.4.2
 ```
 
-The frozen baseline must not be silently rebuilt/reissued under the same version.
-Security fixes are developed on the active repository branch and use a new
-version before a new public binary is built.
+Published/frozen binary identities must not be silently rebuilt or reissued
+under the same version. Security fixes are developed on a new source version
+and require a new release identity before a new public binary is published.
 
 ## Disclosure process
 
