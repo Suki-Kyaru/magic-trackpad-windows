@@ -106,6 +106,9 @@ changing and validating the encoding strategy.
 Use absolute paths when calling `.NET` file APIs. PowerShell's location and
 `[Environment]::CurrentDirectory` may differ.
 
+Maintainer scripts that accept `-RepoRoot` must derive their default repository
+root from `$PSScriptRoot`; do not commit author-specific absolute clone paths.
+
 ## Licensing
 
 Project-authored wrapper code and original documentation are MIT licensed.
@@ -126,6 +129,7 @@ Every PR should run:
 ```powershell
 git diff --check
 .\scripts\Verify-ContributorWorkflow.ps1
+.\scripts\Verify-MaintainerPortability.ps1
 .\scripts\Verify-CIWorkflow.ps1
 ```
 

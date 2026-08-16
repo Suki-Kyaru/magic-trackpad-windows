@@ -1,5 +1,5 @@
 param(
-    [string]$RepoRoot = "D:\Dev\magic-trackpad-windows"
+    [string]$RepoRoot = (Split-Path -Parent $PSScriptRoot)
 )
 
 $ErrorActionPreference = "Stop"
@@ -54,6 +54,7 @@ foreach ($required in @(
     "Verify-LicensePolicyDecision.ps1",
     "Verify-LicenseDistribution.ps1",
     "Verify-ContributorWorkflow.ps1",
+    "Verify-MaintainerPortability.ps1",
     "Verify-CIWorkflow.ps1",
     "Verify-InstallerLocalizationPreview.ps1",
     "Verify-UserSafeUninstall.ps1",

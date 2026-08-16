@@ -178,8 +178,9 @@ See [Runtime Log Sharing Policy](docs/RUNTIME_LOG_SHARING_POLICY.md).
 
 ### 1. Build the helper
 
+From the repository root:
+
 ```powershell
-Set-Location "D:\Dev\magic-trackpad-windows"
 .\scripts\Build.ps1
 ```
 

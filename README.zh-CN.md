@@ -167,8 +167,9 @@
 
 ### 1. 构建 helper
 
+在仓库根目录运行：
+
 ```powershell
-Set-Location "D:\Dev\magic-trackpad-windows"
 .\scripts\Build.ps1
 ```
 

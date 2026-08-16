@@ -80,6 +80,7 @@ Run checks appropriate to the change. For repository/meta changes, at minimum:
 .\scripts\Verify-LicensePolicyDecision.ps1
 .\scripts\Verify-LicenseDistribution.ps1
 .\scripts\Verify-ContributorWorkflow.ps1
+.\scripts\Verify-MaintainerPortability.ps1
 .\scripts\Verify-CIWorkflow.ps1
 .\scripts\Build-CIHelper.ps1
 git diff --check
