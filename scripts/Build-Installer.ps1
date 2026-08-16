@@ -5,6 +5,23 @@ param(
 $ErrorActionPreference = "Stop"
 
 $RepoRoot = Split-Path -Parent $PSScriptRoot
+$VersionPath = Join-Path $RepoRoot "VERSION"
+$FrozenReleaseVersion = "0.1.0-dev.5.4.2"
+$FrozenReleaseSetupSha256 = "afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04"
+
+if (-not (Test-Path $VersionPath -PathType Leaf)) {
+    throw "VERSION file not found: $VersionPath"
+}
+
+$Version = (Get-Content $VersionPath -Raw).Trim()
+
+if ([string]::IsNullOrWhiteSpace($Version)) {
+    throw "VERSION is empty."
+}
+
+if ($Version -eq $FrozenReleaseVersion) {
+    throw "v$FrozenReleaseVersion is frozen (Setup SHA256 $FrozenReleaseSetupSha256). Bump VERSION and installer/setup.iss MyAppVersion together before rebuilding from post-tag source."
+}
 $BuildScript = Join-Path $PSScriptRoot "Build.ps1"
 $VerifyPayload = Join-Path $PSScriptRoot "Verify-DriverPayload.ps1"
 $Helper = Join-Path $RepoRoot "build\Release\MagicTrackpadHelper.exe"
@@ -13,6 +30,17 @@ $RuntimeRoot = Join-Path $RepoRoot "out\installer-runtime\root"
 $RuntimeZip = Join-Path $RepoRoot "out\installer-runtime\MagicTrackpadSetupPayload.zip"
 $InstallerOutput = Join-Path $RepoRoot "out\installer"
 $Iss = Join-Path $RepoRoot "installer\setup.iss"
+
+if (-not (Test-Path $Iss -PathType Leaf)) {
+    throw "Inno Setup source not found: $Iss"
+}
+
+$issText = Get-Content $Iss -Raw
+$expectedVersionDefine = '#define MyAppVersion "' + $Version + '"'
+
+if (-not $issText.Contains($expectedVersionDefine)) {
+    throw "VERSION/setup.iss mismatch. Expected Inno definition: $expectedVersionDefine"
+}
 
 $IsccCandidates = @(
     "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe",
@@ -68,6 +96,14 @@ if (-not (Test-Path $VerifyUserUninstall -PathType Leaf)) {
 }
 
 & $VerifyUserUninstall -RepoRoot $RepoRoot
+
+$VerifyLicenseDistribution = Join-Path $PSScriptRoot "Verify-LicenseDistribution.ps1"
+
+if (-not (Test-Path $VerifyLicenseDistribution -PathType Leaf)) {
+    throw "License distribution verifier is missing: $VerifyLicenseDistribution"
+}
+
+& $VerifyLicenseDistribution -RepoRoot $RepoRoot
 
 foreach ($requiredTool in @(
     (Join-Path $PSScriptRoot "Collect-Diagnostics.ps1"),
@@ -165,7 +201,7 @@ if ($LASTEXITCODE -ne 0) {
     throw "Inno Setup compilation failed."
 }
 
-$SetupExe = Join-Path $InstallerOutput "MagicTrackpad-for-Windows-Setup-0.1.0-dev.5.4.2-x64.exe"
+$SetupExe = Join-Path $InstallerOutput "MagicTrackpad-for-Windows-Setup-$Version-x64.exe"
 
 if (-not (Test-Path $SetupExe -PathType Leaf)) {
     throw "Setup.exe was not produced at the expected path: $SetupExe"
@@ -175,7 +211,7 @@ $setupHash = (Get-FileHash -Algorithm SHA256 -Path $SetupExe).Hash.ToLowerInvari
 $setupSignature = Get-AuthenticodeSignature -FilePath $SetupExe
 
 Write-Host ""
-Write-Host "[PASS] dev.5.4.2 installer built."
+Write-Host "[PASS] $Version installer built."
 Write-Host "[PASS] Setup: $SetupExe"
 Write-Host "[INFO] Setup SHA256: $setupHash"
 Write-Host "[INFO] Setup Authenticode: $($setupSignature.Status)"

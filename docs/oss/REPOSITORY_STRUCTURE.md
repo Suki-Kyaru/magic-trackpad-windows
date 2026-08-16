@@ -12,7 +12,7 @@ metadata, such as:
 
 ```text
 README.md
-LICENSE                  (after OSS-1.3 license review)
+LICENSE                  MIT for project-authored wrapper material
 THIRD_PARTY_NOTICES.md
 CONTRIBUTING.md           (later OSS phase)
 SECURITY.md               (later OSS phase)
@@ -29,6 +29,7 @@ helper/
 installer/
 scripts/
 third_party/
+licenses/
 docs/
 .github/                  (later OSS phase)
 ```
@@ -113,3 +114,26 @@ For future development history, prefer:
 
 Do not delete safety/validation history merely to make the repository look
 smaller.
+
+
+## License / release assets
+
+Repository licensing is implemented as:
+
+```text
+LICENSE
+licenses/GPL-2.0.txt
+THIRD_PARTY_NOTICES.md
+docs/oss/UPSTREAM_SOURCE_PROVENANCE.md
+docs/oss/RELEASE_COMPLIANCE.md
+```
+
+The root MIT license does not relicense the locally staged upstream driver
+payload.
+
+Publishable binary/source bundles are generated only under ignored `out/`
+paths. A naked Setup executable is not the public release unit defined by the
+release-compliance flow.
+
+The frozen dev.5.4.2 artifact must not be rebuilt from post-tag source under the
+same version number.

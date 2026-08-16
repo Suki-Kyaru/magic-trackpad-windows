@@ -1,11 +1,11 @@
 # Public README Blueprint
 
-Status: IMPLEMENTED IN OSS-1.2
+Status: IMPLEMENTED THROUGH OSS-1.3C
 
-The repository-root README has been rewritten as an English public entry point
-with a Simplified Chinese companion at `README.zh-CN.md`.
+The root English README and Simplified Chinese companion are now the public
+repository entry points.
 
-The public README now covers:
+They cover:
 
 - project identity and development status;
 - accepted Windows 11 screenshots;
@@ -15,16 +15,29 @@ The public README now covers:
 - diagnostics/privacy;
 - build-from-source flow;
 - upstream attribution;
-- explicit "license review still in progress" status;
+- MIT wrapper / GPLv2 third-party license separation;
+- frozen dev.5.4.2 artifact identity;
+- controlled release/source-compliance process;
 - technical documentation entry points.
 
-Future phases should update the README when:
+## Maintenance rules
 
-- a public binary release exists;
+Future changes should keep the README aligned with executable/verifier contracts.
+
+Do not:
+
+- reintroduce stale dev.5.1 claims;
+- imply unvalidated ARM64/Windows 10 wrapper support;
+- describe the third-party upstream driver as MIT;
+- publish a post-tag rebuild under `v0.1.0-dev.5.4.2`;
+- instruct users/maintainers to upload a naked Setup executable as the official
+  public release unit.
+
+Update the README when:
+
+- a new wrapper version is actually validated;
 - CI badges become meaningful;
-- OSS-1.3 finalizes license/source-distribution wording;
 - CONTRIBUTING / SECURITY / GitHub templates are added;
-- additional hardware/architectures are actually validated.
-
-Do not reintroduce stale dev.5.1 claims or imply unvalidated ARM64/Windows 10
-support.
+- wrapper code signing is introduced;
+- additional hardware/architectures are genuinely validated;
+- a public binary release is published.

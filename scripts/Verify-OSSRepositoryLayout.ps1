@@ -10,7 +10,14 @@ $required = @(
     "docs\history\patch-notes\README.md",
     "docs\oss\REPOSITORY_STRUCTURE.md",
     "docs\oss\README_PUBLIC_BLUEPRINT.md",
-    "docs\oss\LICENSE_REVIEW_CHECKLIST.md"
+    "docs\oss\LICENSE_REVIEW_CHECKLIST.md",
+    "docs\oss\LICENSE_POLICY_DECISION.md",
+    "docs\oss\UPSTREAM_SOURCE_PROVENANCE.md",
+    "docs\oss\RELEASE_COMPLIANCE.md",
+    "LICENSE",
+    "licenses\GPL-2.0.txt",
+    "licenses\README.md",
+    "THIRD_PARTY_NOTICES.md"
 )
 
 foreach ($relative in $required) {
@@ -74,16 +81,10 @@ foreach ($forbidden in @(
     }
 }
 
-$licensePath = Join-Path $RepoRoot "LICENSE"
-
-if (Test-Path $licensePath -PathType Leaf) {
-    throw "OSS-1.1B must not invent a root LICENSE before OSS-1.3 review."
-}
-
 Write-Host "[PASS] Repository root no longer contains raw PATCH_NOTES files."
 Write-Host "[PASS] Historical patch notes are preserved under docs/history/patch-notes."
 Write-Host "[PASS] Legacy unreferenced INFO_BEFORE.txt is preserved under docs/history/legacy."
 Write-Host "[PASS] Current localized installer resources remain active."
 Write-Host "[PASS] Generated/build and third-party payload directories remain untracked."
 Write-Host "[PASS] Documentation and OSS planning indexes are present."
-Write-Host "[PASS] Root LICENSE remains intentionally deferred to OSS-1.3."
+Write-Host "[PASS] Root MIT LICENSE and separate third-party GPLv2 license text are present."

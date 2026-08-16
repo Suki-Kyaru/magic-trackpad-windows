@@ -87,7 +87,11 @@ product contract when a newer maintained document exists.
 - `oss/UPSTREAM_SOURCE_PROVENANCE.md`
   - exact upstream signed-build/source provenance evidence
 - `oss/LICENSE_REVIEW_CHECKLIST.md`
-  - OSS-1.3 implementation gates and current licensing status
+  - implemented license/source-distribution gates and remaining release work
 - `oss/LICENSE_POLICY_DECISION.md`
   - MIT policy for project-authored wrapper content and explicit third-party
     GPL separation
+- `oss/RELEASE_COMPLIANCE.md`
+  - controlled binary/source bundle process and frozen dev.5.4.2 build guard
+- `../licenses/README.md`
+  - repository MIT versus third-party GPL license-file map

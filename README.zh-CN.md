@@ -15,8 +15,8 @@
 > 当前已验证基线：`v0.1.0-dev.5.4.2`。
 >
 > 本仓库暂未发布公开二进制 Release。外层 `Setup.exe` 当前尚未代码签名；安装器
-> 内嵌的上游驱动仍保持原始 Microsoft 签名。公开分发所需的许可证/源码分发闭环
-> 正在 OSS 产品化阶段完成。
+> 内嵌的上游驱动仍保持原始 Microsoft 签名。许可证与对应源码分发工具链现已完成，
+> CI、贡献流程和首个公开 Release 仍在继续准备。
 
 ## 界面截图
 
@@ -70,8 +70,11 @@
 
 ## 安装
 
-当前尚未发布公开 Release。开发基线请按
-[从源码构建](#从源码构建)生成安装器。
+当前尚未发布公开 Release。
+
+`v0.1.0-dev.5.4.2` 是已经冻结并验收的二进制基线。OSS 产品化分支包含 tag 之后的
+文档/合规改动，因此会主动拒绝继续用同一个版本号重建出不同的 Setup。后续安装器
+必须先升级到新版本号，再按[从源码构建](#从源码构建)执行。
 
 普通用户流程：
 
@@ -195,6 +198,17 @@ third_party\MagicTrackpad2ForWindows-v2.0\
 
 ### 3. 构建安装器
 
+冻结的 `v0.1.0-dev.5.4.2` 不允许从 tag 之后的源码重新构建。它已经验收的 Setup
+SHA256 为：
+
+```text
+afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04
+```
+
+要构建**后续**开发/发布版本，需要先让根目录 `VERSION` 与
+`installer/setup.iss` 中的 `#define MyAppVersion` 同步升级为同一个新版本，并提交
+该源码状态，然后运行：
+
 ```powershell
 .\scripts\Build-Installer.ps1
 ```
@@ -205,7 +219,12 @@ third_party\MagicTrackpad2ForWindows-v2.0\
 out\installer\
 ```
 
-构建过程会再次执行载荷校验和当前静态安全门禁。
+`Build-Installer.ps1` 在 `VERSION` 仍为 `0.1.0-dev.5.4.2` 时会主动阻断，并校验
+VERSION/Inno 版本一致性；真正构建前还会重新执行驱动载荷、安装器、卸载和许可证分发
+门禁。
+
+正式发布资产应使用
+[Release 合规流程](docs/oss/RELEASE_COMPLIANCE.md)，不要直接上传裸 `Setup.exe`。
 
 ## 仓库结构
 
@@ -239,20 +258,24 @@ docs/         契约、验证证据、OSS 规划和开发历史
 
 ## 许可证状态
 
-固定的上游驱动项目包含 GNU General Public License version 2。
+本项目原创 wrapper 代码和原创文档使用 **MIT License**（`SPDX: MIT`）：
 
-本项目原创 wrapper 代码和原创文档的许可证策略现已确定为 **MIT**
-（`SPDX: MIT`）。固定的上游 MagicTrackpad2ForWindows 驱动仍是第三方组件，
-继续遵循其上游 GPLv2 条款，**不会**被本项目重新许可为 MIT。
+- [LICENSE](LICENSE)
 
-根 MIT `LICENSE`、单独的第三方 GPL 许可证副本、对应源码包和 Release 合规门禁会在
-OSS-1.3C 中一次性落地。在 1.3C 完成前，不应因为开发安装器已经可构建，就把仓库视为
-已经达到公开 Release 的许可证收口状态。
+固定的 `vitoplantamura/MagicTrackpad2ForWindows` 驱动/控制面板载荷仍是第三方
+软件，继续遵循其上游 **GPLv2** 条款，**不会**被本项目重新许可为 MIT。
 
-参见：
+重新分发材料明确分开：
 
-- [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
-- [许可证/重新分发审核清单](docs/oss/LICENSE_REVIEW_CHECKLIST.md)
+- [第三方说明](THIRD_PARTY_NOTICES.md)
+- [GNU GPL version 2 文本](licenses/GPL-2.0.txt)
+- [上游源码与构建溯源](docs/oss/UPSTREAM_SOURCE_PROVENANCE.md)
+- [Release 合规流程](docs/oss/RELEASE_COMPLIANCE.md)
+
+未来公开二进制会以包含 MIT/GPL/第三方说明/溯源材料的二进制包发布，并在同一
+Release 位置提供精确上游对应源码包和构建 workflow 快照。
+
+当前尚未发布公开二进制 Release。
 
 ## 贡献与安全
 

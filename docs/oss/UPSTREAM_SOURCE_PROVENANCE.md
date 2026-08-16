@@ -171,20 +171,47 @@ upstream repository. The distributor should be able to preserve the exact source
 needed for the binary it redistributes even if upstream branches/tags later
 change or disappear.
 
-## Current decision boundary
+## Policy status
 
-OSS-1.3A does **not** decide:
+OSS-1.3B selected MIT (`SPDX: MIT`) for project-authored wrapper code and
+original documentation while keeping the upstream driver under its own GPLv2
+terms.
 
-- the final SPDX identifier for this wrapper repository;
-- whether the wrapper's independently authored code should use GPL-2.0-only,
-  GPL-2.0-or-later, or another compatible/independent license;
-- whether the combined installer is legally a derivative work or mere
-  aggregation.
+OSS-1.3C implements the repository license files and controlled release/source
+bundle tooling.
 
-Those are OSS-1.3B policy decisions.
+This remains an engineering/open-source compliance position rather than a
+binding legal determination about derivative-work boundaries. Reopen the
+analysis if future architecture directly incorporates, links, or modifies
+GPL-covered upstream source.
 
-Until OSS-1.3B/1.3C complete:
+A public binary release remains a separate, explicit action and must pass the
+release-bundle verifier.
 
-- do not create a root `LICENSE`;
-- do not publish the Setup binary as a public release;
-- do not describe the repository as license-finalized.
+## OSS-1.3C implementation evidence
+
+On 2026-08-16, `refs/heads/ossign` was re-checked and still resolved to:
+
+```text
+8874eaa3994f0e7e40fa40312250bbc5f13cc928
+```
+
+That is supporting evidence only. The release tooling archives the immutable
+source commit directly and does not require the mutable `ossign` branch to remain
+at that commit forever.
+
+The future corresponding-source ZIP is built from the exact commit above and is
+augmented only with explicitly named redistribution metadata:
+
+- GNU GPL version 2 license text;
+- the preserved build workflow from
+  `3611b8c6f4fa06a6912d16bb4b51a47bb8c70afa`;
+- a source-origin text record.
+
+These additions do not replace or rewrite upstream source files; they make the
+redistribution package self-describing.
+
+`Build-ReleaseBundle.ps1` records SHA256 values for the wrapper source archive,
+upstream corresponding-source archive, and preserved workflow in
+`UPSTREAM_PROVENANCE.txt`, and `Verify-ReleaseBundle.ps1` checks them before a
+release bundle is accepted.

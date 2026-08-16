@@ -1,6 +1,6 @@
 # License Policy Decision
 
-Status: DECIDED IN OSS-1.3B
+Status: DECIDED IN OSS-1.3B; IMPLEMENTED IN OSS-1.3C
 Decision date: 2026-08-16
 
 This document records the project's licensing policy decision. It is an
@@ -18,8 +18,8 @@ Copyright holder: Suki-Kyaru
 Initial copyright year: 2026
 ```
 
-The root `LICENSE` file will be added in OSS-1.3C using the standard MIT license
-text.
+The root `LICENSE` file is implemented in OSS-1.3C using the standard MIT
+license text.
 
 ## Scope of the MIT license
 
@@ -111,8 +111,9 @@ for upstream files solely from the shorthand "GPLv2".
 
 ## Public release policy
 
-A public binary release is not license-complete until OSS-1.3C adds and verifies
-all of the following:
+OSS-1.3C implements and verifies the repository/release materials below. A
+public binary release is still a separate release decision and must pass the
+release-bundle verifier:
 
 ```text
 LICENSE
@@ -157,3 +158,16 @@ Reopen this policy before release if any of these become true:
 
 Absent such a trigger, future maintainers and coding agents should treat this
 decision as the project's licensing baseline.
+
+## OSS-1.3C implementation note
+
+The frozen `v0.1.0-dev.5.4.2` Setup artifact is not rebuilt by OSS-1.3C.
+Post-tag licensing/release tooling changes live on the OSS productization branch,
+while the validated dev.5.4.2 artifact remains tied to its original tag/source
+state.
+
+Future builds require a new version before `Build-Installer.ps1` will run.
+
+Public binary publication uses a binary ZIP as the compliance unit. That ZIP
+contains Setup plus MIT/GPL/third-party/provenance material; the exact upstream
+corresponding-source ZIP is published alongside it.

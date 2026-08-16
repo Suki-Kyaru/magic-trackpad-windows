@@ -38,8 +38,9 @@ foreach ($required in @(
     'MT2FW11-20260223-MSSigned.zip',
     '2870c0c7982ce6aafc3ff763fec2999423dc4bdbd1a2c0e31ca216f26a75714f',
     'SPDX: MIT',
-    'third-party software under its upstream',
-    'OSS-1.3C',
+    'GPLv2',
+    'Release compliance process',
+    'afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04',
     'docs/assets/screenshots/installer-information-zh-cn.png',
     'docs/assets/screenshots/installer-destination-zh-cn.png',
     'docs/assets/screenshots/uninstall-connected-guard-zh-cn.png'
@@ -62,7 +63,8 @@ foreach ($required in @(
     '2870c0c7982ce6aafc3ff763fec2999423dc4bdbd1a2c0e31ca216f26a75714f',
     'SPDX: MIT',
     '不会**被本项目重新许可为 MIT',
-    'OSS-1.3C'
+    'Release 合规流程',
+    'afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04'
 )) {
     if (-not $zh.Contains($required)) {
         throw "Chinese public README contract missing: $required"
@@ -85,10 +87,6 @@ foreach ($image in @(
     }
 }
 
-if (Test-Path (Join-Path $RepoRoot "LICENSE") -PathType Leaf) {
-    throw "OSS-1.3B public README baseline must not create the root LICENSE before OSS-1.3C implementation."
-}
-
 $rootPatchNotes = @(Get-ChildItem -Path $RepoRoot -File -Filter "PATCH_NOTES*.md")
 
 if ($rootPatchNotes.Count -ne 0) {
@@ -101,5 +99,5 @@ Write-Host "[PASS] Validated support is separated from unvalidated ARM64/Windows
 Write-Host "[PASS] Install, safe uninstall, diagnostics/privacy, and safety model are documented."
 Write-Host "[PASS] Pinned upstream v2.0 asset and SHA256 are documented."
 Write-Host "[PASS] Three accepted Windows 11 screenshots are present."
-Write-Host "[PASS] README records MIT wrapper policy, GPL third-party separation, and OSS-1.3C implementation gate."
+Write-Host "[PASS] README records implemented MIT/GPL separation, release compliance, and frozen dev.5.4.2 artifact identity."
 Write-Host "[PASS] OSS-1.1B root-history cleanup remains intact."

@@ -17,8 +17,9 @@ and predictable uninstall/reinstall behavior for ordinary Windows users.
 >
 > No public binary release is published from this repository yet. The wrapper
 > `Setup.exe` is currently unsigned; the embedded upstream driver payload remains
-> the original Microsoft-signed payload. Public redistribution/license packaging
-> is still being finalized in the OSS productization phase.
+> the original Microsoft-signed payload. License/source-distribution tooling is
+> now implemented, while CI, contribution workflows, and the first public release
+> are still being prepared.
 
 ## Screenshots
 
@@ -77,8 +78,12 @@ until this wrapper has been exercised on the corresponding real hardware/system.
 
 ## Installation
 
-A public release is not published yet. For the current development baseline,
-build the installer locally as described in [Build from source](#build-from-source).
+A public release is not published yet.
+
+`v0.1.0-dev.5.4.2` is a frozen validated artifact. The OSS productization branch
+contains post-tag documentation/compliance changes and intentionally refuses to
+rebuild a different installer under that same version number. Future installer
+builds must use a new version first; see [Build from source](#build-from-source).
 
 The normal user flow is:
 
@@ -204,6 +209,17 @@ and is intentionally excluded from Git.
 
 ### 3. Build the installer
 
+The frozen `v0.1.0-dev.5.4.2` installer must not be rebuilt from post-tag source.
+Its validated Setup SHA256 is:
+
+```text
+afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04
+```
+
+For a **future** development/release version, update `VERSION` and
+`#define MyAppVersion` in `installer/setup.iss` to the same new version, commit
+that source state, then run:
+
 ```powershell
 .\scripts\Build-Installer.ps1
 ```
@@ -214,7 +230,13 @@ Output:
 out\installer\
 ```
 
-The build re-runs payload verification and the current static safety contracts.
+`Build-Installer.ps1` fails closed while `VERSION` is still
+`0.1.0-dev.5.4.2`, checks `VERSION`/Inno version consistency, and re-runs payload,
+installer, uninstall, and license-distribution gates before compiling.
+
+For publishable release assets, use the controlled
+[release compliance process](docs/oss/RELEASE_COMPLIANCE.md) rather than
+uploading the raw Setup executable directly.
 
 ## Repository layout
 
@@ -250,24 +272,27 @@ wrapper project.
 
 ## Licensing status
 
-The pinned upstream driver project includes the GNU General Public License,
-version 2.
+Project-authored wrapper code and original documentation are licensed under the
+**MIT License** (`SPDX: MIT`):
 
-The licensing policy for project-authored wrapper code and original
-documentation is now **MIT** (`SPDX: MIT`). The pinned upstream
-MagicTrackpad2ForWindows driver remains third-party software under its upstream
-GPLv2 terms and is **not** relicensed by this project.
+- [LICENSE](LICENSE)
 
-The root MIT license file, third-party GPL license copy, corresponding-source
-bundle, and release compliance gates will be implemented together in OSS-1.3C.
-Until that implementation is complete, do not treat this repository as
-public-release ready merely because the development installer can be built
-locally.
+The pinned `vitoplantamura/MagicTrackpad2ForWindows` driver/control-panel payload
+is third-party software under its upstream **GPLv2** terms and is **not**
+relicensed under MIT by this project.
 
-See:
+Redistribution material is kept separate and explicit:
 
-- [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
-- [License / Redistribution Review Checklist](docs/oss/LICENSE_REVIEW_CHECKLIST.md)
+- [Third-party notices](THIRD_PARTY_NOTICES.md)
+- [GNU GPL version 2 text](licenses/GPL-2.0.txt)
+- [Upstream source/build provenance](docs/oss/UPSTREAM_SOURCE_PROVENANCE.md)
+- [Release compliance process](docs/oss/RELEASE_COMPLIANCE.md)
+
+Future public binary releases are produced as a binary bundle that contains the
+MIT/GPL/third-party/provenance material. The exact upstream corresponding-source
+archive and build-workflow snapshot are published alongside that binary bundle.
+
+No public binary release has been published yet.
 
 ## Contributing and security
 
