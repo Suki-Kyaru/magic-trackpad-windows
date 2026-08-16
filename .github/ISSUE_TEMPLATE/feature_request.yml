@@ -1,0 +1,39 @@
+name: Feature request
+description: Suggest a focused improvement to the wrapper/tooling.
+title: "[Feature] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please describe the user problem first. Avoid broad rewrites unless the current design genuinely blocks the goal.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / use case
+      description: What user or maintainer problem should be solved?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: What should change?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety / scope
+      options:
+        - label: This request does not rely on generic deletion of Apple drivers, `/force`, or bypassing the existing safety gates.
+          required: true
+        - label: I understand ARM64/Windows 10 are not project-validated wrapper targets yet.
+          required: true

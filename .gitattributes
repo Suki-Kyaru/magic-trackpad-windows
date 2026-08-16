@@ -2,6 +2,7 @@
 * text=auto
 
 .gitattributes text eol=lf
+.gitignore text eol=lf
 *.cpp text eol=lf
 *.h text eol=lf
 *.hpp text eol=lf
@@ -9,8 +10,11 @@
 *.iss text eol=lf
 *.md text eol=lf
 *.txt text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
 CMakeLists.txt text eol=lf
 VERSION text eol=lf
+LICENSE text eol=lf
 
 # Binary / generated payloads
 *.exe binary
