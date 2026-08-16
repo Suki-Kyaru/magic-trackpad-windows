@@ -11,7 +11,7 @@ body:
     id: version
     attributes:
       label: Project version / commit
-      description: For example v0.1.0-dev.5.4.2 or a commit SHA.
+      description: For example v0.1.0-dev.6.0, v0.1.0-dev.5.4.2, or a commit SHA.
     validations:
       required: true
 

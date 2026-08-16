@@ -1,6 +1,6 @@
 # OSS Productization Roadmap After dev.5.4.2
 
-Status after OSS-1.5B hosted CI and first PR/main integration validation.
+Status after OSS-1.6 public repository launch, main ruleset activation, and public-readiness closure.
 
 The validated driver lifecycle remains frozen. OSS productization is improving
 the repository, licensing, contributor workflow, CI, and release engineering
@@ -77,14 +77,35 @@ driver payload.
 
 ## First public release preparation
 
+Current release line:
+
+- selected source/prerelease version: `v0.1.0-dev.6.0`;
+- last fully validated binary baseline: `v0.1.0-dev.5.4.2`;
+- wrapper Setup remains unsigned for the initial prerelease candidate;
+- dev.6.0 Candidate 1 has been built and used to refresh the English/Simplified
+  Chinese installation and connected-device fail-closed screenshot set.
+
+Candidate 1 behavioral validation is now closed:
+
+- clean-VM install: `not-installed` -> one exact current Driver Store package;
+- application-only uninstall: application removed while the driver remained;
+- reinstall with the exact current driver: NO-OP Driver Store path, count remained one;
+- VM safe driver removal: export -> four-file backup verification -> delete without
+  `/force` -> post-check `not-installed`;
+- reinstall after safe removal: returned to one exact current package while the
+  driver backup remained preserved;
+- physical-host A3120 connected-device guard: destructive removal failed closed,
+  `remove.executed=false`, `other_apple_drivers_touched=false`, `result=connected`;
+- English and Simplified Chinese candidate screenshots were captured.
+
 Before the first public binary release:
 
-- choose and validate the next wrapper version;
-- build a new installer without reusing `v0.1.0-dev.5.4.2`;
-- run the complete regression matrix;
+- commit the Candidate 1 validation evidence;
+- rebuild the final dev.6.0 candidate from the final clean committed HEAD;
+- re-run focused identity/signature/smoke checks against that exact final binary;
 - generate and verify the controlled release directory;
-- decide wrapper code-signing strategy;
-- publish only verified release assets;
+- re-capture screenshots only if the final candidate changes user-visible UI;
+- publish as a prerelease only after asset/source/SHA verification;
 - document beta support/reporting expectations.
 
 ## Deferred

@@ -13,24 +13,28 @@ and predictable uninstall/reinstall behavior for ordinary Windows users.
 
 > **Development status**
 >
-> Current validated baseline: `v0.1.0-dev.5.4.2`.
+> Current source version: `v0.1.0-dev.6.0`.
+>
+> Last fully validated binary baseline: `v0.1.0-dev.5.4.2`.
 >
 > No public binary release is published from this repository yet. The wrapper
 > `Setup.exe` is currently unsigned; the embedded upstream driver payload remains
 > the original Microsoft-signed payload. License/source-distribution tooling,
-> contributor workflows, and the non-destructive GitHub Actions CI are implemented
-> and hosted-validated. Preparation for the first public binary release remains
-> separate from this validated repository/CI baseline.
+> contributor workflows, hosted non-destructive CI, and public-repository safety
+> controls are in place. `dev.6.0` is the first public-binary prerelease candidate
+> line and is not considered validated until its release regression closes.
 
 ## Screenshots
 
+The screenshots below were refreshed from the dev.6.0 prerelease candidate UI.
+
 | Installation information | Destination folder |
 | --- | --- |
-| ![Simplified Chinese installation information page](docs/assets/screenshots/installer-information-zh-cn.png) | ![Simplified Chinese destination folder page](docs/assets/screenshots/installer-destination-zh-cn.png) |
+| ![English installation information page](docs/assets/screenshots/installer-information-en.png) | ![English destination folder page](docs/assets/screenshots/installer-destination-en.png) |
 
 Connected-device fail-closed guard:
 
-![Connected Magic Trackpad driver-removal guard](docs/assets/screenshots/uninstall-connected-guard-zh-cn.png)
+![English connected Magic Trackpad driver-removal guard](docs/assets/screenshots/uninstall-connected-guard-en.png)
 
 The installer automatically uses Simplified Chinese on a Simplified Chinese
 Windows UI. Unsupported Windows UI languages fall back to English.
@@ -79,12 +83,13 @@ until this wrapper has been exercised on the corresponding real hardware/system.
 
 ## Installation
 
-A public release is not published yet.
+A public binary release is not published yet.
 
-`v0.1.0-dev.5.4.2` is a frozen validated artifact. The OSS productization branch
-contains post-tag documentation/compliance changes and intentionally refuses to
-rebuild a different installer under that same version number. Future installer
-builds must use a new version first; see [Build from source](#build-from-source).
+`v0.1.0-dev.5.4.2` remains the frozen validated binary baseline and must never be
+rebuilt or reissued from post-tag source. The active source version has advanced
+to `v0.1.0-dev.6.0` for the first public-binary prerelease candidate. The version
+bump alone is not validation; the candidate must still pass the complete release
+regression and controlled bundle verification.
 
 The normal user flow is:
 
@@ -218,9 +223,9 @@ Its validated Setup SHA256 is:
 afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04
 ```
 
-For a **future** development/release version, update `VERSION` and
-`#define MyAppVersion` in `installer/setup.iss` to the same new version, commit
-that source state, then run:
+The current source has already advanced to `0.1.0-dev.6.0`, with `VERSION` and
+`#define MyAppVersion` in `installer/setup.iss` synchronized. From a clean
+committed source state, build the prerelease candidate with:
 
 ```powershell
 .\scripts\Build-Installer.ps1
@@ -232,9 +237,10 @@ Output:
 out\installer\
 ```
 
-`Build-Installer.ps1` fails closed while `VERSION` is still
-`0.1.0-dev.5.4.2`, checks `VERSION`/Inno version consistency, and re-runs payload,
-installer, uninstall, and license-distribution gates before compiling.
+`Build-Installer.ps1` still fails closed if `VERSION` is set to the frozen
+`0.1.0-dev.5.4.2`, while `dev.6.0` is allowed only when `VERSION`/Inno version
+identity matches. Payload, installer, uninstall, and license-distribution gates
+are re-run before compiling.
 
 For publishable release assets, use the controlled
 [release compliance process](docs/oss/RELEASE_COMPLIANCE.md) rather than
