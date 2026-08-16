@@ -253,10 +253,16 @@ wrapper project.
 The pinned upstream driver project includes the GNU General Public License,
 version 2.
 
-The final top-level license expression and public binary/source redistribution
-package for **this wrapper repository** are still being reviewed in OSS-1.3.
-Until that review is complete, do not treat this repository as public-release
-ready merely because the development installer can be built locally.
+The licensing policy for project-authored wrapper code and original
+documentation is now **MIT** (`SPDX: MIT`). The pinned upstream
+MagicTrackpad2ForWindows driver remains third-party software under its upstream
+GPLv2 terms and is **not** relicensed by this project.
+
+The root MIT license file, third-party GPL license copy, corresponding-source
+bundle, and release compliance gates will be implemented together in OSS-1.3C.
+Until that implementation is complete, do not treat this repository as
+public-release ready merely because the development installer can be built
+locally.
 
 See:
 

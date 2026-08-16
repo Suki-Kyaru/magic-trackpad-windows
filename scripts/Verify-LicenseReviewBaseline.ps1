@@ -32,13 +32,17 @@ foreach ($required in @(
 }
 
 if (Test-Path (Join-Path $RepoRoot "LICENSE") -PathType Leaf) {
-    throw "OSS-1.3A must not create the wrapper root LICENSE before policy review."
+    throw "OSS-1.3B baseline must not create the wrapper root LICENSE before OSS-1.3C implementation."
 }
 
 $readme = Get-Content (Join-Path $RepoRoot "README.md") -Raw
 
-if (-not $readme.Contains("still being reviewed in OSS-1.3")) {
-    throw "Public README no longer preserves license-review-in-progress status."
+if (-not $readme.Contains("MagicTrackpad2ForWindows driver remains third-party software under its upstream")) {
+    throw "Public README no longer preserves third-party GPL separation."
+}
+
+if (-not $readme.Contains("implemented together in OSS-1.3C")) {
+    throw "Public README no longer preserves license-implementation-pending status."
 }
 
 Write-Host "[PASS] Signed upstream asset identity and SHA256 are frozen."
@@ -46,5 +50,5 @@ Write-Host "[PASS] Release Actions run ID is frozen."
 Write-Host "[PASS] Exact source checkout SHA is distinguished from workflow and tag SHAs."
 Write-Host "[PASS] GPLv2 lineage evidence is recorded without guessing only/or-later SPDX semantics."
 Write-Host "[PASS] Conservative corresponding-source release plan is documented."
-Write-Host "[PASS] Root LICENSE remains intentionally deferred to OSS-1.3B."
-Write-Host "[PASS] Public README still states license review is in progress."
+Write-Host "[PASS] Root LICENSE remains intentionally deferred to OSS-1.3C implementation."
+Write-Host "[PASS] Public README records the MIT policy while keeping OSS-1.3C implementation pending."

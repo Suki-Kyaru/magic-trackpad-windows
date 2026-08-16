@@ -37,7 +37,9 @@ foreach ($required in @(
     'MagicTrackpad2ForWindows',
     'MT2FW11-20260223-MSSigned.zip',
     '2870c0c7982ce6aafc3ff763fec2999423dc4bdbd1a2c0e31ca216f26a75714f',
-    'top-level license expression',
+    'SPDX: MIT',
+    'third-party software under its upstream',
+    'OSS-1.3C',
     'docs/assets/screenshots/installer-information-zh-cn.png',
     'docs/assets/screenshots/installer-destination-zh-cn.png',
     'docs/assets/screenshots/uninstall-connected-guard-zh-cn.png'
@@ -58,7 +60,9 @@ foreach ($required in @(
     'MagicTrackpad2ForWindows',
     'MT2FW11-20260223-MSSigned.zip',
     '2870c0c7982ce6aafc3ff763fec2999423dc4bdbd1a2c0e31ca216f26a75714f',
-    '顶层 license expression'
+    'SPDX: MIT',
+    '不会**被本项目重新许可为 MIT',
+    'OSS-1.3C'
 )) {
     if (-not $zh.Contains($required)) {
         throw "Chinese public README contract missing: $required"
@@ -82,7 +86,7 @@ foreach ($image in @(
 }
 
 if (Test-Path (Join-Path $RepoRoot "LICENSE") -PathType Leaf) {
-    throw "OSS-1.2 must not create the root LICENSE before OSS-1.3 review."
+    throw "OSS-1.3B public README baseline must not create the root LICENSE before OSS-1.3C implementation."
 }
 
 $rootPatchNotes = @(Get-ChildItem -Path $RepoRoot -File -Filter "PATCH_NOTES*.md")
@@ -97,5 +101,5 @@ Write-Host "[PASS] Validated support is separated from unvalidated ARM64/Windows
 Write-Host "[PASS] Install, safe uninstall, diagnostics/privacy, and safety model are documented."
 Write-Host "[PASS] Pinned upstream v2.0 asset and SHA256 are documented."
 Write-Host "[PASS] Three accepted Windows 11 screenshots are present."
-Write-Host "[PASS] License status is explicit without inventing the OSS-1.3 root LICENSE."
+Write-Host "[PASS] README records MIT wrapper policy, GPL third-party separation, and OSS-1.3C implementation gate."
 Write-Host "[PASS] OSS-1.1B root-history cleanup remains intact."

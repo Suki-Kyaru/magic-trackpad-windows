@@ -1,10 +1,11 @@
 # License / Redistribution Review Checklist
 
-Status: OSS-1.3A EVIDENCE COLLECTED; POLICY NOT YET FINALIZED
+Status: OSS-1.3B POLICY DECIDED; OSS-1.3C IMPLEMENTATION PENDING
 
-This document is an engineering/legal-review checklist, not legal advice.
+This document is an engineering/open-source compliance checklist, not legal
+advice.
 
-## Evidence now frozen
+## Frozen upstream evidence
 
 ### Pinned signed payload
 
@@ -48,40 +49,61 @@ Archived run metadata identifies that source artifact as:
 source-code-8874eaa3994f0e7e40fa40312250bbc5f13cc928
 ```
 
-Treat this source SHA as the strongest currently available public evidence of the
-source checkout used by the signed build.
+Treat this source SHA as the strongest currently available public evidence of
+the source checkout used by the signed build.
 
 See `UPSTREAM_SOURCE_PROVENANCE.md`.
 
-## OSS-1.3B policy questions still open
+## OSS-1.3B policy decision
 
-1. Final license expression for code authored in this wrapper repository.
-2. Whether to align wrapper code to GPLv2 for simplicity, or license independent
-   wrapper components separately while honoring GPL obligations for the driver.
-3. Exact SPDX wording (`GPL-2.0-only` vs `GPL-2.0-or-later`) must not be guessed
-   from shorthand "GPLv2".
-4. Final form of `THIRD_PARTY_NOTICES.md`.
-5. Copyright/attribution notice for wrapper-authored code.
-6. Public release source bundle layout.
+The author has selected:
+
+```text
+Project-authored wrapper code/docs: MIT
+SPDX identifier: MIT
+Copyright holder: Suki-Kyaru
+Third-party MagicTrackpad2ForWindows: upstream GPLv2 terms, not relicensed
+```
+
+See `LICENSE_POLICY_DECISION.md`.
+
+The project uses a separate-works/aggregation packaging policy for the current
+architecture. This is an engineering compliance position supported by GNU GPL
+FAQ guidance, not a binding legal determination.
+
+The policy must be revisited if future code directly incorporates or links
+GPL-covered upstream source.
+
+## Upstream SPDX precision
+
+Do not guess `GPL-2.0-only` versus `GPL-2.0-or-later` for upstream files from
+the shorthand "GPLv2".
+
+Preserve the actual upstream GPL version 2 license text in the redistribution
+package and use conservative human-readable attribution unless upstream supplies
+a more precise authoritative notice.
 
 ## OSS-1.3C implementation gates
 
 Before public binary distribution:
 
-- add the final root LICENSE chosen in OSS-1.3B;
-- preserve applicable upstream GPLv2 text;
-- ship/furnish exact corresponding upstream source;
+- add root `LICENSE` with standard MIT text;
+- use `Copyright (c) 2026 Suki-Kyaru`;
+- add/preserve the applicable upstream GPL version 2 license text separately;
+- rewrite `THIRD_PARTY_NOTICES.md` with explicit MIT-vs-third-party scope;
+- preserve exact upstream corresponding source;
 - preserve build/provenance information;
 - keep signed upstream binaries byte-for-byte unchanged;
-- update README licensing language from "review in progress";
-- update THIRD_PARTY_NOTICES;
-- add a release verifier that fails when source/license assets are missing;
-- document wrapper `Setup.exe` signature status separately from driver signature.
+- update README licensing language from "implementation pending";
+- add a source/release packaging script;
+- add a release verifier that fails when source/license/provenance assets are
+  missing;
+- document wrapper `Setup.exe` signature status separately from driver
+  signature.
 
-## Conservative source-availability plan
+## Conservative release layout
 
-For each binary release containing the pinned upstream driver, publish at the
-same release/download location:
+Target shape:
 
 ```text
 MagicTrackpad-for-Windows-Setup-<version>-x64.exe
@@ -92,5 +114,14 @@ UPSTREAM_PROVENANCE.txt
 GPL-2.0.txt
 ```
 
-The exact final filenames may change in OSS-1.3C, but the evidence/source
-coverage must not be weakened.
+The source/provenance coverage must remain intact even if filenames change.
+
+## Public release gate
+
+Until OSS-1.3C is complete:
+
+```text
+license policy: decided
+license implementation: incomplete
+public binary release: blocked
+```

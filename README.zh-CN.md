@@ -241,8 +241,12 @@ docs/         契约、验证证据、OSS 规划和开发历史
 
 固定的上游驱动项目包含 GNU General Public License version 2。
 
-**本包装仓库自身**最终的顶层 license expression，以及公开二进制/源码配套分发方式，
-仍在 OSS-1.3 中审核。在该阶段完成前，不应因为开发安装器已经可构建，就把仓库视为
+本项目原创 wrapper 代码和原创文档的许可证策略现已确定为 **MIT**
+（`SPDX: MIT`）。固定的上游 MagicTrackpad2ForWindows 驱动仍是第三方组件，
+继续遵循其上游 GPLv2 条款，**不会**被本项目重新许可为 MIT。
+
+根 MIT `LICENSE`、单独的第三方 GPL 许可证副本、对应源码包和 Release 合规门禁会在
+OSS-1.3C 中一次性落地。在 1.3C 完成前，不应因为开发安装器已经可构建，就把仓库视为
 已经达到公开 Release 的许可证收口状态。
 
 参见：
