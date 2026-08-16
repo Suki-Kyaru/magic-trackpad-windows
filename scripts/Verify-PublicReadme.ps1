@@ -19,7 +19,9 @@ $zh = Get-Content $ReadmeZh -Raw
 foreach ($stale in @(
     'v0.1.0-dev.5.1',
     '尚未完成的关键验收',
-    '当前卸载程序只移除'
+    '当前卸载程序只移除',
+    'are still being prepared.',
+    'CI、贡献流程和首个公开 Release 仍在继续准备'
 )) {
     if ($en.Contains($stale) -or $zh.Contains($stale)) {
         throw "Stale pre-OSS README statement remains: $stale"
@@ -40,6 +42,8 @@ foreach ($required in @(
     'SPDX: MIT',
     'GPLv2',
     'Release compliance process',
+    'non-destructive GitHub Actions CI',
+    'hosted-validated',
     'afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04',
     'docs/assets/screenshots/installer-information-zh-cn.png',
     'docs/assets/screenshots/installer-destination-zh-cn.png',
@@ -64,6 +68,8 @@ foreach ($required in @(
     'SPDX: MIT',
     '不会**被本项目重新许可为 MIT',
     'Release 合规流程',
+    '非破坏性 GitHub Actions CI',
+    'GitHub hosted 环境完成验证',
     'afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04'
 )) {
     if (-not $zh.Contains($required)) {
@@ -100,4 +106,5 @@ Write-Host "[PASS] Install, safe uninstall, diagnostics/privacy, and safety mode
 Write-Host "[PASS] Pinned upstream v2.0 asset and SHA256 are documented."
 Write-Host "[PASS] Three accepted Windows 11 screenshots are present."
 Write-Host "[PASS] README records implemented MIT/GPL separation, release compliance, and frozen dev.5.4.2 artifact identity."
+Write-Host "[PASS] Public status copy reflects completed contributor workflow and hosted non-destructive CI validation."
 Write-Host "[PASS] OSS-1.1B root-history cleanup remains intact."

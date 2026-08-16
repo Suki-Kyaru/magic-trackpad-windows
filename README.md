@@ -17,9 +17,10 @@ and predictable uninstall/reinstall behavior for ordinary Windows users.
 >
 > No public binary release is published from this repository yet. The wrapper
 > `Setup.exe` is currently unsigned; the embedded upstream driver payload remains
-> the original Microsoft-signed payload. License/source-distribution tooling is
-> now implemented, while CI, contribution workflows, and the first public release
-> are still being prepared.
+> the original Microsoft-signed payload. License/source-distribution tooling,
+> contributor workflows, and the non-destructive GitHub Actions CI are implemented
+> and hosted-validated. Preparation for the first public binary release remains
+> separate from this validated repository/CI baseline.
 
 ## Screenshots
 

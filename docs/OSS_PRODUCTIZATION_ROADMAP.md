@@ -1,6 +1,6 @@
 # OSS Productization Roadmap After dev.5.4.2
 
-Status after OSS-1.3C.
+Status after OSS-1.5B hosted CI and first PR/main integration validation.
 
 The validated driver lifecycle remains frozen. OSS productization is improving
 the repository, licensing, contributor workflow, CI, and release engineering
@@ -53,18 +53,24 @@ Completed in OSS-1.4:
 - explicit "do not weaken" contracts for contributors/coding agents;
 - static contributor-workflow verifier.
 
-## Next: CI / reproducibility
+## CI / reproducibility
 
-Automate on Windows:
+Completed in OSS-1.5A/B:
 
-- C++ configure/build;
-- static verifier suite;
-- Windows PowerShell 5.1 compatibility checks where available;
-- upstream payload hash/signature validation;
-- installer build on a **new** wrapper version;
-- release/source-bundle verification;
-- artifact SHA256 generation;
-- clean-source / no-runtime-log gates.
+- non-destructive GitHub Actions workflow on `windows-2025-vs2026`;
+- repository/license/contributor/static-installer contract suite;
+- fresh x64 C++ helper configure/build;
+- Windows PowerShell 5.1 runtime compatibility using the fresh helper;
+- explicit support for both current-driver and clean no-driver dry-run states;
+- frozen dev.5.4.2 installer/release build exclusion;
+- read-only Actions token permissions and non-persistent checkout credentials;
+- real hosted validation for push, pull-request merge ref, and merged `main`;
+- zero uploaded CI artifacts.
+
+Future release CI remains a separate phase. It may add upstream payload
+hash/signature validation, installer build on a **new** wrapper version,
+release/source-bundle verification, artifact SHA256 generation, and clean-source
+gates only after the release version and packaging policy are reviewed.
 
 CI must not invent, silently replace, or modify the pinned upstream signed
 driver payload.
