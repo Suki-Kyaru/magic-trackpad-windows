@@ -1,4 +1,4 @@
-; Magic Trackpad for Windows - v0.1.0-dev.6.0
+; Magic Trackpad for Windows - v0.1.0-dev.6.1
 ; UI-language auto detection + bilingual user-safe driver removal.
 ; dev.5.3 destructive lifecycle remains the validated safety reference.
 ; x64 Windows 11 only.
@@ -16,7 +16,7 @@
 #endif
 
 #define MyAppName "Magic Trackpad for Windows"
-#define MyAppVersion "0.1.0-dev.6.0"
+#define MyAppVersion "0.1.0-dev.6.1"
 #define MyAppExeName "AmtPtpControlPanel.exe"
 
 [Setup]

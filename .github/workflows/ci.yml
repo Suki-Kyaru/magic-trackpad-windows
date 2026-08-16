@@ -64,11 +64,14 @@ jobs:
         run: |
           ./scripts/Build-CIHelper.ps1
 
-      - name: Confirm frozen installer is not produced
+      - name: Confirm frozen installers are not produced
         shell: pwsh
         run: |
-          $frozen = Join-Path $PWD "out\installer\MagicTrackpad-for-Windows-Setup-0.1.0-dev.5.4.2-x64.exe"
-          if (Test-Path $frozen -PathType Leaf) {
-            throw "CI must not rebuild the frozen dev.5.4.2 installer."
+          $frozenVersions = @("0.1.0-dev.5.4.2", "0.1.0-dev.6.0")
+          foreach ($version in $frozenVersions) {
+            $frozen = Join-Path $PWD "out\installer\MagicTrackpad-for-Windows-Setup-$version-x64.exe"
+            if (Test-Path $frozen -PathType Leaf) {
+              throw "CI must not rebuild frozen v$version installer."
+            }
           }
-          Write-Host "[PASS] CI did not produce a frozen dev.5.4.2 Setup."
+          Write-Host "[PASS] CI did not produce any frozen Setup."

@@ -13,7 +13,7 @@ and predictable uninstall/reinstall behavior for ordinary Windows users.
 
 > **Development status**
 >
-> Current source version: `v0.1.0-dev.6.0`.
+> Current source version: `v0.1.0-dev.6.1`.
 >
 > Last fully validated binary baseline: `v0.1.0-dev.5.4.2`.
 >

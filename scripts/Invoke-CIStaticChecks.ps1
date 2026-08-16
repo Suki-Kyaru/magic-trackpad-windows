@@ -81,14 +81,18 @@ Invoke-CheckedScript "scripts\Verify-UserSafeUninstall.ps1"
 # GitHub CI runs that test in the helper-build job after CMake compilation.
 Write-Host "[INFO] Windows PowerShell 5.1 runtime compatibility is deferred to the helper-build job."
 
-# Frozen version rule: CI must not build/reissue dev.5.4.2.
+# Frozen version rule: CI must not build/reissue published/frozen releases.
 $version = (Get-Content (Join-Path $RepoRoot "VERSION") -Raw).Trim()
+$frozenVersions = @(
+    "0.1.0-dev.5.4.2",
+    "0.1.0-dev.6.0"
+)
 
-if ($version -eq "0.1.0-dev.5.4.2") {
-    Write-Host "[PASS] Frozen dev.5.4.2 detected; installer/release build intentionally skipped."
+if ($frozenVersions -contains $version) {
+    Write-Host "[PASS] Frozen release v$version detected; installer/release build intentionally skipped."
 }
 else {
-    Write-Host "[INFO] VERSION is no longer dev.5.4.2: $version"
+    Write-Host "[INFO] VERSION is not a frozen release: $version"
     Write-Host "[INFO] CI installer/release build remains opt-in until a later reviewed phase."
 }
 

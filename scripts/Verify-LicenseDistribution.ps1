@@ -16,8 +16,10 @@ $BuildRelease = Join-Path $RepoRoot "scripts\Build-ReleaseBundle.ps1"
 $VerifyRelease = Join-Path $RepoRoot "scripts\Verify-ReleaseBundle.ps1"
 $VersionPath = Join-Path $RepoRoot "VERSION"
 
-$FrozenReleaseVersion = "0.1.0-dev.5.4.2"
-$FrozenReleaseSetupSha256 = "afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04"
+$FrozenReleaseSetupSha256ByVersion = @{
+    "0.1.0-dev.5.4.2" = "afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04"
+    "0.1.0-dev.6.0" = "f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791"
+}
 $UpstreamSourceSha = "8874eaa3994f0e7e40fa40312250bbc5f13cc928"
 $UpstreamWorkflowSha = "3611b8c6f4fa06a6912d16bb4b51a47bb8c70afa"
 $UpstreamTagSha = "6a308eccf6ae4fbc3cdcf267c3a525b4818824e3"
@@ -108,8 +110,10 @@ if (-not $iss.Contains('Source: "{#RepoRoot}\THIRD_PARTY_NOTICES.md"; DestDir: "
 }
 
 foreach ($required in @(
-    '$FrozenReleaseVersion = "0.1.0-dev.5.4.2"',
-    '$FrozenReleaseSetupSha256 = "afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04"',
+    '$FrozenReleaseSetupSha256ByVersion = @{' ,
+    '"0.1.0-dev.5.4.2" = "afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04"',
+    '"0.1.0-dev.6.0" = "f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791"',
+    'ContainsKey($Version)',
     'VERSION/setup.iss mismatch',
     'Verify-LicenseDistribution.ps1',
     'MagicTrackpad-for-Windows-Setup-$Version-x64.exe'
@@ -120,7 +124,10 @@ foreach ($required in @(
 }
 
 foreach ($required in @(
-    '$FrozenReleaseVersion = "0.1.0-dev.5.4.2"',
+    '$FrozenReleaseSetupSha256ByVersion = @{' ,
+    '"0.1.0-dev.5.4.2" = "afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04"',
+    '"0.1.0-dev.6.0" = "f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791"',
+    'ContainsKey($Version)',
     $UpstreamSourceSha,
     $UpstreamWorkflowSha,
     $UpstreamTagSha,
@@ -151,7 +158,7 @@ foreach ($required in @(
 foreach ($required in @(
     "Publishable binary unit",
     'does not modify `installer/setup.iss`',
-    $FrozenReleaseSetupSha256,
+    $FrozenReleaseSetupSha256ByVersion["0.1.0-dev.5.4.2"],
     "binary ZIP",
     "corresponding-source"
 )) {
@@ -160,25 +167,22 @@ foreach ($required in @(
     }
 }
 
-if ($Version -eq $FrozenReleaseVersion) {
-    if (-not $iss.Contains('#define MyAppVersion "0.1.0-dev.5.4.2"')) {
-        throw "Frozen current source unexpectedly changed installer MyAppVersion."
+foreach ($frozenVersion in ($FrozenReleaseSetupSha256ByVersion.Keys | Sort-Object)) {
+    $frozenSetup = Join-Path $RepoRoot "out\installer\MagicTrackpad-for-Windows-Setup-$frozenVersion-x64.exe"
+
+    if (-not (Test-Path $frozenSetup -PathType Leaf)) {
+        Write-Host "[INFO] Frozen v$frozenVersion Setup is not present under out\installer; source guard is still enforced."
+        continue
     }
 
-    $frozenSetup = Join-Path $RepoRoot "out\installer\MagicTrackpad-for-Windows-Setup-0.1.0-dev.5.4.2-x64.exe"
+    $expectedFrozenHash = $FrozenReleaseSetupSha256ByVersion[$frozenVersion]
+    $actualFrozenHash = (Get-FileHash $frozenSetup -Algorithm SHA256).Hash.ToLowerInvariant()
 
-    if (Test-Path $frozenSetup -PathType Leaf) {
-        $actualFrozenHash = (Get-FileHash $frozenSetup -Algorithm SHA256).Hash.ToLowerInvariant()
-
-        if ($actualFrozenHash -ne $FrozenReleaseSetupSha256) {
-            throw "Local frozen dev.5.4.2 Setup exists but its SHA256 no longer matches the validated artifact."
-        }
-
-        Write-Host "[PASS] Existing local dev.5.4.2 Setup still matches the frozen SHA256."
+    if ($actualFrozenHash -ne $expectedFrozenHash) {
+        throw "Local frozen v$frozenVersion Setup exists but its SHA256 no longer matches the published/validated artifact."
     }
-    else {
-        Write-Host "[INFO] Frozen dev.5.4.2 Setup is not present under out\installer; source guard is still enforced."
-    }
+
+    Write-Host "[PASS] Existing local v$frozenVersion Setup still matches the frozen SHA256."
 }
 
 Write-Host "[PASS] Root MIT LICENSE identifies Suki-Kyaru (2026)."
@@ -186,6 +190,6 @@ Write-Host "[PASS] Separate GNU GPL version 2 license text is present."
 Write-Host "[PASS] THIRD_PARTY_NOTICES preserves upstream identity, payload hash, and source requirement."
 Write-Host "[PASS] Upstream source/workflow/tag provenance remains frozen."
 Write-Host "[PASS] Current installer source still matches VERSION and installs the third-party notice."
-Write-Host "[PASS] Build-Installer prevents same-version dev.5.4.2 rebuilds and enforces VERSION/Inno consistency."
+Write-Host "[PASS] Build scripts prevent rebuilds of frozen dev.5.4.2/dev.6.0 releases and enforce VERSION/Inno consistency."
 Write-Host "[PASS] Release tooling packages a license-bearing binary ZIP plus exact wrapper/upstream source assets."
 Write-Host "[PASS] Release verifier rejects naked Setup publication and checks archive/provenance/source closure."
