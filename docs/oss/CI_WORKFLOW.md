@@ -1,6 +1,6 @@
 # GitHub Actions CI Workflow
 
-Status: OSS-1.5A — DEFINED LOCALLY; FIRST HOSTED RUN PENDING
+Status: OSS-1.5B — HOSTED PUSH / PR MERGE-REF / MERGED MAIN VALIDATED
 
 ## Purpose
 
@@ -135,17 +135,31 @@ session just to put CMake on PATH.
 
 `build-ci/` is a local build product and is ignored by Git.
 
-## OSS-1.5B acceptance
+## OSS-1.5B hosted acceptance evidence
 
-Do not mark hosted CI as validated until the repository is connected to GitHub
-and an actual Actions run proves:
+Hosted CI validation is complete.
 
-1. workflow YAML is accepted;
-2. both jobs start on the intended Windows runner;
-3. static contract job passes;
-4. Windows PowerShell 5.1 compatibility passes;
-5. helper config/build passes;
-6. no installer/release artifact is produced;
-7. no permissions/secrets warning indicates unexpected write access.
+Validated workflow runs:
 
-Any hosted-run fix belongs to OSS-1.5B, not a silent rewrite of this baseline.
+- feature-branch push: `31924121861`;
+- pull-request merge ref: `31924711963`;
+- merged `main` push: `31925457637`.
+
+Across the hosted validation:
+
+1. workflow YAML was accepted;
+2. both jobs ran successfully on `windows-2025-vs2026`;
+3. the OSS/safety contract job passed;
+4. the fresh-helper Windows PowerShell 5.1 compatibility path passed;
+5. a clean hosted runner correctly produced
+   `driver-not-installed -> result=nothing-to-remove` with
+   `uninstall.executed=false`;
+6. the frozen dev.5.4.2 Setup was not rebuilt;
+7. no workflow artifacts were uploaded;
+8. `GITHUB_TOKEN` remained read-only for repository contents and checkout did
+   not persist credentials.
+
+The local current-driver environment separately validates the
+`result=plan-ready` dry-run branch. Together, local and hosted validation cover
+both supported compatibility-test environments without weakening uninstall
+safety.

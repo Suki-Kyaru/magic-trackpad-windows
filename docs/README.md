@@ -112,4 +112,4 @@ product contract when a newer maintained document exists.
 ## Continuous integration
 
 - `oss/CI_WORKFLOW.md`
-  - hosted CI scope, safety boundaries, and first-run acceptance plan
+  - hosted CI scope, safety boundaries, and completed hosted validation evidence
