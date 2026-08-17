@@ -17,7 +17,7 @@ $infoEnText = Get-Content $InfoEn -Raw
 $infoZhText = Get-Content $InfoZh -Raw
 
 $required = @(
-'WizardStyle=modern dynamic windows11','LanguageDetectionMethod=uilanguage','ShowLanguageDialog=no','UsePreviousLanguage=yes',
+'WizardStyle=modern dynamic windows11','MinVersion=10.0.22000','LanguageDetectionMethod=uilanguage','ShowLanguageDialog=no','UsePreviousLanguage=yes',
 'DisableDirPage=no','DisableReadyPage=yes','UsePreviousAppDir=yes',
 'Name: "english"; MessagesFile: "compiler:Default.isl"','Name: "chinesesimp"; MessagesFile: "{#ChineseMessagesFile}"',
 'english.UninstallRemovalSuccess=','chinesesimp.UninstallRemovalSuccess=','english.UninstallRemovalConnected=','chinesesimp.UninstallRemovalConnected=',
@@ -46,15 +46,15 @@ foreach($fragment in @('procedure LayoutHeader;','ContentTop := ScaleY(4);','pro
 }
 if($issText.Contains('WizardForm.DiskSpaceLabel.Top :=') -or $issText.Contains('WizardForm.NextButton.Top :=')){ throw "Frozen bottom geometry changed." }
 
-foreach($requiredText in @('This installation includes:','Safety boundaries:','Uninstall options:','Driver removal is fail-closed:')){
+foreach($requiredText in @('Supported OS for this release candidate: Windows 11 x64.','Windows 10 is not supported by the current pinned upstream driver package.','This installation includes:','Safety boundaries:','Uninstall options:','Driver removal is fail-closed:')){
     if(-not $infoEnText.Contains($requiredText)){ throw "English InfoBefore section missing: $requiredText" }
 }
-foreach($requiredText in @('本次安装包括：','安全边界：','卸载选项：','驱动移除采用失败即保留策略：')){
+foreach($requiredText in @('当前发布候选仅支持 Windows 11 x64。','当前固定的上游驱动包不支持 Windows 10。','本次安装包括：','安全边界：','卸载选项：','驱动移除采用失败即保留策略：')){
     if(-not $infoZhText.Contains($requiredText)){ throw "Chinese InfoBefore section missing: $requiredText" }
 }
 if($buildText -notmatch 'ChineseSimplified\.isl'){ throw "Simplified Chinese resource discovery changed." }
 
-Write-Host "[PASS] Windows 11 bilingual installer baseline remains frozen."
+Write-Host "[PASS] Bilingual installer UX/safety baseline remains frozen; RC minimum OS gate is Windows 11 x64 build 22000."
 Write-Host "[PASS] Destination-folder freedom and R10.2 geometry remain frozen."
 Write-Host "[PASS] User-facing uninstall invokes the safe removal runtime."
 Write-Host "[PASS] Connected-device failure has a dedicated bilingual path."

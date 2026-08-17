@@ -8,8 +8,9 @@ $workflowPath = Join-Path $RepoRoot ".github\workflows\ci.yml"
 $runnerPath = Join-Path $RepoRoot "scripts\Invoke-CIStaticChecks.ps1"
 $compatPath = Join-Path $RepoRoot "scripts\Test-WindowsPowerShellCompatibility.ps1"
 $buildHelperPath = Join-Path $RepoRoot "scripts\Build-CIHelper.ps1"
+$cmakePath = Join-Path $RepoRoot "CMakeLists.txt"
 
-foreach ($path in @($workflowPath, $runnerPath, $compatPath, $buildHelperPath)) {
+foreach ($path in @($workflowPath, $runnerPath, $compatPath, $buildHelperPath, $cmakePath)) {
     if (-not (Test-Path $path -PathType Leaf)) {
         throw "CI foundation file missing: $path"
     }
@@ -19,6 +20,7 @@ $workflow = Get-Content $workflowPath -Raw
 $runner = Get-Content $runnerPath -Raw
 $compat = Get-Content $compatPath -Raw
 $buildHelper = Get-Content $buildHelperPath -Raw
+$cmake = Get-Content $cmakePath -Raw
 
 foreach ($required in @(
     "actions/checkout@v6",
@@ -30,7 +32,8 @@ foreach ($required in @(
     "Build helper and run Windows PowerShell 5.1 compatibility",
     "Confirm frozen installers are not produced",
     "0.1.0-dev.5.4.2",
-    "0.1.0-dev.6.0"
+    "0.1.0-dev.6.0",
+    "0.1.0-rc.1"
 )) {
     if (-not $workflow.Contains($required)) {
         throw "CI workflow contract missing: $required"
@@ -62,6 +65,7 @@ foreach ($required in @(
     "Windows PowerShell 5.1 runtime compatibility is deferred to the helper-build job",
     "0.1.0-dev.5.4.2",
     "0.1.0-dev.6.0",
+    "0.1.0-rc.1",
     "installer/release build intentionally skipped"
 )) {
     if (-not $runner.Contains($required)) {
@@ -69,6 +73,17 @@ foreach ($required in @(
     }
 }
 
+
+foreach ($required in @(
+    "include(CTest)",
+    "MagicTrackpadStatusBindingTests",
+    "tests/status_binding_tests.cpp",
+    "NAME status-binding"
+)) {
+    if (-not $cmake.Contains($required)) {
+        throw "CMake status-binding test contract missing: $required"
+    }
+}
 $attributes = Get-Content (Join-Path $RepoRoot ".gitattributes") -Raw
 if (-not $attributes.Contains("*.yml text eol=lf")) {
     throw "YAML LF normalization contract missing."
@@ -86,7 +101,12 @@ foreach ($required in @(
     "--build",
     "-A x64",
     "Test-WindowsPowerShellCompatibility.ps1",
-    "-HelperPath"
+    "-HelperPath",
+    "ctest.exe",
+    "[TEST] C++ status-binding regression...",
+    '--test-dir $BuildDir',
+    "--output-on-failure",
+    "[PASS] C++ status-binding regression passed."
 )) {
     if (-not $buildHelper.Contains($required)) {
         throw "Shared CI helper-build contract missing: $required"
@@ -124,8 +144,9 @@ if (-not $gitignore.Contains("/build-ci/")) {
 Write-Host "[PASS] GitHub Actions workflow uses read-only repository permissions."
 Write-Host "[PASS] CI targets the Windows 2025 + Visual Studio 2026 hosted runner."
 Write-Host "[PASS] CI runs the OSS/license/contributor and static installer safety contracts."
+Write-Host "[PASS] Fresh helper CI runs the status-binding CTest before Windows PowerShell 5.1 compatibility."
 Write-Host "[PASS] CI runs Windows PowerShell 5.1 compatibility only after a fresh helper build."
 Write-Host "[PASS] WinPS compatibility accepts both current-driver and clean no-driver environments without weakening dry-run safety."
 Write-Host "[PASS] CI and local reproduction share the same CMake/helper-build script."
-Write-Host "[PASS] Frozen dev.5.4.2 and dev.6.0 installer/release builds are excluded from CI."
+Write-Host "[PASS] Frozen dev.5.4.2, dev.6.0, and rc.1 installer/release builds are excluded from CI."
 Write-Host "[PASS] CI contains no driver-removal or `/force` execution path."

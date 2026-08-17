@@ -1,4 +1,4 @@
-当前仅支持 Windows 11 x64。
+当前发布候选仅支持 Windows 11 x64。当前固定的上游驱动包不支持 Windows 10。
 
 本次安装包括：
 - 已验证的 Microsoft 签名 MagicTrackpad2ForWindows v2.0 驱动。

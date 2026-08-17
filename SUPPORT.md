@@ -45,12 +45,19 @@ the upstream driver.
 For problems clearly inside the upstream driver's touch-processing behavior,
 maintainers may ask you to reproduce or report the issue upstream as well.
 
+## Current release-candidate OS support
+
+The current `v0.1.0-rc.2` release candidate supports Windows 11 x64.
+`v0.1.0-rc.1` was tested on Windows 10 x64 build 19044, but the pinned
+Microsoft-signed upstream driver could not configure the A3120 `MI_01` UMDF
+function-driver path. The current `v0.1.0` line therefore does not support Windows 10.
+
 ## Unsupported / not yet validated
 
 The wrapper currently does not claim project-level validation for:
 
 - ARM64 installation/lifecycle;
-- Windows 10 installation/lifecycle;
+- Windows 10 installation/lifecycle with the current pinned upstream driver package;
 - automatic cleanup of ambiguous historical driver packages;
 - arbitrary Apple pointing-device models not covered by the validated baseline.
 

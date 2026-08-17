@@ -69,11 +69,14 @@ foreach ($required in @(
     'Final Setup SHA256 inside the published binary ZIP:',
     'f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791',
     'Previous frozen validated binary baseline: `v0.1.0-dev.5.4.2`.',
+    '`0.1.0-dev.6.0`, and `0.1.0-rc.1` identities',
     '`v0.1.0-dev.6.0` completed the controlled release regression and is now frozen.',
     'The current public binary prerelease is `v0.1.0-dev.6.0`.',
     'The workflow has completed successfully on GitHub-hosted',
     'The screenshots below were refreshed from the dev.6.0 prerelease candidate UI.',
     'Windows 11 x64',
+    'The current `v0.1.0` line therefore remains Windows 11 x64 only.',
+    '| Windows 10 wrapper/install lifecycle | **Not supported by the current `v0.1.0` line; `v0.1.0-rc.1` failed A3120 validation on Windows 10 x64 build 19044** |',
     'Apple USB-C Magic Trackpad A3120',
     'ARM64 wrapper/install lifecycle | **Not yet validated**',
     'Remove the application and Magic Trackpad driver',
@@ -105,11 +108,14 @@ foreach ($required in @(
     '已发布二进制 ZIP 内 Final Setup SHA256：',
     'f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791',
     '上一个冻结并完成验收的二进制基线：`v0.1.0-dev.5.4.2`。',
+    '和 `0.1.0-rc.1` 主动阻断。',
     '`v0.1.0-dev.6.0` 已完成受控发布回归并正式冻结。',
     '当前公开二进制预发行版为 `v0.1.0-dev.6.0`。',
     '该工作流已经在 GitHub-hosted Windows runner 上实际成功运行',
     '以下截图已使用 dev.6.0 预发布候选界面重新采集。',
     'Windows 11 x64',
+    '因此当前 `v0.1.0` 版本线继续仅支持 Windows 11 x64。',
+    '| Windows 10 包装/安装生命周期 | **当前 `v0.1.0` 版本线不支持；`v0.1.0-rc.1` 已在 Windows 10 x64 build 19044 上完成 A3120 失败验证** |',
     'Apple USB-C Magic Trackpad A3120',
     'ARM64 包装/安装生命周期',
     '同时卸载程序和 Magic Trackpad 驱动',
@@ -156,9 +162,9 @@ if ($rootPatchNotes.Count -ne 0) {
 Write-Host "[PASS] Public README reports current source version v$Version and published dev.6.0 prerelease."
 Write-Host "[PASS] English and Simplified Chinese READMEs use language-matched screenshot sets."
 Write-Host "[PASS] All six dev.6.0 bilingual screenshot assets exist and are non-empty."
-Write-Host "[PASS] Validated support is separated from unvalidated ARM64/Windows 10 claims."
+Write-Host "[PASS] ARM64 remains unvalidated; Windows 10 rc.1 validation failed and the current v0.1.0 line remains Windows 11 x64 only."
 Write-Host "[PASS] Install, safe uninstall, diagnostics/privacy, and safety model are documented."
 Write-Host "[PASS] Pinned upstream v2.0 asset and SHA256 are documented."
-Write-Host "[PASS] README records MIT/GPL separation, release compliance, and frozen dev.5.4.2/dev.6.0 identities."
-Write-Host "[PASS] Public status distinguishes published dev.6.0 from post-release dev.6.1 source."
+Write-Host "[PASS] README records MIT/GPL separation, release compliance, and frozen dev.5.4.2/dev.6.0/rc.1 identities."
+Write-Host "[PASS] Public status distinguishes published dev.6.0 from current v$Version stable-release candidate source."
 Write-Host "[PASS] OSS-1.1B root-history cleanup remains intact."

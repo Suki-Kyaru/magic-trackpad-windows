@@ -13,7 +13,7 @@ and predictable uninstall/reinstall behavior for ordinary Windows users.
 
 > **Development status**
 >
-> Current source version: `v0.1.0-dev.6.1`.
+> Current source version: `v0.1.0-rc.2`.
 >
 > Current public prerelease: [`v0.1.0-dev.6.0`](https://github.com/Suki-Kyaru/magic-trackpad-windows/releases/tag/v0.1.0-dev.6.0).
 >
@@ -24,8 +24,8 @@ and predictable uninstall/reinstall behavior for ordinary Windows users.
 >
 > `v0.1.0-dev.6.0` completed the controlled release regression and is now frozen.
 > The outer `Setup.exe` remains unsigned; the embedded upstream driver payload
-> remains the original Microsoft-signed payload. Current `dev.6.1` source is
-> post-release development and is not itself a published binary.
+> remains the original Microsoft-signed payload. Current `v0.1.0-rc.2` source is
+> the stable-release candidate and is not yet a published stable binary.
 
 ## Screenshots
 
@@ -67,6 +67,7 @@ This repository adds the surrounding Windows product lifecycle:
 The table below describes what **this wrapper project has actually validated**.
 It is intentionally narrower than the upstream driver's possible support.
 
+
 | Area | Project-validated baseline |
 | --- | --- |
 | Operating system | Windows 11 x64 |
@@ -78,7 +79,11 @@ It is intentionally narrower than the upstream driver's possible support.
 | Haptic feedback | Validated |
 | Native Windows two/three/four-finger gestures | Validated |
 | ARM64 wrapper/install lifecycle | **Not yet validated** |
-| Windows 10 wrapper/install lifecycle | **Not claimed by this project** |
+| Windows 10 wrapper/install lifecycle | **Not supported by the current `v0.1.0` line; `v0.1.0-rc.1` failed A3120 validation on Windows 10 x64 build 19044** |
+
+Windows 10 x64 build 19044 was tested with `v0.1.0-rc.1`. Windows selected the
+pinned Microsoft-signed A3120 `MI_01` driver, but its UMDF function-driver path
+could not be configured. The current `v0.1.0` line therefore remains Windows 11 x64 only.
 
 The pinned upstream package contains other architecture support, and upstream may
 support additional configurations. Do not treat that as project-level validation
@@ -92,8 +97,8 @@ standalone raw Setup executable.
 
 `v0.1.0-dev.6.0` is now a frozen published release identity and must never be
 rebuilt or reissued from post-tag source. `v0.1.0-dev.5.4.2` remains the previous
-frozen validated binary baseline. Current source `v0.1.0-dev.6.1` is post-release
-development and requires its own new release identity before binary publication.
+frozen validated binary baseline. Current source `v0.1.0-rc.2` is the stable-release
+candidate and must complete Windows 11 stable-release validation before publication.
 
 The normal user flow is:
 
@@ -227,9 +232,9 @@ Its validated Setup SHA256 is:
 afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04
 ```
 
-The current source has already advanced to `0.1.0-dev.6.0`, with `VERSION` and
-`#define MyAppVersion` in `installer/setup.iss` synchronized. From a clean
-committed source state, build the prerelease candidate with:
+The current source is `0.1.0-rc.2`, with `VERSION` and `#define MyAppVersion` in
+`installer/setup.iss` synchronized. From a clean committed source state, build
+the release candidate with:
 
 ```powershell
 .\scripts\Build-Installer.ps1
@@ -241,10 +246,10 @@ Output:
 out\installer\
 ```
 
-`Build-Installer.ps1` still fails closed if `VERSION` is set to the frozen
-`0.1.0-dev.5.4.2`, while `dev.6.0` is allowed only when `VERSION`/Inno version
-identity matches. Payload, installer, uninstall, and license-distribution gates
-are re-run before compiling.
+`Build-Installer.ps1` fails closed for the frozen `0.1.0-dev.5.4.2`,
+`0.1.0-dev.6.0`, and `0.1.0-rc.1` identities. Current `0.1.0-rc.2` is buildable
+only when `VERSION` and the Inno version match. Payload, installer, uninstall,
+and license-distribution gates are re-run before compiling.
 
 For publishable release assets, use the controlled
 [release compliance process](docs/oss/RELEASE_COMPLIANCE.md) rather than

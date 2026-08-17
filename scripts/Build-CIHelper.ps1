@@ -55,10 +55,16 @@ if (-not (Test-Path $CompatScript -PathType Leaf)) {
 }
 
 $cmake = Resolve-CMakeExecutable
+$ctest = Join-Path (Split-Path -Parent $cmake) "ctest.exe"
+
+if (-not (Test-Path $ctest -PathType Leaf)) {
+    throw "CTest executable was not found next to CMake: $ctest"
+}
 
 Write-Host "Magic Trackpad for Windows - CI helper build"
 Write-Host "[INFO] Repository: $RepoRoot"
 Write-Host "[INFO] CMake: $cmake"
+Write-Host "[INFO] CTest: $ctest"
 
 & $cmake --version
 
@@ -81,6 +87,19 @@ if ($LASTEXITCODE -ne 0) {
 if ($LASTEXITCODE -ne 0) {
     throw "CMake build failed with exit code $LASTEXITCODE."
 }
+
+Write-Host "[TEST] C++ status-binding regression..."
+
+& $ctest `
+    --test-dir $BuildDir `
+    -C Release `
+    --output-on-failure
+
+if ($LASTEXITCODE -ne 0) {
+    throw "C++ status-binding regression failed with exit code $LASTEXITCODE."
+}
+
+Write-Host "[PASS] C++ status-binding regression passed."
 
 $helper = Join-Path $BuildDir "Release\MagicTrackpadHelper.exe"
 

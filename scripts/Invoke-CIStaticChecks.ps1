@@ -85,7 +85,8 @@ Write-Host "[INFO] Windows PowerShell 5.1 runtime compatibility is deferred to t
 $version = (Get-Content (Join-Path $RepoRoot "VERSION") -Raw).Trim()
 $frozenVersions = @(
     "0.1.0-dev.5.4.2",
-    "0.1.0-dev.6.0"
+    "0.1.0-dev.6.0",
+    "0.1.0-rc.1"
 )
 
 if ($frozenVersions -contains $version) {

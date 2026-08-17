@@ -14,6 +14,7 @@ $VerifyRelease = Join-Path $RepoRoot "scripts\Verify-ReleaseBundle.ps1"
 $FrozenReleaseSetupSha256ByVersion = @{
     "0.1.0-dev.5.4.2" = "afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04"
     "0.1.0-dev.6.0" = "f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791"
+    "0.1.0-rc.1" = "fb209f59939dde9291a3879f4e30145192901c397114510301a3a3cf309bd068"
 }
 
 $UpstreamUrl = "https://github.com/vitoplantamura/MagicTrackpad2ForWindows.git"

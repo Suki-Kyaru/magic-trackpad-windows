@@ -67,7 +67,7 @@ jobs:
       - name: Confirm frozen installers are not produced
         shell: pwsh
         run: |
-          $frozenVersions = @("0.1.0-dev.5.4.2", "0.1.0-dev.6.0")
+          $frozenVersions = @("0.1.0-dev.5.4.2", "0.1.0-dev.6.0", "0.1.0-rc.1")
           foreach ($version in $frozenVersions) {
             $frozen = Join-Path $PWD "out\installer\MagicTrackpad-for-Windows-Setup-$version-x64.exe"
             if (Test-Path $frozen -PathType Leaf) {

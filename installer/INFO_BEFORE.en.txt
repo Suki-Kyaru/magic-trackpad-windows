@@ -1,4 +1,4 @@
-Windows 11 x64 is currently supported.
+Supported OS for this release candidate: Windows 11 x64. Windows 10 is not supported by the current pinned upstream driver package.
 
 This installation includes:
 - The validated Microsoft-signed MagicTrackpad2ForWindows v2.0 driver.
