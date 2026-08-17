@@ -5,6 +5,35 @@ project(MagicTrackpadWindows
     LANGUAGES CXX
 )
 
+set_property(
+    DIRECTORY APPEND PROPERTY
+    CMAKE_CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/VERSION"
+)
+
+file(
+    READ
+    "${CMAKE_CURRENT_SOURCE_DIR}/VERSION"
+    MAGIC_TRACKPAD_PRODUCT_VERSION
+)
+
+string(
+    STRIP
+    "${MAGIC_TRACKPAD_PRODUCT_VERSION}"
+    MAGIC_TRACKPAD_PRODUCT_VERSION
+)
+
+if(MAGIC_TRACKPAD_PRODUCT_VERSION STREQUAL "")
+    message(FATAL_ERROR "VERSION is empty.")
+endif()
+
+if(NOT MAGIC_TRACKPAD_PRODUCT_VERSION MATCHES "^[0-9A-Za-z][0-9A-Za-z._+-]*$")
+    message(
+        FATAL_ERROR
+        "VERSION contains unsupported characters: ${MAGIC_TRACKPAD_PRODUCT_VERSION}"
+    )
+endif()
+
 include(CTest)
 
 add_executable(MagicTrackpadHelper
@@ -18,6 +47,7 @@ target_compile_definitions(MagicTrackpadHelper PRIVATE
     _UNICODE
     WIN32_LEAN_AND_MEAN
     NOMINMAX
+    MAGIC_TRACKPAD_PRODUCT_VERSION="${MAGIC_TRACKPAD_PRODUCT_VERSION}"
 )
 
 target_link_libraries(MagicTrackpadHelper PRIVATE

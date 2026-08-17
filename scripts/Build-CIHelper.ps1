@@ -7,6 +7,7 @@ $ErrorActionPreference = "Stop"
 $RepoRoot = (Resolve-Path $RepoRoot).Path
 $BuildDir = Join-Path $RepoRoot "build-ci"
 $CompatScript = Join-Path $RepoRoot "scripts\Test-WindowsPowerShellCompatibility.ps1"
+$VersionContractScript = Join-Path $RepoRoot "scripts\Test-HelperVersionContract.ps1"
 
 function Resolve-CMakeExecutable {
     $command = Get-Command "cmake.exe" -ErrorAction SilentlyContinue
@@ -52,6 +53,10 @@ function Resolve-CMakeExecutable {
 
 if (-not (Test-Path $CompatScript -PathType Leaf)) {
     throw "Windows PowerShell compatibility test missing: $CompatScript"
+}
+
+if (-not (Test-Path $VersionContractScript -PathType Leaf)) {
+    throw "Helper product-version contract test missing: $VersionContractScript"
 }
 
 $cmake = Resolve-CMakeExecutable
@@ -110,6 +115,14 @@ if (-not (Test-Path $helper -PathType Leaf)) {
 $item = Get-Item $helper
 Write-Host "[PASS] Fresh helper built: $($item.FullName)"
 Write-Host "[INFO] Helper size: $($item.Length) bytes"
+
+Write-Host "[TEST] Helper product-version contract..."
+
+& $VersionContractScript `
+    -RepoRoot $RepoRoot `
+    -HelperPath $helper
+
+Write-Host "[PASS] Helper product-version contract passed."
 
 & $CompatScript -HelperPath $helper
 
