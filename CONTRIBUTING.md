@@ -79,7 +79,10 @@ VERSION
 installer/setup.iss -> MyAppVersion
 ```
 
-Current stable-release candidate source is `0.1.0-rc.1`.
+`v0.1.0-rc.1` is now a frozen Windows 10 validation candidate with Setup SHA256
+`fb209f59939dde9291a3879f4e30145192901c397114510301a3a3cf309bd068`.
+
+Current stable-release candidate source is `0.1.0-rc.2`.
 
 See `docs/oss/RELEASE_COMPLIANCE.md`.
 
@@ -150,7 +153,7 @@ and all additional checks relevant to the files/behavior changed.
 
 The repository also contains a GitHub Actions workflow that mirrors the
 non-destructive OSS/static checks and compiles the C++ helper on a hosted Windows
-runner. Hosted CI must not rebuild either frozen dev.5.4.2 or dev.6.0 installer.
+runner. Hosted CI must not rebuild frozen dev.5.4.2, dev.6.0, or rc.1 installers.
 
 Do not claim a check passed if it was not run.
 

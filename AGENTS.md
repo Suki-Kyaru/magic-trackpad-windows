@@ -37,7 +37,11 @@ f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791
 
 Do not rebuild or republish a different installer under either frozen version.
 
-Current stable-release candidate source uses `0.1.0-rc.1`.
+`v0.1.0-rc.1` is a frozen Windows 10 validation candidate, not a public release.
+Frozen rc.1 Setup SHA256: `fb209f59939dde9291a3879f4e30145192901c397114510301a3a3cf309bd068`.
+Its source commit is `bdad6cb24a39f479436763db774f46ee4a5ab154`.
+
+Current stable-release candidate source uses `0.1.0-rc.2`.
 
 ## Never weaken these rules
 
@@ -99,9 +103,9 @@ For installer/runtime/driver lifecycle changes, also run the relevant existing
 installer, PowerShell compatibility, payload, status, and uninstall verifiers
 listed in `docs/oss/CONTRIBUTOR_WORKFLOW.md`.
 
-Do not run `Build-Installer.ps1` or `Build-ReleaseBundle.ps1` with either frozen
-`VERSION=0.1.0-dev.5.4.2` or `VERSION=0.1.0-dev.6.0`; refusal is intentional.
-Current `0.1.0-rc.1` source is not a frozen published identity; release building remains an
+Do not run `Build-Installer.ps1` or `Build-ReleaseBundle.ps1` with any frozen
+`VERSION`: `0.1.0-dev.5.4.2`, `0.1.0-dev.6.0`, or `0.1.0-rc.1`; refusal is intentional.
+Current `0.1.0-rc.2` source is not a frozen identity; release building remains an
 explicit maintainer action rather than part of normal CI.
 
 The GitHub Actions CI workflow must preserve this rule: CI may build the C++

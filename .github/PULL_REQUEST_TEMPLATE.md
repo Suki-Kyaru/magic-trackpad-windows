@@ -43,5 +43,5 @@ What changed, and why?
 
 ## Release/version note
 
-- [ ] This change does not attempt to rebuild/reissue frozen `v0.1.0-dev.5.4.2` or `v0.1.0-dev.6.0`
+- [ ] This change does not attempt to rebuild/reissue frozen `v0.1.0-dev.5.4.2`, `v0.1.0-dev.6.0`, or `v0.1.0-rc.1`
 - [ ] If an installer build is intended, `VERSION` and `installer/setup.iss` use the same new version

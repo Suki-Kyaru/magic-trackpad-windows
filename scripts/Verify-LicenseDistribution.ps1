@@ -19,6 +19,7 @@ $VersionPath = Join-Path $RepoRoot "VERSION"
 $FrozenReleaseSetupSha256ByVersion = @{
     "0.1.0-dev.5.4.2" = "afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04"
     "0.1.0-dev.6.0" = "f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791"
+    "0.1.0-rc.1" = "fb209f59939dde9291a3879f4e30145192901c397114510301a3a3cf309bd068"
 }
 $UpstreamSourceSha = "8874eaa3994f0e7e40fa40312250bbc5f13cc928"
 $UpstreamWorkflowSha = "3611b8c6f4fa06a6912d16bb4b51a47bb8c70afa"
@@ -113,6 +114,7 @@ foreach ($required in @(
     '$FrozenReleaseSetupSha256ByVersion = @{' ,
     '"0.1.0-dev.5.4.2" = "afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04"',
     '"0.1.0-dev.6.0" = "f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791"',
+    '"0.1.0-rc.1" = "fb209f59939dde9291a3879f4e30145192901c397114510301a3a3cf309bd068"',
     'ContainsKey($Version)',
     'VERSION/setup.iss mismatch',
     'Verify-LicenseDistribution.ps1',
@@ -127,6 +129,7 @@ foreach ($required in @(
     '$FrozenReleaseSetupSha256ByVersion = @{' ,
     '"0.1.0-dev.5.4.2" = "afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04"',
     '"0.1.0-dev.6.0" = "f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791"',
+    '"0.1.0-rc.1" = "fb209f59939dde9291a3879f4e30145192901c397114510301a3a3cf309bd068"',
     'ContainsKey($Version)',
     $UpstreamSourceSha,
     $UpstreamWorkflowSha,
@@ -159,6 +162,9 @@ foreach ($required in @(
     "Publishable binary unit",
     'does not modify `installer/setup.iss`',
     $FrozenReleaseSetupSha256ByVersion["0.1.0-dev.5.4.2"],
+    $FrozenReleaseSetupSha256ByVersion["0.1.0-rc.1"],
+    "0.1.0-rc.2",
+    "Windows 10 validation candidate",
     "binary ZIP",
     "corresponding-source"
 )) {
@@ -190,6 +196,6 @@ Write-Host "[PASS] Separate GNU GPL version 2 license text is present."
 Write-Host "[PASS] THIRD_PARTY_NOTICES preserves upstream identity, payload hash, and source requirement."
 Write-Host "[PASS] Upstream source/workflow/tag provenance remains frozen."
 Write-Host "[PASS] Current installer source still matches VERSION and installs the third-party notice."
-Write-Host "[PASS] Build scripts prevent rebuilds of frozen dev.5.4.2/dev.6.0 releases and enforce VERSION/Inno consistency."
+Write-Host "[PASS] Build scripts prevent rebuilds of frozen dev.5.4.2/dev.6.0/rc.1 identities and enforce VERSION/Inno consistency."
 Write-Host "[PASS] Release tooling packages a license-bearing binary ZIP plus exact wrapper/upstream source assets."
 Write-Host "[PASS] Release verifier rejects naked Setup publication and checks archive/provenance/source closure."

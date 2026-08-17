@@ -31,11 +31,25 @@ Its final source/tag target is:
 4ea2db6dc7ba1f7998f735d56ce1158c9b2be420
 ```
 
-Both binary identities are immutable. Rebuilding later source under either frozen
-version would create a different binary with an existing identity, so the build
-scripts deliberately reject both versions.
+`v0.1.0-rc.1` is a frozen Windows 10 validation candidate, not a public release.
 
-Current stable-release candidate source uses `0.1.0-rc.1`.
+Frozen rc.1 Setup SHA256:
+
+```text
+fb209f59939dde9291a3879f4e30145192901c397114510301a3a3cf309bd068
+```
+
+Its source commit is:
+
+```text
+bdad6cb24a39f479436763db774f46ee4a5ab154
+```
+
+All three binary identities are immutable. Rebuilding later source under any frozen
+version would create a different binary with an existing identity, so the build
+scripts deliberately reject all frozen versions.
+
+Current stable-release candidate source uses `0.1.0-rc.2`.
 
 Historical note: OSS-1.3C does not modify `installer/setup.iss`; that phase
 established the original dev.5.4.2 freeze before the first public prerelease existed.
@@ -98,7 +112,7 @@ Upload the verified files from that release directory together.
 
 Before any new installer/release build:
 
-- do not reuse `0.1.0-dev.5.4.2` or `0.1.0-dev.6.0`;
+- do not reuse `0.1.0-dev.5.4.2`, `0.1.0-dev.6.0`, or `0.1.0-rc.1`;
 - update root `VERSION`;
 - update `#define MyAppVersion` in `installer/setup.iss` to exactly the same
   version;
@@ -192,11 +206,11 @@ Among other checks, the verifier ensures:
 
 ## Current expected behavior
 
-Running `Build-Installer.ps1` or `Build-ReleaseBundle.ps1` with either frozen
-`VERSION=0.1.0-dev.5.4.2` or `VERSION=0.1.0-dev.6.0` must **fail deliberately
-before rebuilding**.
+Running `Build-Installer.ps1` or `Build-ReleaseBundle.ps1` with any frozen
+`VERSION` (`0.1.0-dev.5.4.2`, `0.1.0-dev.6.0`, or `0.1.0-rc.1`) must **fail
+deliberately before rebuilding**.
 
-Current stable-release candidate `0.1.0-rc.1` is not yet a frozen published identity; installer/release
+Current stable-release candidate `0.1.0-rc.2` is not frozen; installer/release
 building remains an explicit maintainer action rather than a normal CI side effect.
 
 A frozen-version refusal is a safety gate, not a regression.

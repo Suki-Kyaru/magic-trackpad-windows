@@ -7,8 +7,8 @@ Status: OSS-1.5B — HOSTED PUSH / PR MERGE-REF / MERGED MAIN VALIDATED
 The first CI workflow is intentionally non-destructive.
 
 It should catch repository/contract regressions and compile the C++ helper
-without touching Driver Store state or rebuilding either frozen dev.5.4.2 or
-dev.6.0 installer.
+without touching Driver Store state or rebuilding frozen dev.5.4.2, dev.6.0,
+or rc.1 installers.
 
 Workflow:
 
@@ -95,6 +95,7 @@ Published/frozen release identities are:
 ```text
 0.1.0-dev.5.4.2
 0.1.0-dev.6.0
+0.1.0-rc.1
 ```
 
 Normal CI must not invoke:
@@ -104,9 +105,9 @@ Build-Installer.ps1
 Build-ReleaseBundle.ps1
 ```
 
-and must not produce a new Setup under either frozen version.
+and must not produce a new Setup under any frozen version.
 
-Current stable-release candidate source `0.1.0-rc.1` is not a frozen published identity; installer/release builds
+Current stable-release candidate source `0.1.0-rc.2` is not frozen; installer/release builds
 remain explicit maintainer actions and are not part of normal CI.
 
 ## Permissions

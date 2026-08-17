@@ -55,7 +55,19 @@ v0.1.0-dev.6.0
 The current stable-release candidate source is:
 
 ```text
+v0.1.0-rc.2
+```
+
+The frozen Windows 10 validation candidate is:
+
+```text
 v0.1.0-rc.1
+```
+
+Frozen rc.1 Setup SHA256:
+
+```text
+fb209f59939dde9291a3879f4e30145192901c397114510301a3a3cf309bd068
 ```
 
 The previous frozen validated binary baseline remains:

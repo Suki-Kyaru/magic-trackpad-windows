@@ -39,6 +39,7 @@ foreach ($requiredText in @(
     "0.1.0-dev.5.4.2",
     "0.1.0-dev.6.0",
     "0.1.0-rc.1",
+    "0.1.0-rc.2",
     "DEV6_0_FINAL_RELEASE_VALIDATION.md",
     "Verify-ContributorWorkflow.ps1"
 )) {
@@ -51,6 +52,7 @@ foreach ($requiredText in @(
     "v0.1.0-dev.5.4.2",
     "v0.1.0-dev.6.0",
     "0.1.0-rc.1",
+    "0.1.0-rc.2",
     "PowerShell's location",
     "MagicTrackpad2ForWindows",
     "third-party GPLv2 software",
@@ -67,7 +69,8 @@ foreach ($requiredText in @(
     "private security",
     "v0.1.0-dev.5.4.2",
     "v0.1.0-dev.6.0",
-    "v0.1.0-rc.1"
+    "v0.1.0-rc.1",
+    "v0.1.0-rc.2"
 )) {
     if (-not $security.Contains($requiredText)) {
         throw "SECURITY.md contract missing: $requiredText"
@@ -81,7 +84,8 @@ foreach ($requiredText in @(
     "Build-Installer.ps1",
     "runtime logs",
     "v0.1.0-dev.6.0",
-    "v0.1.0-rc.1"
+    "v0.1.0-rc.1",
+    "v0.1.0-rc.2"
 )) {
     if (-not $workflow.Contains($requiredText)) {
         throw "Contributor validation matrix missing: $requiredText"
@@ -93,7 +97,8 @@ foreach ($requiredText in @(
     "Validated",
     "Not run",
     "v0.1.0-dev.5.4.2",
-    "v0.1.0-dev.6.0"
+    "v0.1.0-dev.6.0",
+    "v0.1.0-rc.1"
 )) {
     if (-not $pr.Contains($requiredText)) {
         throw "PR template contract missing: $requiredText"
@@ -124,6 +129,6 @@ Write-Host "[PASS] CONTRIBUTING, SUPPORT, and SECURITY policies are present."
 Write-Host "[PASS] Root AGENTS.md is a concise safety/navigation map for coding agents."
 Write-Host "[PASS] GitHub bug/feature issue forms and PR template are present."
 Write-Host "[PASS] Risk-based contributor validation matrix is documented."
-Write-Host "[PASS] Frozen dev.5.4.2/dev.6.0 release identities and driver-removal safety rules are carried into contributor guidance."
+Write-Host "[PASS] Frozen dev.5.4.2/dev.6.0/rc.1 identities and current rc.2 guidance are carried into contributor contracts."
 Write-Host "[PASS] LICENSE/YAML files are explicitly normalized to LF."
 Write-Host "[PASS] OSS-1.1B root-history cleanup remains intact."
