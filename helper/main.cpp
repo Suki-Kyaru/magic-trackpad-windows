@@ -1,8 +1,11 @@
 #include <windows.h>
 #include <setupapi.h>
+#include <cfgmgr32.h>
+#include <cfg.h>
 #include <initguid.h>
 #include <devpkey.h>
 #include <bluetoothapis.h>
+#include "status_binding.h"
 
 #include <algorithm>
 #include <cctype>
@@ -30,6 +33,8 @@ struct DeviceInfo {
     std::wstring infPath;
     std::wstring provider;
     std::wstring driverVersion;
+    std::optional<ULONG> devNodeStatus;
+    std::optional<ULONG> problemCode;
 };
 
 struct BluetoothState {
@@ -166,6 +171,30 @@ std::wstring GetDevicePropertyString(
     return std::wstring(reinterpret_cast<const wchar_t*>(buffer.data()));
 }
 
+void PopulateDeviceNodeState(
+    const SP_DEVINFO_DATA& deviceInfoData,
+    DeviceInfo& device) {
+
+    ULONG status = 0;
+    ULONG problem = 0;
+
+    const CONFIGRET result = CM_Get_DevNode_Status(
+        &status,
+        &problem,
+        deviceInfoData.DevInst,
+        0);
+
+    if (result != CR_SUCCESS) {
+        return;
+    }
+
+    device.devNodeStatus = status;
+
+    if ((status & DN_HAS_PROBLEM) != 0) {
+        device.problemCode = problem;
+    }
+}
+
 std::wstring GetInstanceId(
     HDEVINFO deviceInfoSet,
     SP_DEVINFO_DATA& deviceInfoData) {
@@ -235,6 +264,7 @@ std::vector<DeviceInfo> EnumeratePresentDevices() {
             deviceInfoSet, data, DEVPKEY_Device_DriverProvider);
         device.driverVersion = GetDevicePropertyString(
             deviceInfoSet, data, DEVPKEY_Device_DriverVersion);
+        PopulateDeviceNodeState(data, device);
 
         devices.push_back(std::move(device));
     }
@@ -271,11 +301,21 @@ bool IsBluetoothPrecisionInterface(const DeviceInfo& device) {
             ContainsI(device.provider, L"VITO PLANTAMURA"));
 }
 
+status_binding::PrecisionBindingEvidence MakeBindingEvidence(
+    const DeviceInfo& device) {
+
+    return {
+        device.name,
+        device.provider,
+        !device.infPath.empty(),
+        !device.driverVersion.empty(),
+        device.devNodeStatus
+    };
+}
+
 bool IsUpstreamDriverBound(const DeviceInfo& device) {
-    return ContainsI(device.provider, L"BINGXING WANG") ||
-           ContainsI(device.provider, L"VITO PLANTAMURA") ||
-           ContainsI(device.name, L"APPLE USB PRECISION TOUCHPAD DEVICE") ||
-           ContainsI(device.name, L"APPLE MULTI-TOUCH TRACKPAD HID FILTER");
+    return status_binding::IsUpstreamDriverBound(
+        MakeBindingEvidence(device));
 }
 
 std::optional<ULONGLONG> ExtractBluetoothAddress(
@@ -749,6 +789,22 @@ void PrintDevice(const DeviceInfo& device) {
     std::cout << "device.inf=" << Utf8(device.infPath) << "\n";
     std::cout << "device.provider=" << Utf8(device.provider) << "\n";
     std::cout << "device.driver_version=" << Utf8(device.driverVersion) << "\n";
+    std::cout << "device.devnode_status=";
+    if (device.devNodeStatus.has_value()) {
+        std::cout << device.devNodeStatus.value();
+    }
+    std::cout << "\n";
+    std::cout << "device.started="
+              << (status_binding::IsDevNodeStarted(device.devNodeStatus) ? "true" : "false")
+              << "\n";
+    std::cout << "device.has_problem="
+              << (status_binding::HasDevNodeProblem(device.devNodeStatus) ? "true" : "false")
+              << "\n";
+    std::cout << "device.problem_code=";
+    if (device.problemCode.has_value()) {
+        std::cout << device.problemCode.value();
+    }
+    std::cout << "\n";
     std::cout << "---\n";
 }
 
@@ -773,17 +829,18 @@ int Status(bool verbose) {
         bluetoothPnpPresent =
             bluetoothPnpPresent || IsBluetoothPnpA3120(device);
 
-        if (IsUsbPrecisionInterface(device) &&
-            IsUpstreamDriverBound(device)) {
-            usbPrecision = true;
-        }
+        const bool usbPrecisionBound =
+            IsUsbPrecisionInterface(device) &&
+            IsUpstreamDriverBound(device);
+        const bool bluetoothPrecisionBound =
+            IsBluetoothPrecisionInterface(device) &&
+            IsUpstreamDriverBound(device);
 
-        if (IsBluetoothPrecisionInterface(device) &&
-            IsUpstreamDriverBound(device)) {
-            bluetoothPrecision = true;
-        }
+        usbPrecision = usbPrecision || usbPrecisionBound;
+        bluetoothPrecision =
+            bluetoothPrecision || bluetoothPrecisionBound;
 
-        if (IsUpstreamDriverBound(device)) {
+        if (usbPrecisionBound || bluetoothPrecisionBound) {
             upstreamDriverBound = true;
 
             if (publishedInf.empty() && !device.infPath.empty()) {

@@ -8,8 +8,9 @@ $workflowPath = Join-Path $RepoRoot ".github\workflows\ci.yml"
 $runnerPath = Join-Path $RepoRoot "scripts\Invoke-CIStaticChecks.ps1"
 $compatPath = Join-Path $RepoRoot "scripts\Test-WindowsPowerShellCompatibility.ps1"
 $buildHelperPath = Join-Path $RepoRoot "scripts\Build-CIHelper.ps1"
+$cmakePath = Join-Path $RepoRoot "CMakeLists.txt"
 
-foreach ($path in @($workflowPath, $runnerPath, $compatPath, $buildHelperPath)) {
+foreach ($path in @($workflowPath, $runnerPath, $compatPath, $buildHelperPath, $cmakePath)) {
     if (-not (Test-Path $path -PathType Leaf)) {
         throw "CI foundation file missing: $path"
     }
@@ -19,6 +20,7 @@ $workflow = Get-Content $workflowPath -Raw
 $runner = Get-Content $runnerPath -Raw
 $compat = Get-Content $compatPath -Raw
 $buildHelper = Get-Content $buildHelperPath -Raw
+$cmake = Get-Content $cmakePath -Raw
 
 foreach ($required in @(
     "actions/checkout@v6",
@@ -71,6 +73,17 @@ foreach ($required in @(
     }
 }
 
+
+foreach ($required in @(
+    "include(CTest)",
+    "MagicTrackpadStatusBindingTests",
+    "tests/status_binding_tests.cpp",
+    "NAME status-binding"
+)) {
+    if (-not $cmake.Contains($required)) {
+        throw "CMake status-binding test contract missing: $required"
+    }
+}
 $attributes = Get-Content (Join-Path $RepoRoot ".gitattributes") -Raw
 if (-not $attributes.Contains("*.yml text eol=lf")) {
     throw "YAML LF normalization contract missing."
@@ -88,7 +101,12 @@ foreach ($required in @(
     "--build",
     "-A x64",
     "Test-WindowsPowerShellCompatibility.ps1",
-    "-HelperPath"
+    "-HelperPath",
+    "ctest.exe",
+    "[TEST] C++ status-binding regression...",
+    '--test-dir $BuildDir',
+    "--output-on-failure",
+    "[PASS] C++ status-binding regression passed."
 )) {
     if (-not $buildHelper.Contains($required)) {
         throw "Shared CI helper-build contract missing: $required"
@@ -126,6 +144,7 @@ if (-not $gitignore.Contains("/build-ci/")) {
 Write-Host "[PASS] GitHub Actions workflow uses read-only repository permissions."
 Write-Host "[PASS] CI targets the Windows 2025 + Visual Studio 2026 hosted runner."
 Write-Host "[PASS] CI runs the OSS/license/contributor and static installer safety contracts."
+Write-Host "[PASS] Fresh helper CI runs the status-binding CTest before Windows PowerShell 5.1 compatibility."
 Write-Host "[PASS] CI runs Windows PowerShell 5.1 compatibility only after a fresh helper build."
 Write-Host "[PASS] WinPS compatibility accepts both current-driver and clean no-driver environments without weakening dry-run safety."
 Write-Host "[PASS] CI and local reproduction share the same CMake/helper-build script."
