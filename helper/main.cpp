@@ -25,7 +25,14 @@
 #pragma comment(lib, "cfgmgr32.lib")
 #pragma comment(lib, "bthprops.lib")
 
+#ifndef MAGIC_TRACKPAD_PRODUCT_VERSION
+#error "MAGIC_TRACKPAD_PRODUCT_VERSION must be provided by CMake."
+#endif
+
 namespace {
+
+constexpr std::string_view kProductVersion =
+    MAGIC_TRACKPAD_PRODUCT_VERSION;
 
 struct DeviceInfo {
     std::wstring instanceId;
@@ -699,7 +706,7 @@ void PrintDriverPackage(
 int DriverStatus(bool verbose) {
     const auto packages = EnumerateInstalledDriverPackages();
 
-    std::cout << "helper.version=0.1.0-dev.3\n";
+    std::cout << "helper.version=" << kProductVersion << "\n";
     std::cout << "driver.expected_original_inf="
               << Utf8(kExpectedOriginalInf) << "\n";
     std::cout << "driver.expected_provider="
@@ -866,7 +873,7 @@ int Status(bool verbose) {
         (usbPresent && usbPrecision) ||
         (bluetooth.connected && bluetoothPrecision);
 
-    std::cout << "helper.version=0.1.0-dev.3\n";
+    std::cout << "helper.version=" << kProductVersion << "\n";
     std::cout << "os.arch=" << NativeArchitecture() << "\n";
     std::cout << "device.model=" << (supportedKnown ? "A3120" : "not-detected") << "\n";
 
@@ -948,7 +955,7 @@ int Status(bool verbose) {
 
 void PrintUsage() {
     std::cout
-        << "MagicTrackpadHelper 0.1.0-dev.3\n"
+        << "MagicTrackpadHelper " << kProductVersion << "\n"
         << "Usage:\n"
         << "  MagicTrackpadHelper.exe status\n"
         << "  MagicTrackpadHelper.exe status --verbose\n"

@@ -62,8 +62,9 @@ CMake is not on PATH, falls back to Visual Studio's bundled CMake via
 
 It performs a clean x64 configure/build, runs the registered CTest
 `status-binding` regression from that fresh build tree, verifies that
-`MagicTrackpadHelper.exe` is produced, then passes that fresh helper explicitly
-to:
+`MagicTrackpadHelper.exe` is produced, checks that the helper reports the exact
+root `VERSION` across `driver-status`, `status`, and the usage banner, then
+passes that fresh helper explicitly to:
 
 ```text
 Test-WindowsPowerShellCompatibility.ps1 -HelperPath <build-ci helper>
@@ -74,8 +75,13 @@ the real helper. It requires healthy USB/Bluetooth Precision targets to bind and
 requires FriendlyName-only matches, missing driver identity, missing `DN_STARTED`,
 `DN_HAS_PROBLEM`, and unknown DevNode state to fail closed.
 
-That test invokes inbox Windows PowerShell 5.1 for the dry-run/diagnostics
-runtime paths.
+The helper product-version contract reads the repository-root `VERSION` at runtime
+and requires `driver-status`, `status`, and the usage banner to report that exact
+product version. CMake watches the root `VERSION` file and injects its value into
+the helper at configure/build time.
+
+The Windows PowerShell compatibility test invokes inbox Windows PowerShell 5.1
+for the dry-run/diagnostics runtime paths.
 
 The dry-run test accepts exactly two environment outcomes:
 

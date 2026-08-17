@@ -8,9 +8,10 @@ $workflowPath = Join-Path $RepoRoot ".github\workflows\ci.yml"
 $runnerPath = Join-Path $RepoRoot "scripts\Invoke-CIStaticChecks.ps1"
 $compatPath = Join-Path $RepoRoot "scripts\Test-WindowsPowerShellCompatibility.ps1"
 $buildHelperPath = Join-Path $RepoRoot "scripts\Build-CIHelper.ps1"
+$versionContractPath = Join-Path $RepoRoot "scripts\Test-HelperVersionContract.ps1"
 $cmakePath = Join-Path $RepoRoot "CMakeLists.txt"
 
-foreach ($path in @($workflowPath, $runnerPath, $compatPath, $buildHelperPath, $cmakePath)) {
+foreach ($path in @($workflowPath, $runnerPath, $compatPath, $buildHelperPath, $versionContractPath, $cmakePath)) {
     if (-not (Test-Path $path -PathType Leaf)) {
         throw "CI foundation file missing: $path"
     }
@@ -20,6 +21,7 @@ $workflow = Get-Content $workflowPath -Raw
 $runner = Get-Content $runnerPath -Raw
 $compat = Get-Content $compatPath -Raw
 $buildHelper = Get-Content $buildHelperPath -Raw
+$versionContract = Get-Content $versionContractPath -Raw
 $cmake = Get-Content $cmakePath -Raw
 
 foreach ($required in @(
@@ -78,7 +80,10 @@ foreach ($required in @(
     "include(CTest)",
     "MagicTrackpadStatusBindingTests",
     "tests/status_binding_tests.cpp",
-    "NAME status-binding"
+    "NAME status-binding",
+    "CMAKE_CONFIGURE_DEPENDS",
+    '${CMAKE_CURRENT_SOURCE_DIR}/VERSION',
+    "MAGIC_TRACKPAD_PRODUCT_VERSION"
 )) {
     if (-not $cmake.Contains($required)) {
         throw "CMake status-binding test contract missing: $required"
@@ -106,10 +111,37 @@ foreach ($required in @(
     "[TEST] C++ status-binding regression...",
     '--test-dir $BuildDir',
     "--output-on-failure",
-    "[PASS] C++ status-binding regression passed."
+    "[PASS] C++ status-binding regression passed.",
+    "Test-HelperVersionContract.ps1",
+    "[TEST] Helper product-version contract...",
+    "[PASS] Helper product-version contract passed."
 )) {
     if (-not $buildHelper.Contains($required)) {
         throw "Shared CI helper-build contract missing: $required"
+    }
+}
+
+foreach ($required in @(
+    '[string]$HelperPath',
+    '[string]$VersionLinePrefix',
+    '$VersionPath',
+    'Get-Content $VersionPath -Raw',
+    'driver-status product version',
+    'status product version',
+    'usage product version',
+    'helper.version=$ExpectedVersion',
+    'MagicTrackpadHelper $ExpectedVersion',
+    '$reportedVersionLines',
+    'StartsWith(',
+    '$VersionLinePrefix',
+    '$reportedVersionLines.Count -ne 1',
+    'reported unexpected version line',
+    '@(0, 10, 11, 12, 13)',
+    '@(0, 2, 3, 4)',
+    '@(64)'
+)) {
+    if (-not $versionContract.Contains($required)) {
+        throw "Helper product-version runtime contract missing: $required"
     }
 }
 
@@ -145,7 +177,8 @@ Write-Host "[PASS] GitHub Actions workflow uses read-only repository permissions
 Write-Host "[PASS] CI targets the Windows 2025 + Visual Studio 2026 hosted runner."
 Write-Host "[PASS] CI runs the OSS/license/contributor and static installer safety contracts."
 Write-Host "[PASS] Fresh helper CI runs the status-binding CTest before Windows PowerShell 5.1 compatibility."
-Write-Host "[PASS] CI runs Windows PowerShell 5.1 compatibility only after a fresh helper build."
+Write-Host "[PASS] Fresh helper CI validates Helper product version against root VERSION."
+Write-Host "[PASS] CI runs Windows PowerShell 5.1 compatibility only after fresh helper runtime contracts pass."
 Write-Host "[PASS] WinPS compatibility accepts both current-driver and clean no-driver environments without weakening dry-run safety."
 Write-Host "[PASS] CI and local reproduction share the same CMake/helper-build script."
 Write-Host "[PASS] Frozen dev.5.4.2, dev.6.0, and rc.1 installer/release builds are excluded from CI."
