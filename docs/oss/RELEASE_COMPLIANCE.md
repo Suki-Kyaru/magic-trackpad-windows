@@ -35,7 +35,7 @@ Both binary identities are immutable. Rebuilding later source under either froze
 version would create a different binary with an existing identity, so the build
 scripts deliberately reject both versions.
 
-Current post-release development uses `0.1.0-dev.6.1`.
+Current stable-release candidate source uses `0.1.0-rc.1`.
 
 Historical note: OSS-1.3C does not modify `installer/setup.iss`; that phase
 established the original dev.5.4.2 freeze before the first public prerelease existed.
@@ -196,7 +196,7 @@ Running `Build-Installer.ps1` or `Build-ReleaseBundle.ps1` with either frozen
 `VERSION=0.1.0-dev.5.4.2` or `VERSION=0.1.0-dev.6.0` must **fail deliberately
 before rebuilding**.
 
-Current development `0.1.0-dev.6.1` is not a frozen identity, but installer/release
+Current stable-release candidate `0.1.0-rc.1` is not yet a frozen published identity; installer/release
 building remains an explicit maintainer action rather than a normal CI side effect.
 
 A frozen-version refusal is a safety gate, not a regression.

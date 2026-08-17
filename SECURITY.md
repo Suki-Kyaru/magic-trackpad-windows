@@ -52,10 +52,10 @@ The current public binary prerelease is:
 v0.1.0-dev.6.0
 ```
 
-The current post-release development source is:
+The current stable-release candidate source is:
 
 ```text
-v0.1.0-dev.6.1
+v0.1.0-rc.1
 ```
 
 The previous frozen validated binary baseline remains:

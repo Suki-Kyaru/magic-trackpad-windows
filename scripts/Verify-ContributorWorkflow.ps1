@@ -38,7 +38,7 @@ foreach ($requiredText in @(
     "Windows PowerShell 5.1",
     "0.1.0-dev.5.4.2",
     "0.1.0-dev.6.0",
-    "0.1.0-dev.6.1",
+    "0.1.0-rc.1",
     "DEV6_0_FINAL_RELEASE_VALIDATION.md",
     "Verify-ContributorWorkflow.ps1"
 )) {
@@ -50,7 +50,7 @@ foreach ($requiredText in @(
 foreach ($requiredText in @(
     "v0.1.0-dev.5.4.2",
     "v0.1.0-dev.6.0",
-    "0.1.0-dev.6.1",
+    "0.1.0-rc.1",
     "PowerShell's location",
     "MagicTrackpad2ForWindows",
     "third-party GPLv2 software",
@@ -67,7 +67,7 @@ foreach ($requiredText in @(
     "private security",
     "v0.1.0-dev.5.4.2",
     "v0.1.0-dev.6.0",
-    "v0.1.0-dev.6.1"
+    "v0.1.0-rc.1"
 )) {
     if (-not $security.Contains($requiredText)) {
         throw "SECURITY.md contract missing: $requiredText"
@@ -81,7 +81,7 @@ foreach ($requiredText in @(
     "Build-Installer.ps1",
     "runtime logs",
     "v0.1.0-dev.6.0",
-    "v0.1.0-dev.6.1"
+    "v0.1.0-rc.1"
 )) {
     if (-not $workflow.Contains($requiredText)) {
         throw "Contributor validation matrix missing: $requiredText"

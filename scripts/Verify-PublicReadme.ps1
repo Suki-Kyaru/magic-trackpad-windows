@@ -74,6 +74,8 @@ foreach ($required in @(
     'The workflow has completed successfully on GitHub-hosted',
     'The screenshots below were refreshed from the dev.6.0 prerelease candidate UI.',
     'Windows 11 x64',
+    'Minimum installer OS for current release candidate: **Windows 10 x64 build 19044 or later**.',
+    '| Windows 10 x64 build 19044 lifecycle | **Release-candidate validation in progress; not yet claimed as supported** |',
     'Apple USB-C Magic Trackpad A3120',
     'ARM64 wrapper/install lifecycle | **Not yet validated**',
     'Remove the application and Magic Trackpad driver',
@@ -110,6 +112,8 @@ foreach ($required in @(
     '该工作流已经在 GitHub-hosted Windows runner 上实际成功运行',
     '以下截图已使用 dev.6.0 预发布候选界面重新采集。',
     'Windows 11 x64',
+    '当前发布候选的最低安装系统：**Windows 10 x64 build 19044 或更高版本**。',
+    '| Windows 10 x64 build 19044 生命周期 | **正式版候选验证中；暂不声明已支持** |',
     'Apple USB-C Magic Trackpad A3120',
     'ARM64 包装/安装生命周期',
     '同时卸载程序和 Magic Trackpad 驱动',
@@ -156,9 +160,9 @@ if ($rootPatchNotes.Count -ne 0) {
 Write-Host "[PASS] Public README reports current source version v$Version and published dev.6.0 prerelease."
 Write-Host "[PASS] English and Simplified Chinese READMEs use language-matched screenshot sets."
 Write-Host "[PASS] All six dev.6.0 bilingual screenshot assets exist and are non-empty."
-Write-Host "[PASS] Validated support is separated from unvalidated ARM64/Windows 10 claims."
+Write-Host "[PASS] ARM64 remains unvalidated and Windows 10 RC validation remains explicitly in progress."
 Write-Host "[PASS] Install, safe uninstall, diagnostics/privacy, and safety model are documented."
 Write-Host "[PASS] Pinned upstream v2.0 asset and SHA256 are documented."
 Write-Host "[PASS] README records MIT/GPL separation, release compliance, and frozen dev.5.4.2/dev.6.0 identities."
-Write-Host "[PASS] Public status distinguishes published dev.6.0 from post-release dev.6.1 source."
+Write-Host "[PASS] Public status distinguishes published dev.6.0 from current v$Version stable-release candidate source."
 Write-Host "[PASS] OSS-1.1B root-history cleanup remains intact."

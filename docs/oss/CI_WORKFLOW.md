@@ -106,7 +106,7 @@ Build-ReleaseBundle.ps1
 
 and must not produce a new Setup under either frozen version.
 
-Current source `0.1.0-dev.6.1` is not frozen, but installer/release builds
+Current stable-release candidate source `0.1.0-rc.1` is not a frozen published identity; installer/release builds
 remain explicit maintainer actions and are not part of normal CI.
 
 ## Permissions

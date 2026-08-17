@@ -84,7 +84,7 @@ The first public binary prerelease has been published and closed:
 - final Setup SHA256: `f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791`;
 - the outer Setup remains unsigned; the embedded upstream driver remains Microsoft-signed;
 - validated project scope remains Windows 11 x64 + Apple USB-C Magic Trackpad A3120;
-- current post-release source line: `v0.1.0-dev.6.1`.
+- current stable-release candidate source line: `v0.1.0-rc.1`.
 
 Release closure included:
 

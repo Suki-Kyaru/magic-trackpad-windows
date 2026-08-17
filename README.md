@@ -2,7 +2,7 @@
 
 [简体中文](README.zh-CN.md)
 
-A Windows 11 installer, diagnostics, and lifecycle-management layer for Apple
+A Windows x64 installer, diagnostics, and lifecycle-management layer for Apple
 Magic Trackpad, built around the Microsoft-signed
 [MagicTrackpad2ForWindows](https://github.com/vitoplantamura/MagicTrackpad2ForWindows)
 Precision Touchpad driver.
@@ -13,7 +13,7 @@ and predictable uninstall/reinstall behavior for ordinary Windows users.
 
 > **Development status**
 >
-> Current source version: `v0.1.0-dev.6.1`.
+> Current source version: `v0.1.0-rc.1`.
 >
 > Current public prerelease: [`v0.1.0-dev.6.0`](https://github.com/Suki-Kyaru/magic-trackpad-windows/releases/tag/v0.1.0-dev.6.0).
 >
@@ -24,8 +24,8 @@ and predictable uninstall/reinstall behavior for ordinary Windows users.
 >
 > `v0.1.0-dev.6.0` completed the controlled release regression and is now frozen.
 > The outer `Setup.exe` remains unsigned; the embedded upstream driver payload
-> remains the original Microsoft-signed payload. Current `dev.6.1` source is
-> post-release development and is not itself a published binary.
+> remains the original Microsoft-signed payload. Current `v0.1.0-rc.1` source is
+> the stable-release candidate and is not yet a published stable binary.
 
 ## Screenshots
 
@@ -67,6 +67,9 @@ This repository adds the surrounding Windows product lifecycle:
 The table below describes what **this wrapper project has actually validated**.
 It is intentionally narrower than the upstream driver's possible support.
 
+Minimum installer OS for current release candidate: **Windows 10 x64 build 19044 or later**.
+Windows 10 validation is still in progress; this minimum installer gate is not yet a project-level support claim.
+
 | Area | Project-validated baseline |
 | --- | --- |
 | Operating system | Windows 11 x64 |
@@ -78,7 +81,7 @@ It is intentionally narrower than the upstream driver's possible support.
 | Haptic feedback | Validated |
 | Native Windows two/three/four-finger gestures | Validated |
 | ARM64 wrapper/install lifecycle | **Not yet validated** |
-| Windows 10 wrapper/install lifecycle | **Not claimed by this project** |
+| Windows 10 x64 build 19044 lifecycle | **Release-candidate validation in progress; not yet claimed as supported** |
 
 The pinned upstream package contains other architecture support, and upstream may
 support additional configurations. Do not treat that as project-level validation
@@ -92,8 +95,8 @@ standalone raw Setup executable.
 
 `v0.1.0-dev.6.0` is now a frozen published release identity and must never be
 rebuilt or reissued from post-tag source. `v0.1.0-dev.5.4.2` remains the previous
-frozen validated binary baseline. Current source `v0.1.0-dev.6.1` is post-release
-development and requires its own new release identity before binary publication.
+frozen validated binary baseline. Current source `v0.1.0-rc.1` is the stable-release
+candidate and must complete Windows 10/Windows 11 release validation before stable publication.
 
 The normal user flow is:
 

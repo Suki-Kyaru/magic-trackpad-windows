@@ -167,7 +167,7 @@ Do not write "tests pass" when only static checks were executed.
 
 `v0.1.0-dev.5.4.2` and published prerelease `v0.1.0-dev.6.0` are immutable.
 
-Current post-release development uses `v0.1.0-dev.6.1`.
+Current stable-release candidate source uses `v0.1.0-rc.1`.
 
 Any later installer/release build requires its own new release identity first.
 

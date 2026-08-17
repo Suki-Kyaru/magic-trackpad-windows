@@ -79,7 +79,7 @@ VERSION
 installer/setup.iss -> MyAppVersion
 ```
 
-Current development source is `0.1.0-dev.6.1`.
+Current stable-release candidate source is `0.1.0-rc.1`.
 
 See `docs/oss/RELEASE_COMPLIANCE.md`.
 

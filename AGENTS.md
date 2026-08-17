@@ -37,7 +37,7 @@ f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791
 
 Do not rebuild or republish a different installer under either frozen version.
 
-Current post-release development uses `0.1.0-dev.6.1`.
+Current stable-release candidate source uses `0.1.0-rc.1`.
 
 ## Never weaken these rules
 
@@ -101,7 +101,7 @@ listed in `docs/oss/CONTRIBUTOR_WORKFLOW.md`.
 
 Do not run `Build-Installer.ps1` or `Build-ReleaseBundle.ps1` with either frozen
 `VERSION=0.1.0-dev.5.4.2` or `VERSION=0.1.0-dev.6.0`; refusal is intentional.
-Current `0.1.0-dev.6.1` source is not frozen, but release building remains an
+Current `0.1.0-rc.1` source is not a frozen published identity; release building remains an
 explicit maintainer action rather than part of normal CI.
 
 The GitHub Actions CI workflow must preserve this rule: CI may build the C++

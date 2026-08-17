@@ -1,4 +1,4 @@
-Windows 11 x64 is currently supported.
+Minimum OS for this release candidate: Windows 10 x64 build 19044 or later. Windows 10 validation is in progress; Windows 11 x64 remains validated.
 
 This installation includes:
 - The validated Microsoft-signed MagicTrackpad2ForWindows v2.0 driver.
