@@ -10,6 +10,7 @@ $FrozenReleaseSetupSha256ByVersion = @{
     "0.1.0-dev.5.4.2" = "afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04"
     "0.1.0-dev.6.0" = "f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791"
     "0.1.0-rc.1" = "fb209f59939dde9291a3879f4e30145192901c397114510301a3a3cf309bd068"
+    "0.1.0-rc.2" = "e5e7f4d379e096b3513ed8118c1cf09f29152f24c7ac4282b53678aa4d687d40"
 }
 
 if (-not (Test-Path $VersionPath -PathType Leaf)) {
@@ -24,7 +25,7 @@ if ([string]::IsNullOrWhiteSpace($Version)) {
 
 if ($FrozenReleaseSetupSha256ByVersion.ContainsKey($Version)) {
     $frozenSetupSha256 = $FrozenReleaseSetupSha256ByVersion[$Version]
-    throw "v$Version is frozen (Setup SHA256 $frozenSetupSha256). Bump VERSION and installer/setup.iss MyAppVersion together before rebuilding from post-tag source."
+    throw "v$Version is frozen (Setup SHA256 $frozenSetupSha256). Bump VERSION and installer/setup.iss MyAppVersion together before building another release identity."
 }
 $BuildScript = Join-Path $PSScriptRoot "Build.ps1"
 $VerifyPayload = Join-Path $PSScriptRoot "Verify-DriverPayload.ps1"
@@ -44,6 +45,13 @@ $expectedVersionDefine = '#define MyAppVersion "' + $Version + '"'
 
 if (-not $issText.Contains($expectedVersionDefine)) {
     throw "VERSION/setup.iss mismatch. Expected Inno definition: $expectedVersionDefine"
+}
+
+$SetupExe = Join-Path $InstallerOutput "MagicTrackpad-for-Windows-Setup-$Version-x64.exe"
+
+if (Test-Path $SetupExe -PathType Leaf) {
+    $existingSetupSha256 = (Get-FileHash -Algorithm SHA256 -Path $SetupExe).Hash.ToLowerInvariant()
+    throw "Refusing to overwrite existing installer for v$Version (SHA256 $existingSetupSha256): $SetupExe. Use a new version, or let Build-ReleaseBundle.ps1 explicitly reuse these exact bytes with -ReuseExistingInstallerSha256."
 }
 
 $IsccCandidates = @(
@@ -204,8 +212,6 @@ Write-Host "[INFO] Inno Setup compiler: $Iscc"
 if ($LASTEXITCODE -ne 0) {
     throw "Inno Setup compilation failed."
 }
-
-$SetupExe = Join-Path $InstallerOutput "MagicTrackpad-for-Windows-Setup-$Version-x64.exe"
 
 if (-not (Test-Path $SetupExe -PathType Leaf)) {
     throw "Setup.exe was not produced at the expected path: $SetupExe"

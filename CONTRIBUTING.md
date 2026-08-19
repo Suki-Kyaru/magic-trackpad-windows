@@ -69,7 +69,7 @@ and is intentionally excluded from Git.
 
 `v0.1.0-dev.6.0` is the first public binary prerelease and is also frozen.
 
-Do not rebuild or publish a different Setup binary using either frozen version.
+Do not rebuild or publish a different Setup binary using any frozen release identity.
 
 Any intentional future installer/release build must use a new release identity
 with matching:
@@ -82,7 +82,14 @@ installer/setup.iss -> MyAppVersion
 `v0.1.0-rc.1` is now a frozen Windows 10 validation candidate with Setup SHA256
 `fb209f59939dde9291a3879f4e30145192901c397114510301a3a3cf309bd068`.
 
-Current stable-release candidate source is `0.1.0-rc.2`.
+`v0.1.0-rc.2` is the frozen Windows 11 stable-release candidate with Setup SHA256
+`e5e7f4d379e096b3513ed8118c1cf09f29152f24c7ac4282b53678aa4d687d40`.
+Its source commit is `b54ac7311b1a6e0736e91c2cac248fffcc485e04`; validation evidence lives in
+`docs/RC2_FINAL_VALIDATION.md`.
+
+Current final stable-release source is `0.1.0`; its public stable binary has not yet been published.
+If a release-bundle run fails after Setup is produced, preserve that Setup and resume only
+with its exact SHA256. Never delete it just to rebuild the same version.
 
 See `docs/oss/RELEASE_COMPLIANCE.md`.
 
@@ -153,7 +160,7 @@ and all additional checks relevant to the files/behavior changed.
 
 The repository also contains a GitHub Actions workflow that mirrors the
 non-destructive OSS/static checks and compiles the C++ helper on a hosted Windows
-runner. Hosted CI must not rebuild frozen dev.5.4.2, dev.6.0, or rc.1 installers.
+runner. Hosted CI must not rebuild frozen dev.5.4.2, dev.6.0, rc.1, or rc.2 installers.
 
 Do not claim a check passed if it was not run.
 

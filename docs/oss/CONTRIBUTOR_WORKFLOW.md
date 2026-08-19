@@ -165,9 +165,9 @@ Do not write "tests pass" when only static checks were executed.
 
 ## Version/release gate
 
-`v0.1.0-dev.5.4.2`, published prerelease `v0.1.0-dev.6.0`, and frozen Windows 10 validation candidate `v0.1.0-rc.1` are immutable.
+`v0.1.0-dev.5.4.2`, published prerelease `v0.1.0-dev.6.0`, frozen Windows 10 validation candidate `v0.1.0-rc.1`, and frozen Windows 11 stable-release candidate `v0.1.0-rc.2` are immutable.
 
-Current stable-release candidate source uses `v0.1.0-rc.2`.
+Current final stable-release source uses `v0.1.0`; its public stable binary has not yet been published.
 
 Any later installer/release build requires its own new release identity first.
 

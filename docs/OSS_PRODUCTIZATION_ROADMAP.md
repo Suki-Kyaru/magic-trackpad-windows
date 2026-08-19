@@ -35,7 +35,7 @@ Completed in OSS-1.3A/B/C:
 - SHA256 release manifest and release verifier;
 - frozen dev.5.4.2 same-version rebuild guard.
 
-A public binary release has **not** been published yet.
+The first public binary prerelease has been published; the final stable binary has **not** been published yet.
 
 ## Contributor workflow
 
@@ -62,7 +62,7 @@ Completed in OSS-1.5A/B:
 - fresh x64 C++ helper configure/build;
 - Windows PowerShell 5.1 runtime compatibility using the fresh helper;
 - explicit support for both current-driver and clean no-driver dry-run states;
-- frozen dev.5.4.2 installer/release build exclusion;
+- frozen release-identity installer/release build exclusion;
 - read-only Actions token permissions and non-persistent checkout credentials;
 - real hosted validation for push, pull-request merge ref, and merged `main`;
 - zero uploaded CI artifacts.
@@ -84,7 +84,8 @@ The first public binary prerelease has been published and closed:
 - final Setup SHA256: `f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791`;
 - the outer Setup remains unsigned; the embedded upstream driver remains Microsoft-signed;
 - validated project scope remains Windows 11 x64 + Apple USB-C Magic Trackpad A3120;
-- current stable-release candidate source line: `v0.1.0-rc.2`.
+- frozen stable-release candidate: `v0.1.0-rc.2`, Setup SHA256 `e5e7f4d379e096b3513ed8118c1cf09f29152f24c7ac4282b53678aa4d687d40`, source `b54ac7311b1a6e0736e91c2cac248fffcc485e04`;
+- current final stable-release source line: `v0.1.0`.
 - `v0.1.0-rc.1` is frozen after Windows 10 x64 build 19044 validation failed at the signed upstream A3120 `MI_01` UMDF function-driver configuration stage; the stable line returned to Windows 11 x64.
 
 Release closure included:
@@ -95,6 +96,10 @@ Release closure included:
 - exact wrapper source, upstream corresponding source, workflow snapshot, provenance, and SHA256 closure;
 - GitHub Draft/prerelease remote asset review before publication;
 - publication as the repository's first public binary prerelease.
+
+`v0.1.0-rc.2` completed the final Windows 11 x64 clean-VM lifecycle, physical A3120 Bluetooth Precision, and connected-device fail-closed validation.
+It is now a frozen internal stable-release candidate; no rc.2 tag or public rc.2 Release was created.
+Detailed evidence is preserved in `RC2_FINAL_VALIDATION.md`.
 
 `v0.1.0-dev.6.0` is now frozen and must never be rebuilt or reissued under the same version.
 Future binary publication must use a new version and repeat the controlled release process.
