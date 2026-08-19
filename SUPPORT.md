@@ -45,9 +45,9 @@ the upstream driver.
 For problems clearly inside the upstream driver's touch-processing behavior,
 maintainers may ask you to reproduce or report the issue upstream as well.
 
-## Current release-candidate OS support
+## Current release OS support
 
-The current `v0.1.0-rc.2` release candidate supports Windows 11 x64.
+The current `v0.1.0` stable source line supports Windows 11 x64. The frozen `v0.1.0-rc.2` candidate completed the final Windows 11 x64 validation.
 `v0.1.0-rc.1` was tested on Windows 10 x64 build 19044, but the pinned
 Microsoft-signed upstream driver could not configure the A3120 `MI_01` UMDF
 function-driver path. The current `v0.1.0` line therefore does not support Windows 10.

@@ -1,6 +1,7 @@
 param(
     [string]$RepoRoot = (Split-Path -Parent $PSScriptRoot),
-    [string]$UpstreamRepoPath = ""
+    [string]$UpstreamRepoPath = "",
+    [string]$ReuseExistingInstallerSha256 = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -15,6 +16,7 @@ $FrozenReleaseSetupSha256ByVersion = @{
     "0.1.0-dev.5.4.2" = "afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04"
     "0.1.0-dev.6.0" = "f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791"
     "0.1.0-rc.1" = "fb209f59939dde9291a3879f4e30145192901c397114510301a3a3cf309bd068"
+    "0.1.0-rc.2" = "e5e7f4d379e096b3513ed8118c1cf09f29152f24c7ac4282b53678aa4d687d40"
 }
 
 $UpstreamUrl = "https://github.com/vitoplantamura/MagicTrackpad2ForWindows.git"
@@ -38,7 +40,7 @@ if ([string]::IsNullOrWhiteSpace($Version)) {
 
 if ($FrozenReleaseSetupSha256ByVersion.ContainsKey($Version)) {
     $frozenSetupSha256 = $FrozenReleaseSetupSha256ByVersion[$Version]
-    throw "v$Version is frozen (Setup SHA256 $frozenSetupSha256). Create a new wrapper version before building post-tag release assets."
+    throw "v$Version is frozen (Setup SHA256 $frozenSetupSha256). Create a new wrapper version before building another release identity."
 }
 
 if (-not (Test-Path $Iss -PathType Leaf)) {
@@ -78,21 +80,212 @@ if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($Head)) {
     throw "Unable to resolve wrapper HEAD."
 }
 
-& $BuildInstaller
+$HeadTree = (& git -C $RepoRoot rev-parse "$Head^{tree}").Trim()
+if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($HeadTree)) {
+    throw "Unable to resolve wrapper source tree."
+}
+
+$Utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+$ReleaseStateRoot = Join-Path $RepoRoot "out\release-state"
+$ReleaseStatePath = Join-Path $ReleaseStateRoot "MagicTrackpad-for-Windows-$Version.json"
+$ReleaseRoot = Join-Path $RepoRoot "out\release"
+$ReleaseDir = Join-Path $ReleaseRoot "MagicTrackpad-for-Windows-$Version"
+$TempRoot = Join-Path $RepoRoot "out\release-temp\MagicTrackpad-for-Windows-$Version"
+$Installer = Join-Path $RepoRoot "out\installer\MagicTrackpad-for-Windows-Setup-$Version-x64.exe"
+$reuseSha256 = $ReuseExistingInstallerSha256.Trim().ToLowerInvariant()
+$IsResume = $false
+$PartialReleaseDirPresent = $false
+
+function Write-ReleaseState {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Status,
+        [string]$SetupSha256 = ""
+    )
+
+    New-Item -ItemType Directory -Path $ReleaseStateRoot -Force | Out-Null
+
+    $state = [ordered]@{
+        schema = "magic-trackpad-release-state-v1"
+        version = $Version
+        wrapper_commit = $Head
+        wrapper_tree = $HeadTree
+        setup_sha256 = $SetupSha256.ToLowerInvariant()
+        status = $Status
+    }
+
+    $stateJson = $state | ConvertTo-Json -Depth 3
+    $temporaryStatePath = "$ReleaseStatePath.tmp-$([guid]::NewGuid().ToString('N'))"
+
+    try {
+        [System.IO.File]::WriteAllText($temporaryStatePath, $stateJson + [Environment]::NewLine, $Utf8NoBom)
+        Move-Item $temporaryStatePath $ReleaseStatePath -Force
+    }
+    finally {
+        Remove-Item $temporaryStatePath -Force -ErrorAction SilentlyContinue
+    }
+}
+
+function Read-ReleaseState {
+    if (-not (Test-Path $ReleaseStatePath -PathType Leaf)) {
+        throw "Release-state receipt is missing: $ReleaseStatePath"
+    }
+
+    try {
+        return (Get-Content $ReleaseStatePath -Raw | ConvertFrom-Json)
+    }
+    catch {
+        throw "Release-state receipt is unreadable: $ReleaseStatePath. $($_.Exception.Message)"
+    }
+}
+
+function Assert-ReleaseStateSource {
+    param(
+        [Parameter(Mandatory = $true)]
+        $State
+    )
+
+    foreach ($requiredProperty in @("schema", "version", "wrapper_commit", "wrapper_tree", "setup_sha256", "status")) {
+        if ($State.PSObject.Properties.Name -notcontains $requiredProperty) {
+            throw "Release-state receipt is missing required property: $requiredProperty"
+        }
+    }
+
+    if ($State.schema -ne "magic-trackpad-release-state-v1") {
+        throw "Release-state receipt schema is not supported: $($State.schema)"
+    }
+
+    if ($State.version -ne $Version) {
+        throw "Release-state version mismatch. Receipt=$($State.version), current=$Version."
+    }
+
+    if ($State.wrapper_commit -ne $Head) {
+        throw "Release-state source commit mismatch. Receipt=$($State.wrapper_commit), current=$Head. Refusing cross-commit binary reuse."
+    }
+
+    if ($State.wrapper_tree -ne $HeadTree) {
+        throw "Release-state source tree mismatch. Receipt=$($State.wrapper_tree), current=$HeadTree. Refusing cross-tree binary reuse."
+    }
+}
+
+if (Test-Path $ReleaseDir) {
+    $existingReleaseVerified = $false
+    $existingReleaseVerificationError = ""
+
+    try {
+        & $VerifyRelease -RepoRoot $RepoRoot -ReleaseDir $ReleaseDir
+        $existingReleaseVerified = $true
+    }
+    catch {
+        $existingReleaseVerificationError = $_.Exception.Message
+    }
+
+    if ($existingReleaseVerified) {
+        throw "Existing release directory already passes verification; refusing to regenerate v$Version release assets: $ReleaseDir"
+    }
+
+    $PartialReleaseDirPresent = $true
+    Write-Host "[INFO] Existing release directory is partial/unverified: $ReleaseDir"
+    Write-Host "[INFO] Existing release verification error: $existingReleaseVerificationError"
+}
+
+$ExistingTempRootPresent = Test-Path $TempRoot
+
+if (Test-Path $Installer -PathType Leaf) {
+    $existingInstallerSha256 = (Get-FileHash -Algorithm SHA256 -Path $Installer).Hash.ToLowerInvariant()
+
+    if ([string]::IsNullOrWhiteSpace($reuseSha256)) {
+        throw "Installer for v$Version already exists (SHA256 $existingInstallerSha256): $Installer. Refusing to rebuild the same release identity. Controlled resume requires the exact Setup SHA256 plus the matching local release-state receipt."
+    }
+
+    $releaseState = Read-ReleaseState
+    Assert-ReleaseStateSource -State $releaseState
+
+    if ($releaseState.status -eq "release-complete") {
+        throw "Release-state receipt already marks v$Version complete; refusing to regenerate release assets."
+    }
+
+    if ($releaseState.status -ne "installer-built") {
+        throw "Release-state receipt is not resumable. Expected status installer-built, actual=$($releaseState.status)."
+    }
+
+    $receiptSetupSha256 = ([string]$releaseState.setup_sha256).Trim().ToLowerInvariant()
+
+    if ([string]::IsNullOrWhiteSpace($receiptSetupSha256)) {
+        throw "Release-state receipt does not contain the built Setup SHA256."
+    }
+
+    if ($reuseSha256 -ne $existingInstallerSha256) {
+        throw "Existing installer SHA256 does not match -ReuseExistingInstallerSha256. Expected $reuseSha256, actual $existingInstallerSha256."
+    }
+
+    if ($receiptSetupSha256 -ne $existingInstallerSha256) {
+        throw "Existing installer SHA256 does not match the source-bound release-state receipt. Receipt=$receiptSetupSha256, actual=$existingInstallerSha256."
+    }
+
+    $IsResume = $true
+    Write-Host "[PASS] Reusing existing v$Version installer without recompilation."
+    Write-Host "[PASS] Release-state source commit/tree match the current clean source."
+    Write-Host "[INFO] Reused Setup SHA256: $existingInstallerSha256"
+}
+else {
+    if (-not [string]::IsNullOrWhiteSpace($reuseSha256)) {
+        throw "-ReuseExistingInstallerSha256 was supplied, but the expected v$Version installer does not exist: $Installer"
+    }
+
+    if ($PartialReleaseDirPresent -or $ExistingTempRootPresent) {
+        throw "Partial release/temp state exists without the source-bound Setup required for resume. Refusing to create another same-version installer."
+    }
+
+    if (Test-Path $ReleaseStatePath -PathType Leaf) {
+        $releaseState = Read-ReleaseState
+        Assert-ReleaseStateSource -State $releaseState
+
+        if ($releaseState.status -ne "intent" -or -not [string]::IsNullOrWhiteSpace([string]$releaseState.setup_sha256)) {
+            throw "Existing release-state receipt is not a clean pre-build intent; refusing to start another same-version build."
+        }
+    }
+    else {
+        Write-ReleaseState -Status "intent"
+    }
+
+    & $BuildInstaller
+
+    if (-not (Test-Path $Installer -PathType Leaf)) {
+        throw "Expected installer not found after Build-Installer: $Installer"
+    }
+
+    $builtInstallerSha256 = (Get-FileHash -Algorithm SHA256 -Path $Installer).Hash.ToLowerInvariant()
+    Write-ReleaseState -Status "installer-built" -SetupSha256 $builtInstallerSha256
+}
 
 $postBuildStatus = @(& git -C $RepoRoot status --porcelain)
 if ($LASTEXITCODE -ne 0) {
-    throw "Unable to re-check wrapper repository status after build."
+    throw "Unable to re-check wrapper repository status after installer selection/build."
 }
 
 if ($postBuildStatus.Count -ne 0) {
-    throw "Installer build modified tracked source files. Refusing to archive an uncommitted release state."
+    throw "Installer selection/build modified tracked source files. Refusing to archive an uncommitted release state."
 }
 
-$Installer = Join-Path $RepoRoot "out\installer\MagicTrackpad-for-Windows-Setup-$Version-x64.exe"
+$postBuildHead = (& git -C $RepoRoot rev-parse HEAD).Trim()
+if ($LASTEXITCODE -ne 0 -or $postBuildHead -ne $Head) {
+    throw "Wrapper HEAD changed during installer selection/build. Refusing release continuation."
+}
 
 if (-not (Test-Path $Installer -PathType Leaf)) {
     throw "Expected installer not found: $Installer"
+}
+
+$InstallerSha256 = (Get-FileHash -Algorithm SHA256 -Path $Installer).Hash.ToLowerInvariant()
+Write-Host "[INFO] Release Setup SHA256: $InstallerSha256"
+
+if ($PartialReleaseDirPresent -and -not $IsResume) {
+    throw "A partial release directory may be replaced only during an exact state-bound resume."
+}
+
+if ((Test-Path $TempRoot) -and -not $IsResume) {
+    throw "Existing release temp state may be replaced only during an exact state-bound resume: $TempRoot"
 }
 
 if ([string]::IsNullOrWhiteSpace($UpstreamRepoPath)) {
@@ -131,16 +324,16 @@ foreach ($sha in @($UpstreamSourceSha, $UpstreamWorkflowSha, $UpstreamTagSha)) {
     }
 }
 
-$ReleaseRoot = Join-Path $RepoRoot "out\release"
-$ReleaseDir = Join-Path $ReleaseRoot "MagicTrackpad-for-Windows-$Version"
-$TempRoot = Join-Path $RepoRoot "out\release-temp\MagicTrackpad-for-Windows-$Version"
-
-foreach ($path in @($ReleaseDir, $TempRoot)) {
-    if (Test-Path $path) {
-        Remove-Item $path -Recurse -Force
-    }
-    New-Item -ItemType Directory -Path $path -Force | Out-Null
+if (Test-Path $ReleaseDir) {
+    Remove-Item $ReleaseDir -Recurse -Force
 }
+
+if (Test-Path $TempRoot) {
+    Remove-Item $TempRoot -Recurse -Force
+}
+
+New-Item -ItemType Directory -Path $ReleaseDir -Force | Out-Null
+New-Item -ItemType Directory -Path $TempRoot -Force | Out-Null
 
 $UpstreamShort = $UpstreamSourceSha.Substring(0, 12)
 $WorkflowShort = $UpstreamWorkflowSha.Substring(0, 12)
@@ -153,7 +346,7 @@ $WorkflowName = "UPSTREAM_BUILD_WORKFLOW-$WorkflowShort.yml"
 $WrapperSource = Join-Path $ReleaseDir $WrapperSourceName
 $WrapperPrefix = "MagicTrackpad-for-Windows-source-$Version/"
 
-& git -C $RepoRoot archive --format=zip "--prefix=$WrapperPrefix" "--output=$WrapperSource" HEAD
+& git -C $RepoRoot archive --format=zip "--prefix=$WrapperPrefix" "--output=$WrapperSource" $Head
 if ($LASTEXITCODE -ne 0) {
     throw "Failed to archive wrapper source."
 }
@@ -164,7 +357,6 @@ if ($LASTEXITCODE -ne 0 -or $workflowLines.Count -eq 0) {
     throw "Failed to preserve upstream build workflow."
 }
 
-$Utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllLines($WorkflowPath, $workflowLines, $Utf8NoBom)
 
 $UpstreamSource = Join-Path $ReleaseDir $UpstreamSourceName
@@ -312,6 +504,7 @@ $manifestLines = @(
 [System.IO.File]::WriteAllLines($ManifestPath, $manifestLines, $Utf8NoBom)
 
 & $VerifyRelease -RepoRoot $RepoRoot -ReleaseDir $ReleaseDir
+Write-ReleaseState -Status "release-complete" -SetupSha256 $SetupHash
 
 Remove-Item $TempRoot -Recurse -Force -ErrorAction SilentlyContinue
 

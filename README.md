@@ -13,7 +13,7 @@ and predictable uninstall/reinstall behavior for ordinary Windows users.
 
 > **Development status**
 >
-> Current source version: `v0.1.0-rc.2`.
+> Current source version: `v0.1.0`.
 >
 > Current public prerelease: [`v0.1.0-dev.6.0`](https://github.com/Suki-Kyaru/magic-trackpad-windows/releases/tag/v0.1.0-dev.6.0).
 >
@@ -22,10 +22,16 @@ and predictable uninstall/reinstall behavior for ordinary Windows users.
 >
 > Previous frozen validated binary baseline: `v0.1.0-dev.5.4.2`.
 >
+> Frozen stable-release candidate: `v0.1.0-rc.2`.
+> rc.2 Setup SHA256: `e5e7f4d379e096b3513ed8118c1cf09f29152f24c7ac4282b53678aa4d687d40`.
+> rc.2 source commit: `b54ac7311b1a6e0736e91c2cac248fffcc485e04`.
+> rc.2 source tree: `4f8ba3444993c601e41bf71c4f82e78629711d6c`.
+> Validation evidence: [`docs/RC2_FINAL_VALIDATION.md`](docs/RC2_FINAL_VALIDATION.md).
+>
 > `v0.1.0-dev.6.0` completed the controlled release regression and is now frozen.
 > The outer `Setup.exe` remains unsigned; the embedded upstream driver payload
-> remains the original Microsoft-signed payload. Current `v0.1.0-rc.2` source is
-> the stable-release candidate and is not yet a published stable binary.
+> remains the original Microsoft-signed payload. Current `v0.1.0` source is
+> the final stable-release source; the `v0.1.0` public stable binary has not yet been published.
 
 ## Screenshots
 
@@ -97,8 +103,8 @@ standalone raw Setup executable.
 
 `v0.1.0-dev.6.0` is now a frozen published release identity and must never be
 rebuilt or reissued from post-tag source. `v0.1.0-dev.5.4.2` remains the previous
-frozen validated binary baseline. Current source `v0.1.0-rc.2` is the stable-release
-candidate and must complete Windows 11 stable-release validation before publication.
+frozen validated binary baseline. `v0.1.0-rc.2` is the frozen, fully validated stable-release
+candidate; see [RC2 final validation](docs/RC2_FINAL_VALIDATION.md). Current source `v0.1.0` is the final stable-release source and still requires the one-time controlled final build/publication.
 
 The normal user flow is:
 
@@ -223,7 +229,7 @@ third_party\MagicTrackpad2ForWindows-v2.0\
 
 and is intentionally excluded from Git.
 
-### 3. Build the installer
+### 3. Build the controlled release assets
 
 The frozen `v0.1.0-dev.5.4.2` installer must not be rebuilt from post-tag source.
 Its validated Setup SHA256 is:
@@ -232,24 +238,30 @@ Its validated Setup SHA256 is:
 afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04
 ```
 
-The current source is `0.1.0-rc.2`, with `VERSION` and `#define MyAppVersion` in
+The current source is `0.1.0`, with `VERSION` and `#define MyAppVersion` in
 `installer/setup.iss` synchronized. From a clean committed source state, build
-the release candidate with:
+the final controlled release bundle with:
 
 ```powershell
-.\scripts\Build-Installer.ps1
+.\scripts\Build-ReleaseBundle.ps1
 ```
 
 Output:
 
 ```text
-out\installer\
+out\release\MagicTrackpad-for-Windows-0.1.0\
 ```
 
 `Build-Installer.ps1` fails closed for the frozen `0.1.0-dev.5.4.2`,
-`0.1.0-dev.6.0`, and `0.1.0-rc.1` identities. Current `0.1.0-rc.2` is buildable
+`0.1.0-dev.6.0`, and `0.1.0-rc.1` identities. Frozen `0.1.0-rc.2` is also rejected; current `0.1.0` is buildable
 only when `VERSION` and the Inno version match. Payload, installer, uninstall,
 and license-distribution gates are re-run before compiling.
+
+`Build-ReleaseBundle.ps1` invokes `Build-Installer.ps1` internally for the release identity.
+Do not pre-build another final Setup before running the controlled release-bundle build.
+If the bundle run fails after Setup has already been produced, preserve those exact bytes
+and use the exact-SHA resume procedure in [Release Compliance](docs/oss/RELEASE_COMPLIANCE.md);
+never delete the Setup merely to rebuild the same version.
 
 For publishable release assets, use the controlled
 [release compliance process](docs/oss/RELEASE_COMPLIANCE.md) rather than

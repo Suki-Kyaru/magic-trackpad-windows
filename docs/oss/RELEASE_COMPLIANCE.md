@@ -45,11 +45,23 @@ Its source commit is:
 bdad6cb24a39f479436763db774f46ee4a5ab154
 ```
 
-All three binary identities are immutable. Rebuilding later source under any frozen
+`v0.1.0-rc.2` is the frozen validated Windows 11 stable-release candidate, not a public release.
+
+Frozen rc.2 Setup SHA256:
+
+```text
+e5e7f4d379e096b3513ed8118c1cf09f29152f24c7ac4282b53678aa4d687d40
+```
+
+Its source commit is `b54ac7311b1a6e0736e91c2cac248fffcc485e04`; source tree is
+`4f8ba3444993c601e41bf71c4f82e78629711d6c`. Final validation evidence is
+`docs/RC2_FINAL_VALIDATION.md`. No `v0.1.0-rc.2` tag or public rc.2 Release was created.
+
+All four binary identities are immutable. Rebuilding later source under any frozen
 version would create a different binary with an existing identity, so the build
 scripts deliberately reject all frozen versions.
 
-Current stable-release candidate source uses `0.1.0-rc.2`.
+Current final stable-release source uses `0.1.0`; its public stable binary has not yet been published.
 
 Historical note: OSS-1.3C does not modify `installer/setup.iss`; that phase
 established the original dev.5.4.2 freeze before the first public prerelease existed.
@@ -112,7 +124,7 @@ Upload the verified files from that release directory together.
 
 Before any new installer/release build:
 
-- do not reuse `0.1.0-dev.5.4.2`, `0.1.0-dev.6.0`, or `0.1.0-rc.1`;
+- do not reuse `0.1.0-dev.5.4.2`, `0.1.0-dev.6.0`, `0.1.0-rc.1`, or `0.1.0-rc.2`;
 - update root `VERSION`;
 - update `#define MyAppVersion` in `installer/setup.iss` to exactly the same
   version;
@@ -126,12 +138,34 @@ Before any new installer/release build:
 .\scripts\Build-ReleaseBundle.ps1
 ```
 
-The release builder runs `Build-Installer.ps1` itself.
+The release builder runs `Build-Installer.ps1` itself on the first attempt.
+Do not pre-build another Setup for the same version.
+
+If a controlled release-bundle run fails **after** that unique Setup has already
+been produced, preserve it and note its exact SHA256. Resume with:
+
+```powershell
+.\scripts\Build-ReleaseBundle.ps1 `
+    -ReuseExistingInstallerSha256 "<exact-existing-setup-sha256>"
+```
+
+The first attempt also writes a local ignored release-state receipt under
+`out/release-state/`. The receipt binds the version to the exact wrapper commit,
+wrapper tree, and the one-time Setup SHA256.
+
+The resume path reuses the existing Setup only when its SHA256 exactly matches the
+explicit value **and** the local release-state receipt matches the current clean
+source commit/tree. Cross-commit or cross-tree reuse fails closed.
+
+If an existing release directory already passes `Verify-ReleaseBundle.ps1`, it is
+treated as complete and immutable: the builder refuses to delete or regenerate it.
+Only an unverified partial release directory may be replaced, and only during an
+exact state-bound resume.
 
 It then:
 
 1. requires a clean committed wrapper working tree;
-2. archives the wrapper's committed source;
+2. archives the exact wrapper commit recorded by the release-state receipt;
 3. fetches/uses exact upstream source commit
    `8874eaa3994f0e7e40fa40312250bbc5f13cc928`;
 4. preserves the build-workflow snapshot from
@@ -207,10 +241,10 @@ Among other checks, the verifier ensures:
 ## Current expected behavior
 
 Running `Build-Installer.ps1` or `Build-ReleaseBundle.ps1` with any frozen
-`VERSION` (`0.1.0-dev.5.4.2`, `0.1.0-dev.6.0`, or `0.1.0-rc.1`) must **fail
+`VERSION` (`0.1.0-dev.5.4.2`, `0.1.0-dev.6.0`, `0.1.0-rc.1`, or `0.1.0-rc.2`) must **fail
 deliberately before rebuilding**.
 
-Current stable-release candidate `0.1.0-rc.2` is not frozen; installer/release
+Current final stable-release source `0.1.0` is not yet frozen; installer/release
 building remains an explicit maintainer action rather than a normal CI side effect.
 
 A frozen-version refusal is a safety gate, not a regression.

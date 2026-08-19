@@ -8,7 +8,7 @@ The first CI workflow is intentionally non-destructive.
 
 It should catch repository/contract regressions and compile the C++ helper
 without touching Driver Store state or rebuilding frozen dev.5.4.2, dev.6.0,
-or rc.1 installers.
+rc.1, or rc.2 installers.
 
 Workflow:
 
@@ -108,6 +108,7 @@ Published/frozen release identities are:
 0.1.0-dev.5.4.2
 0.1.0-dev.6.0
 0.1.0-rc.1
+0.1.0-rc.2
 ```
 
 Normal CI must not invoke:
@@ -119,7 +120,7 @@ Build-ReleaseBundle.ps1
 
 and must not produce a new Setup under any frozen version.
 
-Current stable-release candidate source `0.1.0-rc.2` is not frozen; installer/release builds
+Current final stable-release source `0.1.0` is not yet frozen; installer/release builds
 remain explicit maintainer actions and are not part of normal CI.
 
 ## Permissions

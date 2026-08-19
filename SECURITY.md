@@ -52,11 +52,26 @@ The current public binary prerelease is:
 v0.1.0-dev.6.0
 ```
 
-The current stable-release candidate source is:
+The current final stable-release source is:
+
+```text
+v0.1.0
+```
+
+The frozen Windows 11 stable-release candidate is:
 
 ```text
 v0.1.0-rc.2
 ```
+
+Frozen rc.2 Setup SHA256:
+
+```text
+e5e7f4d379e096b3513ed8118c1cf09f29152f24c7ac4282b53678aa4d687d40
+```
+
+Its source commit is `b54ac7311b1a6e0736e91c2cac248fffcc485e04`.
+See `docs/RC2_FINAL_VALIDATION.md` for the final validation evidence.
 
 The frozen Windows 10 validation candidate is:
 

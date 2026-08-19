@@ -14,6 +14,7 @@ Before changing code, read the documents relevant to the task:
 - `docs/DEV5_4_2_USER_SAFE_UNINSTALL_CONTRACT.md` — user-safe removal contract.
 - `docs/DEV5_4_2_USER_SAFE_UNINSTALL_VALIDATION.md` — historical validated baseline evidence.
 - `docs/DEV6_0_FINAL_RELEASE_VALIDATION.md` — first public prerelease identity and final validation evidence.
+- `docs/RC2_FINAL_VALIDATION.md` — frozen rc.2 stable-candidate identity and final Windows 11 validation evidence.
 - `docs/oss/RELEASE_COMPLIANCE.md` — release/source-distribution rules.
 - `docs/oss/CONTRIBUTOR_WORKFLOW.md` — change-risk and validation matrix.
 
@@ -35,13 +36,19 @@ Frozen dev.6.0 final Setup SHA256:
 f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791
 ```
 
-Do not rebuild or republish a different installer under either frozen version.
+Do not rebuild or republish a different installer under any frozen release identity.
 
 `v0.1.0-rc.1` is a frozen Windows 10 validation candidate, not a public release.
 Frozen rc.1 Setup SHA256: `fb209f59939dde9291a3879f4e30145192901c397114510301a3a3cf309bd068`.
 Its source commit is `bdad6cb24a39f479436763db774f46ee4a5ab154`.
 
-Current stable-release candidate source uses `0.1.0-rc.2`.
+`v0.1.0-rc.2` is the frozen Windows 11 stable-release candidate, not a public release.
+Frozen rc.2 Setup SHA256: `e5e7f4d379e096b3513ed8118c1cf09f29152f24c7ac4282b53678aa4d687d40`.
+Its source commit is `b54ac7311b1a6e0736e91c2cac248fffcc485e04`; source tree is `4f8ba3444993c601e41bf71c4f82e78629711d6c`.
+Validation evidence is recorded in `docs/RC2_FINAL_VALIDATION.md`.
+No `v0.1.0-rc.2` tag was created; do not invent one retroactively.
+
+Current final stable-release source uses `0.1.0`; its public stable binary has not yet been published.
 
 ## Never weaken these rules
 
@@ -104,13 +111,16 @@ installer, PowerShell compatibility, payload, status, and uninstall verifiers
 listed in `docs/oss/CONTRIBUTOR_WORKFLOW.md`.
 
 Do not run `Build-Installer.ps1` or `Build-ReleaseBundle.ps1` with any frozen
-`VERSION`: `0.1.0-dev.5.4.2`, `0.1.0-dev.6.0`, or `0.1.0-rc.1`; refusal is intentional.
-Current `0.1.0-rc.2` source is not a frozen identity; release building remains an
+`VERSION`: `0.1.0-dev.5.4.2`, `0.1.0-dev.6.0`, `0.1.0-rc.1`, or `0.1.0-rc.2`; refusal is intentional.
+Current `0.1.0` source is not yet frozen; final stable release building remains an
 explicit maintainer action rather than part of normal CI.
+If a release-bundle run fails after Setup is produced, do not delete or rebuild that
+same-version Setup. Resume only with its exact SHA256 via
+`Build-ReleaseBundle.ps1 -ReuseExistingInstallerSha256`.
 
 The GitHub Actions CI workflow must preserve this rule: CI may build the C++
 helper and run static/runtime compatibility checks, but must not produce a new
-Setup for either frozen version.
+Setup for any frozen version.
 
 ## Change discipline
 

@@ -69,6 +69,9 @@ foreach ($required in @(
     'Final Setup SHA256 inside the published binary ZIP:',
     'f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791',
     'Previous frozen validated binary baseline: `v0.1.0-dev.5.4.2`.',
+    'Frozen stable-release candidate: `v0.1.0-rc.2`.',
+    'rc.2 Setup SHA256: `e5e7f4d379e096b3513ed8118c1cf09f29152f24c7ac4282b53678aa4d687d40`.',
+    'rc.2 source commit: `b54ac7311b1a6e0736e91c2cac248fffcc485e04`.',
     '`0.1.0-dev.6.0`, and `0.1.0-rc.1` identities',
     '`v0.1.0-dev.6.0` completed the controlled release regression and is now frozen.',
     'The current public binary prerelease is `v0.1.0-dev.6.0`.',
@@ -108,6 +111,9 @@ foreach ($required in @(
     '已发布二进制 ZIP 内 Final Setup SHA256：',
     'f6e7155beca5d863b8d70022c5ac9d7a38daa21880b572a25b0bff9c54661791',
     '上一个冻结并完成验收的二进制基线：`v0.1.0-dev.5.4.2`。',
+    '冻结的稳定版候选：`v0.1.0-rc.2`。',
+    'rc.2 Setup SHA256：`e5e7f4d379e096b3513ed8118c1cf09f29152f24c7ac4282b53678aa4d687d40`。',
+    'rc.2 源码提交：`b54ac7311b1a6e0736e91c2cac248fffcc485e04`。',
     '和 `0.1.0-rc.1` 主动阻断。',
     '`v0.1.0-dev.6.0` 已完成受控发布回归并正式冻结。',
     '当前公开二进制预发行版为 `v0.1.0-dev.6.0`。',
@@ -165,6 +171,6 @@ Write-Host "[PASS] All six dev.6.0 bilingual screenshot assets exist and are non
 Write-Host "[PASS] ARM64 remains unvalidated; Windows 10 rc.1 validation failed and the current v0.1.0 line remains Windows 11 x64 only."
 Write-Host "[PASS] Install, safe uninstall, diagnostics/privacy, and safety model are documented."
 Write-Host "[PASS] Pinned upstream v2.0 asset and SHA256 are documented."
-Write-Host "[PASS] README records MIT/GPL separation, release compliance, and frozen dev.5.4.2/dev.6.0/rc.1 identities."
-Write-Host "[PASS] Public status distinguishes published dev.6.0 from current v$Version stable-release candidate source."
+Write-Host "[PASS] README records MIT/GPL separation, release compliance, and frozen dev.5.4.2/dev.6.0/rc.1/rc.2 identities."
+Write-Host "[PASS] Public status distinguishes published dev.6.0 from current v$Version final stable-release source."
 Write-Host "[PASS] OSS-1.1B root-history cleanup remains intact."

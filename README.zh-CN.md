@@ -12,7 +12,7 @@
 
 > **开发状态**
 >
-> 当前源码版本：`v0.1.0-rc.2`。
+> 当前源码版本：`v0.1.0`。
 >
 > 当前公开预发行版：[`v0.1.0-dev.6.0`](https://github.com/Suki-Kyaru/magic-trackpad-windows/releases/tag/v0.1.0-dev.6.0)。
 >
@@ -21,9 +21,15 @@
 >
 > 上一个冻结并完成验收的二进制基线：`v0.1.0-dev.5.4.2`。
 >
+> 冻结的稳定版候选：`v0.1.0-rc.2`。
+> rc.2 Setup SHA256：`e5e7f4d379e096b3513ed8118c1cf09f29152f24c7ac4282b53678aa4d687d40`。
+> rc.2 源码提交：`b54ac7311b1a6e0736e91c2cac248fffcc485e04`。
+> rc.2 源码 tree：`4f8ba3444993c601e41bf71c4f82e78629711d6c`。
+> 完整验收证据：[`docs/RC2_FINAL_VALIDATION.md`](docs/RC2_FINAL_VALIDATION.md)。
+>
 > `v0.1.0-dev.6.0` 已完成受控发布回归并正式冻结。外层 `Setup.exe` 当前仍未
-> 代码签名，内嵌上游驱动继续保持原始 Microsoft 签名。当前 `v0.1.0-rc.2` 源码属于
-> 正式版候选状态，尚不是已经公开发布的稳定版二进制。
+> 代码签名，内嵌上游驱动继续保持原始 Microsoft 签名。当前 `v0.1.0` 源码属于
+> 最终稳定版源码；`v0.1.0` 公开稳定版二进制尚未发布。
 
 ## 界面截图
 
@@ -89,8 +95,8 @@ ZIP，不应把裸 `Setup.exe` 作为独立公开发布单元。
 
 `v0.1.0-dev.6.0` 已成为冻结的公开发布身份，绝不能从 tag 之后的源码重新构建或
 重新发布同版本二进制。`v0.1.0-dev.5.4.2` 继续作为上一个冻结并完成验收的二进制
-基线。当前 `v0.1.0-rc.2` 属于正式版候选源码，必须完成 Windows 11
-稳定版验证后才能公开发布。
+基线。`v0.1.0-rc.2` 已成为冻结并完成验收的稳定版候选，完整证据见
+[rc.2 最终验收记录](docs/RC2_FINAL_VALIDATION.md)。当前 `v0.1.0` 是最终稳定版源码，仍需完成一次受控的最终构建与公开发布。
 
 普通用户流程：
 
@@ -213,7 +219,7 @@ third_party\MagicTrackpad2ForWindows-v2.0\
 
 该二进制目录故意不进入 Git。
 
-### 3. 构建安装器
+### 3. 构建受控发布资产
 
 冻结的 `v0.1.0-dev.5.4.2` 不允许从 tag 之后的源码重新构建。它已经验收的 Setup
 SHA256 为：
@@ -222,22 +228,28 @@ SHA256 为：
 afbe531a5e117820c8643b776b74b82002db27d223366cf07fb390c818aeca04
 ```
 
-当前源码为 `0.1.0-rc.2`，根目录 `VERSION` 与 `installer/setup.iss` 中的
-`#define MyAppVersion` 已保持一致。应在干净、已提交的源码状态下构建正式版候选：
+当前源码为 `0.1.0`，根目录 `VERSION` 与 `installer/setup.iss` 中的
+`#define MyAppVersion` 已保持一致。应在干净、已提交的源码状态下构建最终受控发布资产：
 
 ```powershell
-.\scripts\Build-Installer.ps1
+.\scripts\Build-ReleaseBundle.ps1
 ```
 
 输出：
 
 ```text
-out\installer\
+out\release\MagicTrackpad-for-Windows-0.1.0\
 ```
 
 `Build-Installer.ps1` 会对已经冻结的 `0.1.0-dev.5.4.2`、`0.1.0-dev.6.0`
-和 `0.1.0-rc.1` 主动阻断。当前 `0.1.0-rc.2` 只有在 VERSION/Inno 版本一致时
+和 `0.1.0-rc.1` 主动阻断。冻结的 `0.1.0-rc.2` 也会被阻断；当前 `0.1.0` 只有在 VERSION/Inno 版本一致时
 才允许构建；真正编译前仍会重新执行驱动载荷、安装器、卸载和许可证分发门禁。
+
+`Build-ReleaseBundle.ps1` 会在同一次发布构建中内部调用 `Build-Installer.ps1`。
+最终稳定版不要先单独预构建另一份同版本 Setup，再运行 Release Bundle。
+如果 Release Bundle 在 Setup 已生成后失败，应保留这份 Setup，并按
+[Release 合规流程](docs/oss/RELEASE_COMPLIANCE.md)使用其精确 SHA256 恢复；
+不要为了重试而删除 Setup 并重新构建同一个版本。
 
 正式发布资产应使用
 [Release 合规流程](docs/oss/RELEASE_COMPLIANCE.md)，不要直接上传裸 `Setup.exe`。
